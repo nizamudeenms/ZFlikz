@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">Z Flikz</string>
+    <string name="sign_out">Sign Out</string>
+    <string name="facebook_application_id" translatable="false">169509447088975</string>
+    <string name="facebook_login_protocol_scheme" translatable="false">fb169509447088975</string>
+</resources>
