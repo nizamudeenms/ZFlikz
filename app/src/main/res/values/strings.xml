@@ -3,4 +3,13 @@
     <string name="sign_out">Sign Out</string>
     <string name="facebook_application_id" translatable="false">169509447088975</string>
     <string name="facebook_login_protocol_scheme" translatable="false">fb169509447088975</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+    <string name="popular_sel_mes">Sorted by Most Popular Movies</string>
+    <string name="top_rated_sel_msg">Sorted by Highest rated Movies</string>
 </resources>

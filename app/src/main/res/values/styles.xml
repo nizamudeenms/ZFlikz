@@ -9,13 +9,21 @@
     </style>
 
     <style name="ConnectionTheme" parent="FirebaseUI">
-        <item name="android:windowBackground">@drawable/connection_bg_image</item>
+        <item name="android:windowBackground">@drawable/tilerepeat</item>
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <item name="android:windowFullscreen">true</item>
+        <!--<item name="colorPrimary">@android:color/transparent</item>-->
     </style>
 
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
 
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
 
 </resources>
