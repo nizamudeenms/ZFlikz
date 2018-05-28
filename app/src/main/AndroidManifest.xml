@@ -23,10 +23,9 @@
         </activity>
         <activity
             android:name=".MainActivity"
-            android:theme="@style/ConnectionTheme" />
+            android:theme="@style/AppTheme.MainActivityTheme"/>
         <activity
             android:name=".MovieDetailActivity"
-            android:label="@string/title_activity_main"
             android:theme="@style/ConnectionTheme" />
     </application>
 

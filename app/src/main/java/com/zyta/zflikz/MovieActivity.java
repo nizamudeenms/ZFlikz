@@ -4,8 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.widget.Toast;
 
 import com.firebase.ui.auth.AuthUI;
@@ -119,12 +117,7 @@ public class MovieActivity extends AppCompatActivity {
 //        mMessageAdapter.clear();
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.main, menu);
-        return true;
-    }
+
 
 //    @Override
 //    public boolean onOptionsItemSelected(MenuItem item) {

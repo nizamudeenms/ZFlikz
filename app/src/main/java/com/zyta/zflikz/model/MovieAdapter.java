@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.zyta.zflikz.MovieDetailActivity;
 import com.zyta.zflikz.R;
 
@@ -38,7 +39,8 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MyViewHolder
         ImageView im = holder.thumbnail;
         if (!movies.moveToPosition(position))
             return;
-        Glide.with(mContext).load(movies.getString(movies.getColumnIndex(MovieContract.MovieEntry.COLUMN_POSTER_URL))).placeholder(R.mipmap.ic_launcher).crossFade().thumbnail(0.5f).into(im);
+        RequestOptions glideoptions = new RequestOptions().placeholder(R.mipmap.ic_launcher);
+        Glide.with(mContext).load(movies.getString(movies.getColumnIndex(MovieContract.MovieEntry.COLUMN_POSTER_URL))).apply(glideoptions).into(im);
     }
 
     @Override

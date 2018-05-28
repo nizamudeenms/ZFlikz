@@ -21,6 +21,51 @@
         <item name="windowNoTitle">true</item>
     </style>
 
+    <style name="AppTheme.MainActivityTheme">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="colorPrimary">@color/blackColorAccent40Percent</item>
+    </style>
+
+    <style name="ActivityLabelStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">80dp</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:padding">16dp</item>
+        <item name="android:textColor">@android:color/black</item>
+        <!--<item name="android:textStyle">bold</item>-->
+        <item name="android:textAppearance">?android:textAppearanceMedium</item>
+        <item name="android:layout_marginBottom">8dp</item>
+        <!-- Change the background color for activity views to colorPrimaryLight and their text to black -->
+        <item name="android:background">@color/cardview_shadow_end_color</item>
+    </style>
+
+
+    <style name="TitleTextStyle" parent="ConnectionTheme">
+        <item name="android:fontFamily">sans-serif-light</item>
+        <item name="android:textColor">@color/text_shadow_white</item>
+        <item name="android:shadowColor">@color/text_shadow</item>
+        <item name="android:shadowRadius">2</item>
+        <item name="android:shadowDx">-2</item>
+        <item name="android:shadowDy">-2</item>
+        <item name="android:textSize">25sp</item>
+        <!--<item name="android:textStyle">bold</item>-->
+    </style>
+
+    <style name="NormalTextStyle" parent="ConnectionTheme">
+        <item name="android:fontFamily">sans-serif-light</item>
+        <item name="android:textColor">@color/text_shadow_white</item>
+        <item name="android:shadowColor">@color/text_shadow</item>
+        <item name="android:shadowRadius">2</item>
+        <item name="android:shadowDx">-2</item>
+        <item name="android:shadowDy">-2</item>
+        <item name="android:textSize">17sp</item>
+        <item name="android:alignmentMode">alignMargins</item>
+
+        <!--<item name="android:textStyle">bold</item>-->
+    </style>
+
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />

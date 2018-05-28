@@ -40,6 +40,7 @@ import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.firebase.ui.auth.AuthUI;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -93,6 +94,8 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.inflateMenu(R.menu.main);
+        toolbar.setBackgroundColor(getResources().getColor(R.color.blackColorAccent40Percent));
+
         setSupportActionBar(toolbar);
 
 
@@ -109,7 +112,8 @@ public class MainActivity extends AppCompatActivity
                     onSigninListener(user.getDisplayName());
                     Uri xx = FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl();
                     if (xx != null) {
-                        Glide.with(getApplicationContext()).load(xx).placeholder(R.mipmap.ic_launcher).crossFade().thumbnail(0.5f).into(profileImage);
+                        RequestOptions glideoptions = new RequestOptions().placeholder(R.mipmap.ic_launcher);
+                        Glide.with(getApplicationContext()).load(xx).apply(glideoptions).into(profileImage);
                         profileName.setText(user.getDisplayName());
                         profileEmail.setText(user.getEmail());
 
@@ -307,8 +311,8 @@ public class MainActivity extends AppCompatActivity
                                     String backdropPath = c.getString("backdrop_path");
 
                                     Movie movie = new Movie();
-                                    movie.setPOSTER_PATH(endpoint + "w185/" + posterPath);
-                                    movie.setBACKDROP_PATH(endpoint + "w500/" + backdropPath);
+                                    movie.setPOSTER_PATH(endpoint + "original/" + posterPath);
+                                    movie.setBACKDROP_PATH(endpoint + "w1280/" + backdropPath);
                                     movie.setID(c.getString("id"));
                                     movie.setOVERVIEW(c.getString("overview"));
                                     movie.setRELEASE_DATE(c.getString("release_date"));
@@ -318,8 +322,8 @@ public class MainActivity extends AppCompatActivity
 
 
                                     ContentValues cv = new ContentValues();
-                                    cv.put(MovieContract.MovieEntry.COLUMN_POSTER_URL, endpoint + "w185/" + posterPath);
-                                    cv.put(MovieContract.MovieEntry.COLUMN_BACKDROP_URL, endpoint + "w500/" + backdropPath);
+                                    cv.put(MovieContract.MovieEntry.COLUMN_POSTER_URL, endpoint + "original/" + posterPath);
+                                    cv.put(MovieContract.MovieEntry.COLUMN_BACKDROP_URL, endpoint + "w1280/" + backdropPath);
                                     cv.put(MovieContract.MovieEntry.COLUMN_TITLE, c.getString("original_title"));
                                     cv.put(MovieContract.MovieEntry.COLUMN_MOVIE_ID, c.getString("id"));
                                     cv.put(MovieContract.MovieEntry.COLUMN_OVERVIEW, c.getString("overview"));
@@ -382,8 +386,8 @@ public class MainActivity extends AppCompatActivity
                                     String backdropPath = c.getString("backdrop_path");
 
                                     Movie movie = new Movie();
-                                    movie.setPOSTER_PATH(endpoint + "w185/" + posterPath);
-                                    movie.setBACKDROP_PATH(endpoint + "w500/" + backdropPath);
+                                    movie.setPOSTER_PATH(endpoint + "original/" + posterPath);
+                                    movie.setBACKDROP_PATH(endpoint + "w1280/" + backdropPath);
                                     movie.setID(c.getString("id"));
                                     movie.setOVERVIEW(c.getString("overview"));
                                     movie.setRELEASE_DATE(c.getString("release_date"));
@@ -392,8 +396,8 @@ public class MainActivity extends AppCompatActivity
                                     movies.add(movie);
 
                                     ContentValues cv = new ContentValues();
-                                    cv.put(MovieContract.MovieEntry.COLUMN_POSTER_URL, endpoint + "w185/" + posterPath);
-                                    cv.put(MovieContract.MovieEntry.COLUMN_BACKDROP_URL, endpoint + "w500/" + backdropPath);
+                                    cv.put(MovieContract.MovieEntry.COLUMN_POSTER_URL, endpoint + "original/" + posterPath);
+                                    cv.put(MovieContract.MovieEntry.COLUMN_BACKDROP_URL, endpoint + "w1280/" + backdropPath);
                                     cv.put(MovieContract.MovieEntry.COLUMN_TITLE, c.getString("original_title"));
                                     cv.put(MovieContract.MovieEntry.COLUMN_MOVIE_ID, c.getString("id"));
                                     cv.put(MovieContract.MovieEntry.COLUMN_OVERVIEW, c.getString("overview"));
