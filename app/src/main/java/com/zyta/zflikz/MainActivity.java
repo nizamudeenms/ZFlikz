@@ -1,11 +1,7 @@
 package com.zyta.zflikz;
 
 import android.app.SearchManager;
-import android.content.ContentValues;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
@@ -20,43 +16,31 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AbsListView;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.NetworkError;
-import com.android.volley.NoConnectionError;
-import com.android.volley.ParseError;
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.ServerError;
-import com.android.volley.TimeoutError;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.firebase.ui.auth.AuthUI;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.zyta.zflikz.controller.MovieController;
-import com.zyta.zflikz.model.Movie;
 import com.zyta.zflikz.model.MovieAdapter;
-import com.zyta.zflikz.model.MovieContract;
-import com.zyta.zflikz.model.MovieDBHelper;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.zyta.zflikz.model.PostList;
+import com.zyta.zflikz.model.Result;
+import com.zyta.zflikz.utils.MovieAPI;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -74,11 +58,9 @@ public class MainActivity extends AppCompatActivity
     ImageView profileImage;
     TextView profileName, profileEmail;
     private String TAG = MainActivity.class.getSimpleName();
-    private static final String endpoint = "http://image.tmdb.org/t/p/";
-    private ArrayList<Movie> movies;
+    private ArrayList<Result> movies = new ArrayList<>();
     private MovieAdapter mAdapter;
     private RecyclerView recyclerView;
-    private SQLiteDatabase mMovieDb;
 
 
     final String GET_POPULAR = "popular";
@@ -86,7 +68,20 @@ public class MainActivity extends AppCompatActivity
     final String GET_FAV = "favorite";
     public String sortBy = GET_POPULAR;
     private Parcelable listState;
+    int PAGE_NO = 1;
+    int items = 10;
+    int TOT_PAGES = 0;
+    final String ORG_LANG = "te";
+    final String PRIM_REL_YEAR = "2018";
+    final String SORT_BY = "popularity.desc";
 
+    private static final int PAGE_START = 1;
+
+
+    Boolean isScrolling = false;
+
+
+    int currentItems, totalItems, scrollOutItems;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -150,25 +145,39 @@ public class MainActivity extends AppCompatActivity
         movies = new ArrayList<>();
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
 
-        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getApplicationContext(), getResources().getInteger(R.integer.grid_number_cols));
+        mAdapter = new MovieAdapter(this, movies);
+
+        final RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getApplicationContext(), getResources().getInteger(R.integer.grid_number_cols));
         recyclerView.setLayoutManager(mLayoutManager);
+        recyclerView.setAdapter(mAdapter);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setHasFixedSize(true);
 
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if (newState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL){
+                    isScrolling = true;
+                }
+            }
 
-        MovieDBHelper MovieDBHelper = new MovieDBHelper(this);
-        mMovieDb = MovieDBHelper.getWritableDatabase();
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                currentItems = mLayoutManager.getChildCount();
+                totalItems = mLayoutManager.getItemCount();
+                scrollOutItems = ((GridLayoutManager)mLayoutManager) .findFirstVisibleItemPosition();
 
-        if (savedInstanceState != null) {
-            sortBy = savedInstanceState.getString("loadList");
-            listState = savedInstanceState.getParcelable("ListState");
-            recyclerView.getLayoutManager().onRestoreInstanceState(listState);
-        } else {
-            FetchMoviesTask fetchMovies = new FetchMoviesTask();
-            fetchMovies.execute();
-        }
+                if(isScrolling && (currentItems + scrollOutItems == totalItems))
+                {
+                    isScrolling = false;
+                    getData();
+                }
 
-
+            }
+        });
+        getData();
     }
 
     @Override
@@ -260,184 +269,33 @@ public class MainActivity extends AppCompatActivity
     }
 
 
-    private Cursor getPopularMovies() {
-        return mMovieDb.query(
-                MovieContract.MovieEntry.POPULAR_MOVIE_TABLE,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null
-        );
-    }
+    private void getData() {
 
-    private Cursor getTopMovies() {
-        return mMovieDb.query(
-                MovieContract.MovieEntry.TOP_MOVIE_TABLE,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null
-        );
-    }
+//        progress.setVisibility(View.VISIBLE);
+        System.out.println("PAGE_NO : " + PAGE_NO);
+        System.out.println("TOT_PAGES : " + TOT_PAGES);
+//        if(PAGE_NO > TOT_PAGES){
+//            return;
+//        }
+        final Call<PostList> postList = MovieAPI.getService().getPopularMovies(BuildConfig.TMDB_KEY, PAGE_NO);
+        postList.enqueue(new Callback<PostList>() {
+            @Override
+            public void onResponse(Call<PostList> call, Response<PostList> response) {
+                PostList list = response.body();
+//                PAGE_NO = list.getPage();
+                PAGE_NO++;
+                TOT_PAGES = list.getTotalPages();
+                movies.addAll(list.getResults());
+                mAdapter.notifyDataSetChanged();
+                Toast.makeText(MainActivity.this, "Success", Toast.LENGTH_SHORT).show();
+            }
 
+            @Override
+            public void onFailure(Call<PostList> call, Throwable t) {
+                Toast.makeText(MainActivity.this, "Error Occurred", Toast.LENGTH_SHORT).show();
+            }
+        });
 
-    public class FetchMoviesTask extends AsyncTask<Void, Void, Void> {
-
-        @Override
-        protected Void doInBackground(Void... params) {
-            final String FORECAST_BASE_URL = "https://api.themoviedb.org/3/movie/";
-
-            String popular_url = FORECAST_BASE_URL + GET_POPULAR + "?api_key=" + BuildConfig.TMDB_KEY;
-//            final String top_url = FORECAST_BASE_URL + GET_TOP + "?api_key=" + BuildConfig.TMDB_KEY;
-            final String top_url = "https://api.themoviedb.org/3/discover/movie?api_key="+BuildConfig.TMDB_KEY+"&with_original_language=ta&sort_by=vote_average.desc";
-
-
-            JsonObjectRequest req = new JsonObjectRequest(Request.Method.GET,
-                    popular_url, null,
-                    new Response.Listener<JSONObject>() {
-
-                        @Override
-                        public void onResponse(JSONObject response) {
-                            movies.clear();
-                            try {
-                                JSONArray responseBundle = response.getJSONArray("results");
-                                for (int j = 0; j < responseBundle.length(); j++) {
-                                    JSONObject c = responseBundle.getJSONObject(j);
-                                    String posterPath = c.getString("poster_path");
-                                    String backdropPath = c.getString("backdrop_path");
-
-                                    Movie movie = new Movie();
-                                    movie.setPOSTER_PATH(endpoint + "original/" + posterPath);
-                                    movie.setBACKDROP_PATH(endpoint + "w1280/" + backdropPath);
-                                    movie.setID(c.getString("id"));
-                                    movie.setOVERVIEW(c.getString("overview"));
-                                    movie.setRELEASE_DATE(c.getString("release_date"));
-                                    movie.setTITLE(c.getString("original_title"));
-                                    movie.setVOTE_AVERAGE(c.getString("vote_average"));
-                                    movies.add(movie);
-
-
-                                    ContentValues cv = new ContentValues();
-                                    cv.put(MovieContract.MovieEntry.COLUMN_POSTER_URL, endpoint + "original/" + posterPath);
-                                    cv.put(MovieContract.MovieEntry.COLUMN_BACKDROP_URL, endpoint + "w1280/" + backdropPath);
-                                    cv.put(MovieContract.MovieEntry.COLUMN_TITLE, c.getString("original_title"));
-                                    cv.put(MovieContract.MovieEntry.COLUMN_MOVIE_ID, c.getString("id"));
-                                    cv.put(MovieContract.MovieEntry.COLUMN_OVERVIEW, c.getString("overview"));
-                                    cv.put(MovieContract.MovieEntry.COLUMN_RELEASE_DATE, c.getString("release_date"));
-                                    cv.put(MovieContract.MovieEntry.COLUMN_VOTE_AVERAGE, c.getString("vote_average"));
-                                    mMovieDb.insert(MovieContract.MovieEntry.POPULAR_MOVIE_TABLE, null, cv);
-                                }
-
-                            } catch (JSONException e) {
-                                Log.e(TAG, "Json parsing error: " + e.getMessage());
-                            }
-                            Cursor cPopularMovies = getPopularMovies();
-                            cPopularMovies = getPopularMovies();
-                            mAdapter = new MovieAdapter(getApplicationContext(), cPopularMovies);
-                            recyclerView.setAdapter(mAdapter);
-                            Toast toast = Toast.makeText(getApplicationContext(), getString(R.string.popular_sel_mes), Toast.LENGTH_LONG);
-                            toast.setGravity(Gravity.TOP | Gravity.CENTER, 0, 0);
-                            toast.show();
-                            mAdapter.notifyDataSetChanged();
-                        }
-                    }, new Response.ErrorListener() {
-
-                @Override
-                public void onErrorResponse(VolleyError volleyError) {
-                    String message = null;
-                    if (volleyError instanceof NetworkError) {
-                        message = "Cannot connect to Internet...Please check your connection!";
-                    } else if (volleyError instanceof ServerError) {
-                        message = "The server could not be found. Please try again after some time!!";
-                    } else if (volleyError instanceof AuthFailureError) {
-                        message = "Cannot connect to Internet...Please check your connection!";
-                    } else if (volleyError instanceof ParseError) {
-                        message = "Parsing error! Please try again after some time!!";
-                    } else if (volleyError instanceof NoConnectionError) {
-                        message = "Cannot connect to Internet...Please check your connection!";
-                    } else if (volleyError instanceof TimeoutError) {
-                        message = "Connection TimeOut! Please check your internet connection.";
-                    }
-
-                    Toast toast = Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG);
-                    toast.show();
-                    volleyError.printStackTrace();
-                }
-            });
-            MovieController.getInstance().addToRequestQueue(req);
-
-            JsonObjectRequest req2 = new JsonObjectRequest(Request.Method.GET,
-                    top_url, null,
-                    new Response.Listener<JSONObject>() {
-
-                        @Override
-                        public void onResponse(JSONObject response) {
-//                            Log.d(TAG, response.toString());
-                            movies.clear();
-                            try {
-                                JSONArray responseBundle = response.getJSONArray("results");
-                                for (int j = 0; j < responseBundle.length(); j++) {
-                                    JSONObject c = responseBundle.getJSONObject(j);
-                                    String posterPath = c.getString("poster_path");
-                                    String backdropPath = c.getString("backdrop_path");
-
-                                    Movie movie = new Movie();
-                                    movie.setPOSTER_PATH(endpoint + "original/" + posterPath);
-                                    movie.setBACKDROP_PATH(endpoint + "w1280/" + backdropPath);
-                                    movie.setID(c.getString("id"));
-                                    movie.setOVERVIEW(c.getString("overview"));
-                                    movie.setRELEASE_DATE(c.getString("release_date"));
-                                    movie.setTITLE(c.getString("original_title"));
-                                    movie.setVOTE_AVERAGE(c.getString("vote_average"));
-                                    movies.add(movie);
-
-                                    ContentValues cv = new ContentValues();
-                                    cv.put(MovieContract.MovieEntry.COLUMN_POSTER_URL, endpoint + "original/" + posterPath);
-                                    cv.put(MovieContract.MovieEntry.COLUMN_BACKDROP_URL, endpoint + "w1280/" + backdropPath);
-                                    cv.put(MovieContract.MovieEntry.COLUMN_TITLE, c.getString("original_title"));
-                                    cv.put(MovieContract.MovieEntry.COLUMN_MOVIE_ID, c.getString("id"));
-                                    cv.put(MovieContract.MovieEntry.COLUMN_OVERVIEW, c.getString("overview"));
-                                    cv.put(MovieContract.MovieEntry.COLUMN_RELEASE_DATE, c.getString("release_date"));
-                                    cv.put(MovieContract.MovieEntry.COLUMN_VOTE_AVERAGE, c.getString("vote_average"));
-                                    mMovieDb.insert(MovieContract.MovieEntry.TOP_MOVIE_TABLE, null, cv);
-                                }
-
-                            } catch (JSONException e) {
-                                Log.e(TAG, "Json parsing error: " + e.getMessage());
-                            }
-                        }
-                    }, new Response.ErrorListener() {
-
-                @Override
-                public void onErrorResponse(VolleyError volleyError) {
-                    String message = null;
-                    if (volleyError instanceof NetworkError) {
-                        message = "Cannot connect to Internet...Please check your connection!";
-                    } else if (volleyError instanceof ServerError) {
-                        message = "The server could not be found. Please try again after some time!!";
-                    } else if (volleyError instanceof AuthFailureError) {
-                        message = "Cannot connect to Internet...Please check your connection!";
-                    } else if (volleyError instanceof ParseError) {
-                        message = "Parsing error! Please try again after some time!!";
-                    } else if (volleyError instanceof NoConnectionError) {
-                        message = "Cannot connect to Internet...Please check your connection!";
-                    } else if (volleyError instanceof TimeoutError) {
-                        message = "Connection TimeOut! Please check your internet connection.";
-                    }
-
-
-                    Toast toast = Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG);
-                    toast.show();
-                    volleyError.printStackTrace();
-                }
-            });
-            MovieController.getInstance().addToRequestQueue(req2);
-            return null;
-        }
     }
 
 }
