@@ -40,7 +40,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MyViewHolder
 //            return;
         RequestOptions glideoptions = new RequestOptions().placeholder(R.mipmap.ic_launcher);
         System.out.println("Poster Path : "+movies.get(position).getPosterPath());
-        if (movies.get(position).getPosterPath().equals("http://image.tmdb.org/t/p/original/null")) {
+        if (movies.get(position).getPosterPath() == null) {
             GlideApp.with(mContext).load(R.drawable.no_image_available).placeholder(R.mipmap.ic_launcher).apply(glideoptions).into(im);
         }else {
             GlideApp.with(mContext).load("http://image.tmdb.org/t/p/w780"+movies.get(position).getPosterPath()).placeholder(R.mipmap.ic_launcher).apply(glideoptions).into(im);

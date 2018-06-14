@@ -68,11 +68,10 @@ public class MainActivity extends AppCompatActivity
     final String GET_FAV = "favorite";
     public String sortBy = GET_POPULAR;
     private Parcelable listState;
-    int PAGE_NO = 1;
-    int items = 10;
-    int TOT_PAGES = 0;
+    private int PAGE_NO = 1;
+    private int TOT_PAGES = 0;
     final String ORG_LANG = "te";
-    final String PRIM_REL_YEAR = "2018";
+    final int PRIM_REL_YEAR = 2018;
     final String SORT_BY = "popularity.desc";
 
     private static final int PAGE_START = 1;
@@ -157,7 +156,7 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
-                if (newState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL){
+                if (newState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL) {
                     isScrolling = true;
                 }
             }
@@ -167,10 +166,9 @@ public class MainActivity extends AppCompatActivity
                 super.onScrolled(recyclerView, dx, dy);
                 currentItems = mLayoutManager.getChildCount();
                 totalItems = mLayoutManager.getItemCount();
-                scrollOutItems = ((GridLayoutManager)mLayoutManager) .findFirstVisibleItemPosition();
+                scrollOutItems = ((GridLayoutManager) mLayoutManager).findFirstVisibleItemPosition();
 
-                if(isScrolling && (currentItems + scrollOutItems == totalItems))
-                {
+                if (isScrolling && (currentItems + scrollOutItems == totalItems)) {
                     isScrolling = false;
                     getData();
                 }
@@ -277,7 +275,8 @@ public class MainActivity extends AppCompatActivity
 //        if(PAGE_NO > TOT_PAGES){
 //            return;
 //        }
-        final Call<PostList> postList = MovieAPI.getService().getPopularMovies(BuildConfig.TMDB_KEY, PAGE_NO);
+//        final Call<PostList> postList = MovieAPI.getService().getPopularMovies(BuildConfig.TMDB_KEY, PAGE_NO);
+        final Call<PostList> postList = MovieAPI.getService().getTrendingMovies(BuildConfig.TMDB_KEY, SORT_BY, PRIM_REL_YEAR, ORG_LANG, PAGE_NO);
         postList.enqueue(new Callback<PostList>() {
             @Override
             public void onResponse(Call<PostList> call, Response<PostList> response) {

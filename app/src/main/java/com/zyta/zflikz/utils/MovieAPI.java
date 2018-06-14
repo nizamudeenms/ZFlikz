@@ -34,6 +34,13 @@ public class MovieAPI {
         @GET("movie/popular")
         Call<PostList> getPopularMovies(@Query("api_key") String apiKey, @Query("page") int pageIndex);
 
+        @GET("discover/movie")
+        Call<PostList> getTrendingMovies(@Query("api_key") String apiKey,
+                                         @Query("sort_by") String sortBy,
+                                         @Query("primary_release_year") int primRelYear,
+                                         @Query("with_original_language") String orgLang,
+                                         @Query("page") int pageIndex);
+
     }
 
 
