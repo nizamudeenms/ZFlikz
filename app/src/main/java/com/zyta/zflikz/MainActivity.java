@@ -1,6 +1,8 @@
 package com.zyta.zflikz;
 
 import android.app.SearchManager;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -11,6 +13,7 @@ import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -43,7 +46,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, SharedPreferences.OnSharedPreferenceChangeListener {
 
     FirebaseAuth mFirebaseAuth;
     FirebaseAuth.AuthStateListener mFirebaseAuthListener;
@@ -70,7 +73,7 @@ public class MainActivity extends AppCompatActivity
     private Parcelable listState;
     private int PAGE_NO = 1;
     private int TOT_PAGES = 0;
-    final String ORG_LANG = "te";
+    String ORG_LANG = "te";
     final int PRIM_REL_YEAR = 2018;
     final String SORT_BY = "popularity.desc";
 
@@ -175,7 +178,30 @@ public class MainActivity extends AppCompatActivity
 
             }
         });
+        setupSharedPreferences();
         getData();
+    }
+
+    private void setupSharedPreferences() {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+
+        loadColorFromPreferences(sharedPreferences);
+
+        // Register the listener
+        sharedPreferences.registerOnSharedPreferenceChangeListener(this);
+    }
+
+    private void loadColorFromPreferences(SharedPreferences sharedPreferences) {
+//        mVisualizerView.setColor(sharedPreferences.getString("lang", "en");
+        ORG_LANG = sharedPreferences.getString("lang", "en");
+//        getData();
+    }
+
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        loadColorFromPreferences(sharedPreferences);
+
     }
 
     @Override
@@ -222,14 +248,10 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
+        if (id == R.id.nav_settings) {
+            Intent startSettingsActivity = new Intent(this, SettingsActivity.class);
+            startActivity(startSettingsActivity);
+            this.finish();
         } else if (id == R.id.nav_share) {
 
         } else if (id == R.id.nav_send) {
@@ -247,6 +269,7 @@ public class MainActivity extends AppCompatActivity
     protected void onResume() {
         super.onResume();
         mFirebaseAuth.addAuthStateListener(mFirebaseAuthListener);
+        mAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -272,6 +295,8 @@ public class MainActivity extends AppCompatActivity
 //        progress.setVisibility(View.VISIBLE);
         System.out.println("PAGE_NO : " + PAGE_NO);
         System.out.println("TOT_PAGES : " + TOT_PAGES);
+        System.out.println("ORG_LANG : " + ORG_LANG);
+
 //        if(PAGE_NO > TOT_PAGES){
 //            return;
 //        }
@@ -282,11 +307,16 @@ public class MainActivity extends AppCompatActivity
             public void onResponse(Call<PostList> call, Response<PostList> response) {
                 PostList list = response.body();
 //                PAGE_NO = list.getPage();
-                PAGE_NO++;
+
                 TOT_PAGES = list.getTotalPages();
                 movies.addAll(list.getResults());
                 mAdapter.notifyDataSetChanged();
-                Toast.makeText(MainActivity.this, "Success", Toast.LENGTH_SHORT).show();
+                if (PAGE_NO <= TOT_PAGES) {
+                    PAGE_NO = PAGE_NO + 1;
+                    System.out.println("inside page no block");
+                }
+                System.out.println("PAGE NO at ENd : " + PAGE_NO);
+                Toast.makeText(MainActivity.this, "Page NO : " + PAGE_NO, Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -294,6 +324,7 @@ public class MainActivity extends AppCompatActivity
                 Toast.makeText(MainActivity.this, "Error Occurred", Toast.LENGTH_SHORT).show();
             }
         });
+
 
     }
 

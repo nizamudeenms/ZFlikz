@@ -39,7 +39,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MyViewHolder
 //        if (!movies.get(position))
 //            return;
         RequestOptions glideoptions = new RequestOptions().placeholder(R.mipmap.ic_launcher);
-        System.out.println("Poster Path : "+movies.get(position).getPosterPath());
+//        System.out.println("Poster Path : "+movies.get(position).getPosterPath());
         if (movies.get(position).getPosterPath() == null) {
             GlideApp.with(mContext).load(R.drawable.no_image_available).placeholder(R.mipmap.ic_launcher).apply(glideoptions).into(im);
         }else {

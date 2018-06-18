@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Label ordering must match values -->
+    <array name="pref_lang_option_labels">
+        <item>English</item>
+        <item>Tamil</item>
+        <item>Telugu</item>
+        <item>Malayalam</item>
+        <item>Hindi</item>
+    </array>
+
+    <array name="pref_lang_option_values">
+        <item>en</item>
+        <item>ta</item>
+        <item>te</item>
+        <item>ml</item>
+        <item>hi</item>
+    </array>
+</resources>
