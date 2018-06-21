@@ -1,14 +1,17 @@
 package com.zyta.zflikz.model;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.bumptech.glide.request.RequestOptions;
 import com.zyta.zflikz.GlideApp;
+import com.zyta.zflikz.MovieDetailActivity;
 import com.zyta.zflikz.R;
 
 import java.util.List;
@@ -33,18 +36,37 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MyViewHolder
     }
 
     @Override
-    public void onBindViewHolder(MyViewHolder holder, int position) {
+    public void onBindViewHolder(MyViewHolder holder, final int position) {
         movies.get(position);
         ImageView im = holder.thumbnail;
+        TextView titleOnPoster = holder.titleOnPoster;
 //        if (!movies.get(position))
 //            return;
         RequestOptions glideoptions = new RequestOptions().placeholder(R.mipmap.ic_launcher);
 //        System.out.println("Poster Path : "+movies.get(position).getPosterPath());
         if (movies.get(position).getPosterPath() == null) {
             GlideApp.with(mContext).load(R.drawable.no_image_available).placeholder(R.mipmap.ic_launcher).apply(glideoptions).into(im);
-        }else {
-            GlideApp.with(mContext).load("http://image.tmdb.org/t/p/w780"+movies.get(position).getPosterPath()).placeholder(R.mipmap.ic_launcher).apply(glideoptions).into(im);
+            titleOnPoster.setText(movies.get(position).getTitle());
+            titleOnPoster.setVisibility(View.VISIBLE);
+        } else {
+            GlideApp.with(mContext).load("http://image.tmdb.org/t/p/w780" + movies.get(position).getPosterPath()).placeholder(R.mipmap.ic_launcher).apply(glideoptions).into(im);
         }
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(mContext, MovieDetailActivity.class);
+                intent.putExtra("poster_url","http://image.tmdb.org/t/p/w780"+ movies.get(position).getPosterPath());
+                intent.putExtra("backdrop_url","http://image.tmdb.org/t/p/w780"+ movies.get(position).getBackdropPath());
+                intent.putExtra("id", movies.get(position).getId());
+                intent.putExtra("overview", movies.get(position).getOverview());
+                intent.putExtra("release_date", movies.get(position).getReleaseDate());
+                intent.putExtra("title", movies.get(position).getTitle());
+                intent.putExtra("vote_average", movies.get(position).getVoteAverage());
+                intent.putExtra("favorite", movies.get(position).getVoteCount());
+                mContext.startActivity(intent);
+            }
+        });
     }
 
     @Override
@@ -53,8 +75,9 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MyViewHolder
         return movies.size();
     }
 
-    public class MyViewHolder extends RecyclerView.ViewHolder  {
+    public class MyViewHolder extends RecyclerView.ViewHolder {
         public ImageView thumbnail;
+        public TextView titleOnPoster;
         List<Result> movies;
         Context context;
 
@@ -64,6 +87,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MyViewHolder
             this.context = mContext;
 //            view.setOnClickListener(this);
             thumbnail = (ImageView) view.findViewById(R.id.thumbnail);
+            titleOnPoster = view.findViewById(R.id.movie_title_on_poster);
         }
 
 //        @Override

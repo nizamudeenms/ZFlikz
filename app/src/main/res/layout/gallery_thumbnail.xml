@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout android:layout_height="wrap_content"
+<FrameLayout android:layout_height="wrap_content"
     android:layout_width="match_parent"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
@@ -8,5 +8,14 @@
         android:layout_width="match_parent"
         android:layout_height="300dp"
         android:adjustViewBounds="true"
-        android:scaleType="centerCrop" />
-</LinearLayout>
+        android:scaleType="fitXY" />
+
+    <TextView
+        android:id="@+id/movie_title_on_poster"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="200dp"
+        android:layout_marginLeft="50dp"
+        style="@style/NormalTextStyle"      />
+
+</FrameLayout>

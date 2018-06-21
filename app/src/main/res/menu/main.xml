@@ -3,9 +3,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/action_search"
-        android:title="@string/sign_out"
         android:icon="@android:drawable/ic_menu_search"
+        android:title="@string/sign_out"
         app:actionViewClass="android.support.v7.widget.SearchView"
-        app:showAsAction="ifRoom|collapseActionView"
-        />
+        app:showAsAction="ifRoom|collapseActionView" />
+    <item
+        android:id="@+id/action_language"
+        android:title="Language"
+        android:background="@android:color/transparent"
+        android:icon="@mipmap/ic_lang"
+        app:showAsAction="always" />
 </menu>

@@ -28,6 +28,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.bumptech.glide.request.RequestOptions;
 import com.firebase.ui.auth.AuthUI;
 import com.google.firebase.auth.FirebaseAuth;
@@ -109,7 +110,7 @@ public class MainActivity extends AppCompatActivity
                     onSigninListener(user.getDisplayName());
                     Uri xx = FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl();
                     if (xx != null) {
-                        RequestOptions glideoptions = new RequestOptions().placeholder(R.mipmap.ic_launcher);
+                        RequestOptions glideoptions = new RequestOptions().placeholder(R.mipmap.ic_launcher).bitmapTransform(new CircleCrop());
                         Glide.with(getApplicationContext()).load(xx).apply(glideoptions).into(profileImage);
                         profileName.setText(user.getDisplayName());
                         profileEmail.setText(user.getEmail());
@@ -241,6 +242,20 @@ public class MainActivity extends AppCompatActivity
 //
 //        return super.onOptionsItemSelected(item);
 //    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        int id = item.getItemId();
+        if (id == R.id.action_language) {
+            Intent startSettingsActivity = new Intent(this, SettingsActivity.class);
+            startActivity(startSettingsActivity);
+            finish();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override

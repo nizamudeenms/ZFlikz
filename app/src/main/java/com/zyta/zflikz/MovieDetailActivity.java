@@ -1,5 +1,6 @@
 package com.zyta.zflikz;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -8,24 +9,43 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
+import android.view.View;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.request.RequestOptions;
 
+import java.util.List;
+
 
 public class MovieDetailActivity extends AppCompatActivity {
     private SQLiteDatabase mMovieDb;
     Cursor favoriteMovies;
     String isFavorite = "N";
-    String movieId = null;
-    String posterUrl = null;
-    String overview = null;
-    String backdropUrl = null;
-    String title = null;
-    String releaseDate = null;
-    String rating = null;
+    private Integer movieId = null;
+    private Boolean video=  null;
+    private Double voteAverage = null;
+    private String title = null;
+    private Double popularity = null;
+    private String posterPath=  null;
+    private String originalLanguage = null;
+    private String originalTitle = null;
+    private List<Integer> genreIds = null;
+    private String backdropPath = null;
+    private Boolean adult = null;
+    private String overview = null;
+    private String releaseDate = null;
+    private Integer voteCount = null;
+
+
+
+
+
+
+
+
     private static final String EXTRA_IMAGE = "com.antonioleiva.materializeyourapp.extraImage";
 
     @Override
@@ -37,6 +57,7 @@ public class MovieDetailActivity extends AppCompatActivity {
         TextView movieNameTextView;
         TextView overviewTextView, ratingTextView, releaseDateTextView;
         CardView videoCardView, reviewCardView;
+        Button converseButton;
         final FloatingActionButton favoriteFAB;
         final NestedScrollView scrollView;
         final FrameLayout frameLayout;
@@ -57,27 +78,42 @@ public class MovieDetailActivity extends AppCompatActivity {
 //        reviewCardView = findViewById(R.id.review_card_view);
         linearLayout = findViewById(R.id.complete_layout);
 
-        movieId = getIntent().getStringExtra("id");
-        backdropUrl = getIntent().getStringExtra("backdrop_url");
-        posterUrl = getIntent().getStringExtra("poster_url");
+        converseButton = findViewById(R.id.con_button);
+
+        movieId = getIntent().getIntExtra("id",0);
+        System.out.println("movieId ---------------- "+ movieId);
+
+        backdropPath = getIntent().getStringExtra("backdrop_url");
+        posterPath = getIntent().getStringExtra("poster_url");
         overview = getIntent().getStringExtra("overview");
         title = getIntent().getStringExtra("title");
         releaseDate = "Release Date : " + getIntent().getStringExtra("release_date");
-        rating = "Rating : " + getIntent().getStringExtra("vote_average");
+        voteAverage = (getIntent().getExtras().getDouble("vote_average"));
 
 
         backDropImageView = (ImageView) findViewById(R.id.back_drop_image);
-        backdropUrl = getIntent().getStringExtra("backdrop_url");
+        backdropPath = getIntent().getStringExtra("backdrop_url");
         RequestOptions glideoptions = new RequestOptions().placeholder(R.mipmap.ic_launcher);
-        GlideApp.with(getApplicationContext()).load(posterUrl).placeholder(R.mipmap.ic_launcher).into(posterImageView);
-        GlideApp.with(getApplicationContext()).load(backdropUrl).placeholder(R.mipmap.ic_launcher).into(backDropImageView);
-        GlideApp.with(getApplicationContext()).load(backdropUrl).placeholder(R.mipmap.ic_launcher).transform(new BlurTransformation(getApplicationContext())).into(recImageView);
+        GlideApp.with(getApplicationContext()).load(posterPath).placeholder(R.mipmap.ic_launcher).into(posterImageView);
+        GlideApp.with(getApplicationContext()).load(backdropPath).placeholder(R.mipmap.ic_launcher).into(backDropImageView);
+        GlideApp.with(getApplicationContext()).load(backdropPath).placeholder(R.mipmap.ic_launcher).transform(new BlurTransformation(getApplicationContext())).into(recImageView);
 
         movieNameTextView.setText(title);
         overviewTextView.setText(overview);
         releaseDateTextView.setText(releaseDate);
-        ratingTextView.setText(rating);
+        ratingTextView.setText(voteAverage.toString());
 
+
+        converseButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MovieDetailActivity.this, ConverseActivity.class);
+                System.out.println("movieId ::::::::::: "+ movieId);
+                intent.putExtra("movieId", movieId);
+                intent.putExtra("backDropImagePath", backdropPath);
+                MovieDetailActivity.this.startActivity(intent);
+            }
+        });
 
     }
 }
