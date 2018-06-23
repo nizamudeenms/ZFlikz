@@ -19,6 +19,7 @@
             android:id="@+id/con_profile_image_view"
             android:layout_width="60dp"
             android:layout_height="60dp"
+            android:layout_margin="3dp"
             android:src="@mipmap/ic_launcher_round" />
 
         <LinearLayout
@@ -34,7 +35,7 @@
                 android:padding="1dp"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textStyle="bold"
-                android:textColor="@color/whiteColorAccent0Percent"
+                android:textColor="@color/color_white"
                 tools:text="Name" />
 
             <TextView
@@ -43,7 +44,7 @@
                 android:layout_height="wrap_content"
                 android:padding="1dp"
                 android:textSize="10dp"
-                android:textColor="@color/whiteColorAccent0Percent"
+                android:textColor="@color/color_white"
                 tools:text="Date" />
 
 
@@ -62,8 +63,9 @@
                 android:id="@+id/con_post_text_view_msg"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_margin="2dp"
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textColor="@color/whiteColorAccent0Percent"
+                android:textColor="@color/color_white"
                 tools:text="Message" />
 
             <LinearLayout

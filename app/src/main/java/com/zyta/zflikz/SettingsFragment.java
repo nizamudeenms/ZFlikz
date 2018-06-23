@@ -25,7 +25,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
             Preference p = prefScreen.getPreference(i);
             // You don't need to set up preference summaries for checkbox preferences because
             // they are already set up in xml using summaryOff and summary On
-            String value = sharedPreferences.getString(p.getKey(), "");
+            String value = sharedPreferences.getString(p.getKey(), "ta");
             setPreferenceSummary(p, value);
         }
 

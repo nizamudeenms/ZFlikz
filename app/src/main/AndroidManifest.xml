@@ -3,6 +3,9 @@
     package="com.zyta.zflikz">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:name=".controller.MovieController"
@@ -14,16 +17,14 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MovieActivity">
+        <activity
+            android:name=".MainActivity"
+            android:theme="@style/AppTheme.MainActivityTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".MainActivity"
-            android:theme="@style/AppTheme.MainActivityTheme" />
         <activity
             android:name=".MovieDetailActivity"
             android:theme="@style/ConnectionTheme" />
@@ -38,8 +39,10 @@
         </activity>
         <activity
             android:name=".ConverseActivity"
-            android:theme="@style/ConnectionTheme">
-        </activity>
+            android:theme="@style/ConnectionTheme" />
+        <activity
+            android:name=".ImageSelectionActivity"
+            android:theme="@style/ConnectionTheme" />
     </application>
 
 </manifest>

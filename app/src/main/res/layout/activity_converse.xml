@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="com.zyta.zflikz.ConverseActivity">
 
 
@@ -20,13 +20,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/linearLayout"
-        android:divider="@android:color/transparent"
-        android:layout_marginRight="5dp"
         android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:divider="@android:color/transparent"
         android:padding="2dp"
         android:stackFromBottom="true"
-        android:transcriptMode="alwaysScroll"
-        />
+        android:transcriptMode="alwaysScroll" />
 
     <LinearLayout
         android:id="@+id/linearLayout"
@@ -35,13 +34,16 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
+        android:background="@color/blackColorAccent40Percent"
         android:orientation="horizontal">
 
         <ImageButton
             android:id="@+id/photoPickerButton"
             android:layout_width="36dp"
             android:layout_height="36dp"
-            android:background="@android:drawable/ic_menu_gallery" />
+            android:layout_margin="3dp"
+            android:background="@android:drawable/ic_menu_gallery"
+            android:padding="5dp" />
 
         <EditText
             android:id="@+id/messageEditText"
@@ -49,7 +51,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_weight="1"
-            android:textColor="@color/color_white"/>
+            android:textColor="@color/color_white" />
 
         <Button
             android:id="@+id/sendButton"
@@ -61,8 +63,26 @@
 
     </LinearLayout>
 
+    <android.support.v7.widget.CardView
+        android:id="@+id/converse_activity_card_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:backgroundTint="@color/blackColorAccent20Percent"
+        android:visibility="gone">
+
+        <TextView
+            style="@style/ActivityLabelStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="You are the Choosen one to \n start the Conversation for this movie."
+            android:textAlignment="center"
+            android:textColor="@color/color_white"/>
+
+    </android.support.v7.widget.CardView>
+
     <ProgressBar
-        android:id="@+id/progressBar"
+        android:id="@+id/con_progress_bar"
         style="?android:attr/progressBarStyleLarge"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

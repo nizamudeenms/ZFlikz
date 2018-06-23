@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.bumptech.glide.request.RequestOptions;
+import com.zyta.zflikz.GlideApp;
 import com.zyta.zflikz.R;
 
 import java.util.List;
@@ -46,7 +47,14 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
         TextView profilePostTime = holder.authorPostdateTextView;
 
 //        System.out.println("Uri sis _________"+mProfileImage);
-//        GlideApp.with(cContext).load( conversationMessages.get(position).getMsgPhotoUrl()).placeholder(R.mipmap.ic_launcher).into(postImage);
+
+
+        if (conversationMessages.get(position).getPostImageUrl() != null) {
+            GlideApp.with(cContext).load(conversationMessages.get(position).getPostImageUrl()).error(R.drawable.no_image_available).into(postImage);
+            postImage.setVisibility(View.VISIBLE);
+        }else {
+            postImage.setVisibility(View.GONE);
+        }
         Glide.with(cContext).load(conversationMessages.get(position).getPostAuthorImageUrl()).apply((RequestOptions.bitmapTransform(new CircleCrop())).placeholder(R.mipmap.ic_launcher)).into(profileImage);
         postText.setText(conversationMessages.get(position).getPostMessage());
         profileName.setText(conversationMessages.get(position).getPostAuthor());

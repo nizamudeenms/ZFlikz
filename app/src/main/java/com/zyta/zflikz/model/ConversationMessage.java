@@ -4,6 +4,7 @@ public class ConversationMessage {
     private String movieId;
     private String postDate;
     private String postMessage;
+    private String postImageUrl;
     private String postAuthor;
     private String postAuthorImageUrl;
 
@@ -11,12 +12,13 @@ public class ConversationMessage {
     public ConversationMessage() {
     }
 
-    public ConversationMessage(String movieId, String postDate, String postMessage, String postAuthor,String postAuthorImageUrl) {
+    public ConversationMessage(String movieId, String postDate, String postMessage, String postAuthor,String postAuthorImageUrl,String postImageUrl) {
         this.movieId = movieId;
         this.postDate = postDate;
         this.postMessage = postMessage;
         this.postAuthor = postAuthor;
         this.postAuthorImageUrl = postAuthorImageUrl;
+        this.postImageUrl = postImageUrl;
     }
 
     public String getMovieId() {
@@ -57,5 +59,13 @@ public class ConversationMessage {
 
     public void setPostAuthorImageUrl(String postAuthorImageUrl) {
         this.postAuthorImageUrl = postAuthorImageUrl;
+    }
+
+    public String getPostImageUrl() {
+        return postImageUrl;
+    }
+
+    public void setPostImageUrl(String postImageUrl) {
+        this.postImageUrl = postImageUrl;
     }
 }
