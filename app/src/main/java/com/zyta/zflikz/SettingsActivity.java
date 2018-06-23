@@ -27,6 +27,7 @@ public class SettingsActivity extends AppCompatActivity {
         // When the home button is pressed, take the user back to the VisualizerActivity
         if (id == android.R.id.home) {
             NavUtils.navigateUpFromSameTask(this);
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }

@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.request.RequestOptions;
 import com.zyta.zflikz.GlideApp;
 import com.zyta.zflikz.MovieDetailActivity;
 import com.zyta.zflikz.R;
@@ -42,22 +41,22 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MyViewHolder
         TextView titleOnPoster = holder.titleOnPoster;
 //        if (!movies.get(position))
 //            return;
-        RequestOptions glideoptions = new RequestOptions().placeholder(R.mipmap.ic_launcher);
 //        System.out.println("Poster Path : "+movies.get(position).getPosterPath());
-        if (movies.get(position).getPosterPath() == null) {
-            GlideApp.with(mContext).load(R.drawable.no_image_available).placeholder(R.mipmap.ic_launcher).apply(glideoptions).into(im);
+        holder.setIsRecyclable(false);
+        if (movies.get(position).getPosterPath() != null) {
+            GlideApp.with(mContext).load("http://image.tmdb.org/t/p/w780" + movies.get(position).getPosterPath()).placeholder(R.mipmap.ic_launcher).into(im);
+        } else {
+            GlideApp.with(mContext).load(R.drawable.no_image_available).placeholder(R.mipmap.ic_launcher).into(im);
             titleOnPoster.setText(movies.get(position).getTitle());
             titleOnPoster.setVisibility(View.VISIBLE);
-        } else {
-            GlideApp.with(mContext).load("http://image.tmdb.org/t/p/w780" + movies.get(position).getPosterPath()).placeholder(R.mipmap.ic_launcher).apply(glideoptions).into(im);
         }
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(mContext, MovieDetailActivity.class);
-                intent.putExtra("poster_url","http://image.tmdb.org/t/p/w780"+ movies.get(position).getPosterPath());
-                intent.putExtra("backdrop_url","http://image.tmdb.org/t/p/w780"+ movies.get(position).getBackdropPath());
+                intent.putExtra("poster_url", "http://image.tmdb.org/t/p/w780" + movies.get(position).getPosterPath());
+                intent.putExtra("backdrop_url", "http://image.tmdb.org/t/p/w780" + movies.get(position).getBackdropPath());
                 intent.putExtra("id", movies.get(position).getId());
                 intent.putExtra("overview", movies.get(position).getOverview());
                 intent.putExtra("release_date", movies.get(position).getReleaseDate());
