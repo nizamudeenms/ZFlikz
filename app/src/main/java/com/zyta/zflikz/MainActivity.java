@@ -27,9 +27,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CircleCrop;
-import com.bumptech.glide.request.RequestOptions;
 import com.firebase.ui.auth.AuthUI;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -110,8 +108,7 @@ public class MainActivity extends AppCompatActivity
                     onSigninListener(user.getDisplayName());
                     Uri xx = FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl();
                     if (xx != null) {
-                        RequestOptions glideoptions = new RequestOptions().placeholder(R.mipmap.ic_launcher).bitmapTransform(new CircleCrop());
-                        Glide.with(getApplicationContext()).load(xx).apply(glideoptions).into(profileImage);
+                        GlideApp.with(getApplicationContext()).load(xx).placeholder(R.mipmap.ic_launcher).transform(new CircleCrop()).into(profileImage);
                         profileName.setText(user.getDisplayName());
                         profileEmail.setText(user.getEmail());
 
