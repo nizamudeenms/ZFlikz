@@ -193,7 +193,6 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void loadColorFromPreferences(SharedPreferences sharedPreferences) {
-//        mVisualizerView.setColor(sharedPreferences.getString("lang", "en");
         ORG_LANG = sharedPreferences.getString("lang", "en");
 //        getData();
     }
@@ -266,7 +265,7 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.nav_settings) {
             Intent startSettingsActivity = new Intent(this, SettingsActivity.class);
             startActivity(startSettingsActivity);
-            this.finish();
+//            this.finish();
         } else if (id == R.id.nav_share) {
 
         } else if (id == R.id.nav_send) {
@@ -284,7 +283,6 @@ public class MainActivity extends AppCompatActivity
     protected void onResume() {
         super.onResume();
         mFirebaseAuth.addAuthStateListener(mFirebaseAuthListener);
-        mAdapter.notifyDataSetChanged();
     }
 
     @Override
