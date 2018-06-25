@@ -3,6 +3,8 @@
     <string name="sign_out">Sign Out</string>
     <string name="facebook_application_id" translatable="false">169509447088975</string>
     <string name="facebook_login_protocol_scheme" translatable="false">fb169509447088975</string>
+    <string name="twitter_consumer_key" translatable="false">NHLk6I8gUtAOod6irHPhqHgfQ</string>
+    <string name="twitter_consumer_secret" translatable="false">7bwUoEq376zgxKfBGy2aicR9mr2YHYS4Ee0ZgSMaRLwFH3SEjI</string>
     <string name="title_activity_main">MainActivity</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>

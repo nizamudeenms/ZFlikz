@@ -53,8 +53,7 @@ public class MainActivity extends AppCompatActivity
     public static final String ANONYMOUS = "anonymous";
     private static final int RC_SIGN_IN = 1;
     List<AuthUI.IdpConfig> providers = Arrays.asList(
-            new AuthUI.IdpConfig.EmailBuilder().build(),
-            new AuthUI.IdpConfig.PhoneBuilder().build(),
+            new AuthUI.IdpConfig.TwitterBuilder().build(),
             new AuthUI.IdpConfig.FacebookBuilder().build(),
             new AuthUI.IdpConfig.GoogleBuilder().build());
     ImageView profileImage;
@@ -109,6 +108,8 @@ public class MainActivity extends AppCompatActivity
                     Uri xx = FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl();
                     if (xx != null) {
                         GlideApp.with(getApplicationContext()).load(xx).placeholder(R.mipmap.ic_launcher).transform(new CircleCrop()).into(profileImage);
+                        System.out.println("user.getDisplayName()"+user.getDisplayName());
+                        System.out.println("user.getEmail("+user.getEmail());
                         profileName.setText(user.getDisplayName());
                         profileEmail.setText(user.getEmail());
 
