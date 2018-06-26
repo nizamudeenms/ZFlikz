@@ -15,8 +15,6 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.request.RequestOptions;
-
 import java.util.List;
 
 
@@ -93,9 +91,8 @@ public class MovieDetailActivity extends AppCompatActivity {
 
         backDropImageView = (ImageView) findViewById(R.id.back_drop_image);
         backdropPath = getIntent().getStringExtra("backdrop_url");
-        RequestOptions glideoptions = new RequestOptions().placeholder(R.mipmap.ic_launcher);
         GlideApp.with(getApplicationContext()).load(posterPath).placeholder(R.mipmap.ic_launcher).into(posterImageView);
-        GlideApp.with(getApplicationContext()).load(backdropPath).placeholder(R.mipmap.ic_launcher).into(backDropImageView);
+        GlideApp.with(getApplicationContext()).load(backdropPath).placeholder(R.mipmap.ic_launcher).centerCrop().into(backDropImageView);
         GlideApp.with(getApplicationContext()).load(backdropPath).placeholder(R.mipmap.ic_launcher).transform(new BlurTransformation(getApplicationContext())).into(recImageView);
 
         movieNameTextView.setText(title);

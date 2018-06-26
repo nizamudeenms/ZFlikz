@@ -5,6 +5,7 @@
     android:layout_height="match_parent"
     tools:context="com.zyta.zflikz.ImageSelectionActivity">
 
+
     <com.zyta.zflikz.RecImageView
         android:id="@+id/image_sel_activity_backdrop"
         android:layout_width="match_parent"
@@ -48,12 +49,15 @@
             android:text="Send" />
 
     </LinearLayout>
+
     <ProgressBar
         android:id="@+id/img_sel_progress_bar"
         style="?android:attr/progressBarStyleLarge"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:padding="180dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
+        android:background="@color/blackColorAccent40Percent"
         />
 </RelativeLayout>

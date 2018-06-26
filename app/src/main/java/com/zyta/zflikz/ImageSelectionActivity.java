@@ -3,6 +3,7 @@ package com.zyta.zflikz;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -22,8 +23,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.fxn.pix.Pix;
+import com.fxn.utility.PermUtil;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -124,6 +127,10 @@ public class ImageSelectionActivity extends AppCompatActivity {
                 System.out.println("postImage URL : " + postImageUrl);
                 System.out.println("localUri URL : " + localUri);
 //                StorageReference storageReference = mStorageReference.child(postImageUrl);
+
+                InputMethodManager imm = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
+                imm.toggleSoftInput(InputMethodManager.RESULT_HIDDEN, 0);
+
                 final StorageReference photoRef = mStorageReference.child(movieId.toString()).child(localUri.getLastPathSegment());
 
                 UploadTask uploadTask = photoRef.putFile(localUri);
@@ -131,8 +138,7 @@ public class ImageSelectionActivity extends AppCompatActivity {
                     @Override
                     public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
                         imageSelProgressBar.setVisibility(View.VISIBLE);
-                        InputMethodManager imm = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
-                        imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
+
                         imageSelLinearLayout.setVisibility(View.INVISIBLE);
 
                     }
@@ -259,6 +265,25 @@ public class ImageSelectionActivity extends AppCompatActivity {
             }
             break;
 
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case PermUtil.REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Pix.start(ImageSelectionActivity.this, 100, 1);
+                } else {
+                    Toast.makeText(ImageSelectionActivity.this, "Please approve permissions to select Image", Toast.LENGTH_LONG).show();
+                    finish();
+                }
+                return;
+            }
+
+            // other 'case' lines to check for other
+            // permissions this app might request.
         }
     }
 

@@ -37,7 +37,7 @@
         android:background="@color/blackColorAccent40Percent"
         android:orientation="horizontal">
 
-        <ImageButton
+        <ImageView
             android:id="@+id/photoPickerButton"
             android:layout_width="36dp"
             android:layout_height="36dp"

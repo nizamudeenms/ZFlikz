@@ -27,6 +27,8 @@ public class SquareImageView  extends ImageView {
 //        int width = displayMetrics.widthPixels;
         int height = displayMetrics.heightPixels;
         int width = getMeasuredWidth();
-        setMeasuredDimension(width, height);
+//        int tempHeight  = height /3;
+//        tempHeight = tempHeight * 4;
+        setMeasuredDimension(width, width);
     }
 }

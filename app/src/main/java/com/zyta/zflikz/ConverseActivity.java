@@ -15,7 +15,6 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 
@@ -49,7 +48,7 @@ public class ConverseActivity extends AppCompatActivity {
 
 
     private ProgressBar mProgressBar;
-    private ImageButton mPhotoPickerButton;
+    private ImageView mPhotoPickerButton;
     private EditText mMessageEditText;
     private Button mSendButton;
     private String mUsername;
@@ -96,7 +95,7 @@ public class ConverseActivity extends AppCompatActivity {
         GlideApp.with(getApplicationContext()).load(backDropImagePath).placeholder(R.mipmap.ic_launcher).transform(new BlurTransformation(getApplicationContext())).into(backDropImage);
 
         conRecyclerView = (RecyclerView) findViewById(R.id.con_recycler_view);
-        mPhotoPickerButton = (ImageButton) findViewById(R.id.photoPickerButton);
+        mPhotoPickerButton = (ImageView) findViewById(R.id.photoPickerButton);
         mMessageEditText = (EditText) findViewById(R.id.messageEditText);
         mSendButton = (Button) findViewById(R.id.sendButton);
 

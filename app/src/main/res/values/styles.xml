@@ -26,7 +26,7 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <item name="android:windowFullscreen">true</item>
-        <item name="colorPrimary">@color/blackColorAccent40Percent</item>
+        <item name="colorPrimary">@color/color_black</item>
     </style>
 
     <style name="ActivityLabelStyle">
