@@ -44,9 +44,9 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MyViewHolder
 //        System.out.println("Poster Path : "+movies.get(position).getPosterPath());
         holder.setIsRecyclable(false);
         if (movies.get(position).getPosterPath() != null) {
-            GlideApp.with(mContext).load("http://image.tmdb.org/t/p/w780" + movies.get(position).getPosterPath()).placeholder(R.mipmap.ic_launcher).into(im);
+            GlideApp.with(mContext).load("http://image.tmdb.org/t/p/w500" + movies.get(position).getPosterPath()).placeholder(R.drawable.zlikx_logo).into(im);
         } else {
-            GlideApp.with(mContext).load(R.drawable.no_image_available).placeholder(R.mipmap.ic_launcher).into(im);
+            GlideApp.with(mContext).load(R.drawable.no_image_available).placeholder(R.drawable.zlikx_logo).into(im);
             titleOnPoster.setText(movies.get(position).getTitle());
             titleOnPoster.setVisibility(View.VISIBLE);
         }
@@ -55,8 +55,14 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MyViewHolder
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(mContext, MovieDetailActivity.class);
-                intent.putExtra("poster_url", "http://image.tmdb.org/t/p/w780" + movies.get(position).getPosterPath());
-                intent.putExtra("backdrop_url", "http://image.tmdb.org/t/p/w780" + movies.get(position).getBackdropPath());
+//                intent.putExtra("poster_url", "http://image.tmdb.org/t/p/w780" + movies.get(position).getPosterPath());
+                intent.putExtra("poster_url", (movies.get(position).getPosterPath() == null) ? null : "http://image.tmdb.org/t/p/w500" + movies.get(position).getPosterPath()  );
+                intent.putExtra("backdrop_url", (movies.get(position).getBackdropPath() == null) ? null : "http://image.tmdb.org/t/p/w500" + movies.get(position).getBackdropPath()  );
+//                if (movies.get(position).getBackdropPath() == null) {
+//                    intent.putExtra("backdrop_url",movies.get(position).getBackdropPath());
+//                } else {
+//                    intent.putExtra("backdrop_url", "http://image.tmdb.org/t/p/w780" + movies.get(position).getBackdropPath());
+//                }
                 intent.putExtra("id", movies.get(position).getId());
                 intent.putExtra("overview", movies.get(position).getOverview());
                 intent.putExtra("release_date", movies.get(position).getReleaseDate());

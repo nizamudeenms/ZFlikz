@@ -92,7 +92,7 @@ public class ConverseActivity extends AppCompatActivity {
         mProgressBar.setVisibility(ProgressBar.INVISIBLE);
 
 
-        GlideApp.with(getApplicationContext()).load(backDropImagePath).placeholder(R.mipmap.ic_launcher).transform(new BlurTransformation(getApplicationContext())).into(backDropImage);
+        GlideApp.with(getApplicationContext()).load(backDropImagePath).placeholder(R.drawable.zlikx_logo).transform(new BlurTransformation(getApplicationContext())).into(backDropImage);
 
         conRecyclerView = (RecyclerView) findViewById(R.id.con_recycler_view);
         mPhotoPickerButton = (ImageView) findViewById(R.id.photoPickerButton);

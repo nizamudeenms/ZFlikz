@@ -94,7 +94,7 @@ public class ImageSelectionActivity extends AppCompatActivity {
         mDatabaseReference = mFirebaseDatabase.getReference().child("movies").child(movieId.toString());
 
         getmUsername();
-        GlideApp.with(getApplicationContext()).load(backDropImagePath).placeholder(R.mipmap.ic_launcher).transform(new BlurTransformation(getApplicationContext())).into(activityBackDropImageView);
+        GlideApp.with(getApplicationContext()).load(backDropImagePath).placeholder(R.drawable.zlikx_logo).transform(new BlurTransformation(getApplicationContext())).into(activityBackDropImageView);
 
 
         mMessageEditText.addTextChangedListener(new TextWatcher() {
