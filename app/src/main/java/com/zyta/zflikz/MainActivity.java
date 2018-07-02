@@ -344,7 +344,7 @@ public class MainActivity extends AppCompatActivity
                     System.out.println("inside page no block");
                 }
                 System.out.println("PAGE NO at ENd : " + PAGE_NO);
-                Toast.makeText(MainActivity.this, "Page NO : " + PAGE_NO, Toast.LENGTH_SHORT).show();
+//                Toast.makeText(MainActivity.this, "Page NO : " + PAGE_NO, Toast.LENGTH_SHORT).show();
             }
 
             @Override

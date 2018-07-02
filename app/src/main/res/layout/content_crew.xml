@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_margin="5dp"
+    android:background="@android:color/transparent"
+
+    >
+
+    <LinearLayout
+        android:layout_width="120dp"
+        android:layout_height="wrap_content"
+        android:background="@color/color_black"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/cast_image_view"
+            android:layout_width="match_parent"
+            android:layout_height="180dp"
+            android:background="@android:color/transparent"
+            android:src="@drawable/zlikx_logo" />
+
+        <TextView
+            android:id="@+id/cast_name_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="2dp"
+            android:padding="1dp"
+            android:background="@color/color_black"
+            android:fontFamily="sans-serif-light"
+            android:text="Sample text example text"
+            android:textColor="@color/color_white"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/cast_char_text_view"
+            style="@style/smallTextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="2dp"
+            android:padding="1dp"
+            android:background="@color/color_black"
+            android:text="Sample text example text" />
+
+    </LinearLayout>
+</android.support.v7.widget.CardView>

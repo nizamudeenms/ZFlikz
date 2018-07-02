@@ -1,12 +1,14 @@
 package com.zyta.zflikz.utils;
 
 import com.zyta.zflikz.BuildConfig;
+import com.zyta.zflikz.model.Credits;
 import com.zyta.zflikz.model.PostList;
 
 import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.GET;
+import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public class MovieAPI {
@@ -16,10 +18,8 @@ public class MovieAPI {
 
     public static PostService postService = null;
 
-    public static PostService getService()
-    {
-        if(postService == null)
-        {
+    public static PostService getService() {
+        if (postService == null) {
             Retrofit retrofit = new Retrofit.Builder()
                     .baseUrl(url)
                     .addConverterFactory(GsonConverterFactory.create())
@@ -40,6 +40,11 @@ public class MovieAPI {
                                          @Query("primary_release_year") int primRelYear,
                                          @Query("with_original_language") String orgLang,
                                          @Query("page") int pageIndex);
+
+
+        @GET("movie/{movie_id}/credits")
+        Call<Credits> getCredits(@Path("movie_id") Integer movieId,
+                                 @Query("api_key") String apiKey);
 
     }
 

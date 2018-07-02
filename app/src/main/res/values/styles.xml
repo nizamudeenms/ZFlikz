@@ -63,8 +63,17 @@
         <item name="android:shadowDy">-2</item>
         <item name="android:textSize">17sp</item>
         <item name="android:alignmentMode">alignMargins</item>
+    </style>
 
-        <!--<item name="android:textStyle">bold</item>-->
+    <style name="smallTextStyle" parent="ConnectionTheme">
+        <item name="android:fontFamily">sans-serif-light</item>
+        <item name="android:textColor">@color/text_shadow_white</item>
+        <item name="android:shadowColor">@color/text_shadow</item>
+        <item name="android:shadowRadius">2</item>
+        <item name="android:shadowDx">-2</item>
+        <item name="android:shadowDy">-2</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:alignmentMode">alignMargins</item>
     </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />

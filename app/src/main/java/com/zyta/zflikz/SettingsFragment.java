@@ -37,7 +37,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
         Preference preference = findPreference(key);
         if (null != preference) {
             // Updates the summary for the preference
-            String value = sharedPreferences.getString(preference.getKey(), "");
+            String value = sharedPreferences.getString(preference.getKey(), "ta");
             setPreferenceSummary(preference, value);
         }
     }

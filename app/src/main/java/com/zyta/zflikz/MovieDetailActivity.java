@@ -9,13 +9,29 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.zyta.zflikz.model.Cast;
+import com.zyta.zflikz.model.Credits;
+import com.zyta.zflikz.model.CreditsAdapter;
+import com.zyta.zflikz.model.Crew;
+import com.zyta.zflikz.utils.MovieAPI;
+
+import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 
 public class MovieDetailActivity extends AppCompatActivity {
@@ -36,6 +52,9 @@ public class MovieDetailActivity extends AppCompatActivity {
     private String overview = null;
     private String releaseDate = null;
     private Integer voteCount = null;
+    private ArrayList<Crew> crewList = new ArrayList<>();
+    private ArrayList<Cast> castList = new ArrayList<>();
+    CreditsAdapter creditsAdapter;
 
     private static final String EXTRA_IMAGE = "com.antonioleiva.materializeyourapp.extraImage";
 
@@ -53,9 +72,18 @@ public class MovieDetailActivity extends AppCompatActivity {
         final NestedScrollView scrollView;
         final FrameLayout frameLayout;
         final CoordinatorLayout linearLayout;
+        RecyclerView crewRecyclerView;
+
+        castList = new ArrayList<>();
+
+        creditsAdapter = new CreditsAdapter(this, castList);
 
         final ImageView recImageView = findViewById(R.id.back_temp);
 
+
+        crewRecyclerView = findViewById(R.id.crew_recycler_view);
+        crewRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayout.HORIZONTAL, false));
+        crewRecyclerView.setAdapter(creditsAdapter);
 //        ViewCompat.setTransitionName(findViewById(R.id.app_bar_layout), EXTRA_IMAGE);
 
 
@@ -93,14 +121,15 @@ public class MovieDetailActivity extends AppCompatActivity {
             GlideApp.with(getApplicationContext()).load((backdropPath == null) ? R.drawable.no_image_available : backdropPath).placeholder(R.drawable.zlikx_logo).into(backDropImageView);
             GlideApp.with(getApplicationContext()).load((backdropPath == null) ? R.drawable.no_image_available : backdropPath).placeholder(R.drawable.zlikx_logo).transform(new BlurTransformation(getApplicationContext())).into(recImageView);
         }
-//        GlideApp.with(getApplicationContext()).load((backdropPath == null) ? posterPath : backdropPath).placeholder(R.mipmap.ic_launcher).transform(new BlurTransformation(getApplicationContext())).into(recImageView);
-//        GlideApp.with(getApplicationContext()).load((backdropPath == null) ? posterPath : backdropPath).placeholder(R.mipmap.ic_launcher).transform(new BlurTransformation(getApplicationContext())).into(backDropImageView);
 
         movieNameTextView.setText(title);
         overviewTextView.setText(overview);
         releaseDateTextView.setText(releaseDate);
         ratingTextView.setText(voteAverage.toString());
 
+        getCredits();
+
+        creditsAdapter.notifyDataSetChanged();
 
         converseButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -112,6 +141,32 @@ public class MovieDetailActivity extends AppCompatActivity {
                 MovieDetailActivity.this.startActivity(intent);
             }
         });
+
+    }
+
+
+    private void getCredits() {
+
+        System.out.println("Movie Id  : " + movieId);
+
+        final Call<Credits> credits = MovieAPI.getService().getCredits(movieId, BuildConfig.TMDB_KEY);
+        credits.enqueue(new Callback<Credits>() {
+            @Override
+            public void onResponse(Call<Credits> call, Response<Credits> response) {
+                Credits credits = response.body();
+                Log.e("test debug ", "onResponse: " + credits.getId());
+                castList.addAll(credits.getCast());
+                crewList.addAll(credits.getCrew());
+            }
+
+            @Override
+            public void onFailure(Call<Credits> call, Throwable t) {
+                Toast.makeText(MovieDetailActivity.this, "Error Occurred", Toast.LENGTH_SHORT).show();
+            }
+
+        });
+        creditsAdapter.notifyDataSetChanged();
+
 
     }
 }
