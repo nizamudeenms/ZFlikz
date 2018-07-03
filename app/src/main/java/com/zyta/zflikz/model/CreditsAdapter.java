@@ -39,7 +39,11 @@ public class CreditsAdapter extends RecyclerView.Adapter<CreditsAdapter.CreditsH
         ImageView castImage = holder.castImage;
         TextView castName = holder.castName;
         TextView castChar = holder.castChar;
-        GlideApp.with(mContext).load("http://image.tmdb.org/t/p/w185" + castArrayList.get(position).getProfilePath()).placeholder(R.drawable.zlikx_logo).into(castImage);
+        if (castArrayList.get(position).getProfilePath() != null) {
+            GlideApp.with(mContext).load("http://image.tmdb.org/t/p/w185" + castArrayList.get(position).getProfilePath()).centerCrop().placeholder(R.drawable.zlikx_logo).into(castImage);
+        }else {
+            GlideApp.with(mContext).load(R.drawable.no_image_available).placeholder(R.drawable.zlikx_logo).into(castImage);
+        }
         castName.setText(castArrayList.get(position).getName());
         castChar.setText(castArrayList.get(position).getCharacter());
 
@@ -56,7 +60,6 @@ public class CreditsAdapter extends RecyclerView.Adapter<CreditsAdapter.CreditsH
         TextView castName, castChar;
         ArrayList<Cast> castArrayList;
         Context context;
-
 
         public CreditsHolder(View itemView,Context mContext, ArrayList<Cast> castArrayList) {
             super(itemView);

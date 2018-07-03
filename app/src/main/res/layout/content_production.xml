@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    android:layout_marginStart="10dp"
+    android:background="@android:color/transparent">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/color_black"
+        android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/production_image_view"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:elevation="10dp"
+                android:padding="3dp"
+                android:background="@color/colorPrimary"
+                android:src="@drawable/no_image_available" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@color/color_black"
+            android:minWidth="180dp"
+            android:orientation="vertical"
+            android:padding="2dp">
+
+            <TextView
+                android:id="@+id/production_name_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="2dp"
+                android:background="@color/color_black"
+                android:fontFamily="sans-serif-light"
+                android:padding="1dp"
+                android:text="Sample text example text"
+                android:textColor="@color/color_white"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/production_country_text_view"
+                style="@style/smallTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="2dp"
+                android:background="@color/color_black"
+                android:padding="1dp"
+                android:text="Sample text example text" />
+        </LinearLayout>
+
+    </LinearLayout>
+</android.support.v7.widget.CardView>

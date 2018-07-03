@@ -2,6 +2,7 @@ package com.zyta.zflikz.utils;
 
 import com.zyta.zflikz.BuildConfig;
 import com.zyta.zflikz.model.Credits;
+import com.zyta.zflikz.model.MovieDetails;
 import com.zyta.zflikz.model.PostList;
 
 import retrofit2.Call;
@@ -45,6 +46,13 @@ public class MovieAPI {
         @GET("movie/{movie_id}/credits")
         Call<Credits> getCredits(@Path("movie_id") Integer movieId,
                                  @Query("api_key") String apiKey);
+
+
+
+        @GET("movie/{movie_id}")
+        Call<MovieDetails> getMovieDetails(@Path("movie_id") Integer movieId,
+                                           @Query("api_key") String apiKey);
+
 
     }
 

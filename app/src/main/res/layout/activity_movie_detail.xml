@@ -80,7 +80,7 @@
                     android:layout_below="@+id/movie_name"
                     android:layout_margin="10dp"
                     android:layout_toEndOf="@+id/poster"
-                    android:background="@color/blackColorAccent40Percent"
+                    android:background="@color/blackColorAccent70Percent"
                     android:padding="5dp"
                     android:text="Converse"
                     android:textColor="@color/color_white"
@@ -113,7 +113,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_margin="10dp"
-                android:backgroundTint="@color/blackColorAccent40Percent"
+                android:backgroundTint="@color/blackColorAccent70Percent"
                 card_view:cardCornerRadius="2dp"
                 card_view:cardElevation="50dp">
 
@@ -152,7 +152,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_margin="10dp"
-                android:backgroundTint="@color/blackColorAccent40Percent"
+                android:backgroundTint="@color/blackColorAccent70Percent"
                 card_view:cardCornerRadius="2dp"
                 card_view:cardElevation="50dp">
 
@@ -189,7 +189,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_margin="10dp"
-                android:backgroundTint="@color/blackColorAccent40Percent"
+                android:backgroundTint="@color/blackColorAccent70Percent"
                 card_view:cardCornerRadius="2dp"
                 card_view:cardElevation="50dp">
 
@@ -228,35 +228,75 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_margin="10dp"
-                android:backgroundTint="@color/blackColorAccent40Percent"
+                android:backgroundTint="@color/blackColorAccent70Percent"
                 card_view:cardCornerRadius="2dp"
                 card_view:cardElevation="50dp">
 
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/cast_recycler_view"
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <TextView
+                        style="@style/NormalTextStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+                        android:padding="5dp"
+                        android:text="Cast"
+                        android:textStyle="bold" />
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/cast_recycler_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+
+                    <TextView
+                        style="@style/NormalTextStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom|end"
+                        android:layout_margin="5dp"
+                        android:padding="5dp"
+                        android:text="Complete Cast and Crew >>"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
 
             </android.support.v7.widget.CardView>
 
 
             <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
-                android:id="@+id/crew_card_view"
+                android:id="@+id/production_card_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_margin="10dp"
-                android:backgroundTint="@color/blackColorAccent40Percent"
+                android:padding="5dp"
+                android:backgroundTint="@color/blackColorAccent70Percent"
                 card_view:cardCornerRadius="2dp"
                 card_view:cardElevation="50dp">
 
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/crew_recycler_view"
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:padding="5dp" />
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
 
+                    <TextView
+                        style="@style/NormalTextStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+                        android:padding="5dp"
+                        android:text="Production Companies"
+                        android:textStyle="bold" />
 
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/production_recycler_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+
+                </LinearLayout>
             </android.support.v7.widget.CardView>
 
             <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
@@ -265,7 +305,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_margin="10dp"
-                android:backgroundTint="@color/blackColorAccent40Percent"
+                android:backgroundTint="@color/blackColorAccent70Percent"
                 card_view:cardCornerRadius="2dp"
                 card_view:cardElevation="50dp">
 
@@ -303,7 +343,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_margin="10dp"
-                app:cardBackgroundColor="@color/blackColorAccent40Percent"
+                app:cardBackgroundColor="@color/blackColorAccent70Percent"
                 app:cardCornerRadius="5dp"
                 app:cardElevation="5dp">
 
