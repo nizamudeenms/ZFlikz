@@ -213,6 +213,8 @@ public class MovieDetailActivity extends AppCompatActivity {
                 genreList.addAll(movieDetails.getGenres());
                 spokenLanguagesList.addAll(movieDetails.getSpokenLanguages());
 
+                Log.e("Movie Id received is :", "onResponse: "+ response.body().getId()+ "  Title : "+ response.body().getTitle());
+
                 if (response.body().getProductionCompanies().isEmpty()) {
                     productiCardView.setVisibility(View.GONE);
                 }
@@ -227,12 +229,8 @@ public class MovieDetailActivity extends AppCompatActivity {
 
                 System.out.println("movieDetails : " + movieDetails.toString());
                 overview = movieDetails.getOverview();
-                System.out.println("overview is : " + overview);
-                System.out.println("overview in object  is : " + movieDetails.getOverview());
-                System.out.println("ttile in response here is : " + title);
                 releaseDate = movieDetails.getReleaseDate();
                 voteAverage = movieDetails.getVoteAverage();
-                //adapter code
 
             }
 

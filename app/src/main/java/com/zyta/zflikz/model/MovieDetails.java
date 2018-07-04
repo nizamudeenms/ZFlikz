@@ -60,7 +60,7 @@ public class MovieDetails implements Serializable
     private String releaseDate;
     @SerializedName("revenue")
     @Expose
-    private Integer revenue;
+    private Double revenue;
     @SerializedName("runtime")
     @Expose
     private Integer runtime;
@@ -215,11 +215,11 @@ public class MovieDetails implements Serializable
         this.releaseDate = releaseDate;
     }
 
-    public Integer getRevenue() {
+    public Double getRevenue() {
         return revenue;
     }
 
-    public void setRevenue(Integer revenue) {
+    public void setRevenue(Double revenue) {
         this.revenue = revenue;
     }
 
