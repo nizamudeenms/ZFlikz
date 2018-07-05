@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
@@ -18,7 +19,6 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.zyta.zflikz.model.Cast;
 import com.zyta.zflikz.model.Credits;
@@ -32,6 +32,7 @@ import com.zyta.zflikz.model.ProductionCountry;
 import com.zyta.zflikz.model.SpokenLanguage;
 import com.zyta.zflikz.utils.MovieAPI;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -73,11 +74,10 @@ public class MovieDetailActivity extends AppCompatActivity {
     TextView overviewTextView, ratingTextView, releaseDateTextView;
     CardView videoCardView, reviewCardView;
     ImageView recImageView;
-    RecyclerView crewRecyclerView,prodrecyclerView;
-    private static final String EXTRA_IMAGE = "com.antonioleiva.materializeyourapp.extraImage";
-// FIXME: 03/07/18 set the linear layout to gone
+    RecyclerView crewRecyclerView, prodrecyclerView;
+    // FIXME: 03/07/18 set the linear layout to gone
     CardView productiCardView;
-    
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -90,7 +90,6 @@ public class MovieDetailActivity extends AppCompatActivity {
         final CoordinatorLayout linearLayout;
 
 
-//        castList = new ArrayList<>();
 
         movieId = getIntent().getIntExtra("id", 0);
         System.out.println("movieId ---------------- " + movieId);
@@ -132,6 +131,7 @@ public class MovieDetailActivity extends AppCompatActivity {
         releaseDate = "Release Date : " + getIntent().getStringExtra("release_date");
         voteAverage = (getIntent().getExtras().getDouble("vote_average"));
         backdropPath = getIntent().getStringExtra("backdrop_url");
+        backdropPath = getIntent().getStringExtra("backdrop_url");
 
 
         movieNameTextView.setText(title);
@@ -157,7 +157,6 @@ public class MovieDetailActivity extends AppCompatActivity {
         getCredits();
 
 
-
         creditsAdapter.notifyDataSetChanged();
 
         converseButton.setOnClickListener(new View.OnClickListener() {
@@ -172,8 +171,6 @@ public class MovieDetailActivity extends AppCompatActivity {
         });
 
     }
-
-
 
 
     private void getCredits() {
@@ -193,7 +190,15 @@ public class MovieDetailActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<Credits> call, Throwable t) {
-                Toast.makeText(MovieDetailActivity.this, "Error Occurred", Toast.LENGTH_SHORT).show();
+                if (t instanceof IOException) {
+                    Snackbar mySnackbar = Snackbar.make(findViewById(R.id.complete_layout), "No Network", Snackbar.LENGTH_LONG);
+                    mySnackbar.show();
+                    System.out.println("Failure is : " + t.getMessage());
+                } else {
+                    Snackbar mySnackbar = Snackbar.make(findViewById(R.id.complete_layout), "Error Occurred", Snackbar.LENGTH_LONG);
+                    mySnackbar.show();
+                    System.out.println("Failure is : " + t.getMessage());
+                }
             }
 
         });
@@ -213,18 +218,18 @@ public class MovieDetailActivity extends AppCompatActivity {
                 genreList.addAll(movieDetails.getGenres());
                 spokenLanguagesList.addAll(movieDetails.getSpokenLanguages());
 
-                Log.e("Movie Id received is :", "onResponse: "+ response.body().getId()+ "  Title : "+ response.body().getTitle());
+                Log.e("Movie Id received is :", "onResponse: " + response.body().getId() + "  Title : " + response.body().getTitle());
 
                 if (response.body().getProductionCompanies().isEmpty()) {
                     productiCardView.setVisibility(View.GONE);
                 }
 
                 for (int i = 0; i < productionCompanyList.size(); i++) {
-                    System.out.println("path is :   http://image.tmdb.org/t/p/w185"  +productionCompanyList.get(i).getLogoPath());
+                    System.out.println("path is :   http://image.tmdb.org/t/p/w185" + productionCompanyList.get(i).getLogoPath());
                 }
 
-                for (ProductionCompany company: productionCompanyList) {
-                    System.out.println("Production Company : "+company.getName() );
+                for (ProductionCompany company : productionCompanyList) {
+                    System.out.println("Production Company : " + company.getName());
                 }
 
                 System.out.println("movieDetails : " + movieDetails.toString());
@@ -236,11 +241,26 @@ public class MovieDetailActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<MovieDetails> call, Throwable t) {
-                Toast.makeText(MovieDetailActivity.this, "Error Occurred", Toast.LENGTH_SHORT).show();
-                System.out.println("Failure is : " + t.getMessage());
+
+                if (t instanceof IOException) {
+//                    Toast.makeText(MovieDetailActivity.this, "No network ", Toast.LENGTH_SHORT).show();
+                    Snackbar mySnackbar = Snackbar.make(findViewById(R.id.complete_layout), "No Network", Snackbar.LENGTH_LONG);
+                    mySnackbar.show();
+                    System.out.println("Failure is : " + t.getMessage());
+                } else {
+                    Snackbar mySnackbar = Snackbar.make(findViewById(R.id.complete_layout),"Error Occurred", Snackbar.LENGTH_LONG);
+                    mySnackbar.show();
+                    System.out.println("Failure is : " + t.getMessage());
+
+
+                }
             }
 
         });
+
+
+
+
 
     }
 }

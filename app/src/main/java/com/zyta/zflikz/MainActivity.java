@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -36,6 +37,7 @@ import com.zyta.zflikz.model.PostList;
 import com.zyta.zflikz.model.Result;
 import com.zyta.zflikz.utils.MovieAPI;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -349,7 +351,16 @@ public class MainActivity extends AppCompatActivity
 
             @Override
             public void onFailure(Call<PostList> call, Throwable t) {
-                Toast.makeText(MainActivity.this, "Error Occurred", Toast.LENGTH_SHORT).show();
+                if (t instanceof IOException) {
+//                    Toast.makeText(MovieDetailActivity.this, "No network ", Toast.LENGTH_SHORT).show();
+                    Snackbar mySnackbar = Snackbar.make(findViewById(R.id.main_activity_layout), "No Network", Snackbar.LENGTH_LONG);
+                    mySnackbar.show();
+                    System.out.println("Failure is : " + t.getMessage());
+                } else {
+                    Snackbar mySnackbar = Snackbar.make(findViewById(R.id.main_activity_layout), "Error Occurred", Snackbar.LENGTH_LONG);
+                    mySnackbar.show();
+                    System.out.println("Failure is : " + t.getMessage());
+                }
             }
         });
 
