@@ -5,6 +5,7 @@ import com.zyta.zflikz.model.Credits;
 import com.zyta.zflikz.model.ImageDetails;
 import com.zyta.zflikz.model.MovieDetails;
 import com.zyta.zflikz.model.PostList;
+import com.zyta.zflikz.model.VideoDetails;
 
 import retrofit2.Call;
 import retrofit2.Retrofit;
@@ -58,7 +59,9 @@ public class MovieAPI {
         @GET("movie/{movie_id}/images")
         Call<ImageDetails> getImageDetails(@Path("movie_id") Integer movieId,
                                            @Query("api_key") String apiKey);
-
+        @GET("movie/{movie_id}/videos")
+        Call<VideoDetails> getVideoDetails(@Path("movie_id") Integer movieId,
+                                           @Query("api_key") String apiKey);
     }
 
 

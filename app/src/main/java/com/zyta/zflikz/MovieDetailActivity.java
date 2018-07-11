@@ -30,6 +30,9 @@ import com.zyta.zflikz.model.ProductionAdapter;
 import com.zyta.zflikz.model.ProductionCompany;
 import com.zyta.zflikz.model.ProductionCountry;
 import com.zyta.zflikz.model.SpokenLanguage;
+import com.zyta.zflikz.model.VideoAdapter;
+import com.zyta.zflikz.model.VideoDetails;
+import com.zyta.zflikz.model.VideoList;
 import com.zyta.zflikz.utils.MovieAPI;
 
 import java.io.IOException;
@@ -65,17 +68,22 @@ public class MovieDetailActivity extends AppCompatActivity {
     private ArrayList<ProductionCountry> productionCountryList = new ArrayList<>();
     private ArrayList<Genre> genreList = new ArrayList<>();
     private ArrayList<SpokenLanguage> spokenLanguagesList = new ArrayList<>();
+    private ArrayList<VideoList> videosListArrayList = new ArrayList<>();
+    private ArrayList<String> videoUrlsArrayList = new ArrayList<>();
     CreditsAdapter creditsAdapter;
     ProductionAdapter productionAdapter;
+    VideoAdapter videoAdapter;
     //    MovieDetails movieDetails = new MovieDetails();
     ImageView posterImageView;
     ImageView backDropImageView;
     TextView movieNameTextView;
     TextView overviewTextView, ratingTextView, releaseDateTextView;
-    CardView ratingCardView, releaseDateCardView, overviewCardView, productionCardView, castCardView;
+    CardView ratingCardView, releaseDateCardView, overviewCardView, productionCardView, castCardView, videoCardView;
     ImageView recImageView;
-    RecyclerView crewRecyclerView, prodrecyclerView;
-    // FIXME: 03/07/18 set the linear layout to gone
+    RecyclerView crewRecyclerView, prodrecyclerView, videosRecyclerView;
+    final String FIRST_VIDEO_URL = "<iframe width=\"100%\" height=\"100%\" src=\"https://www.youtube.com/embed/";
+    final String SECOND_VIDEO_URL = "\" frameborder=\"0\" allowfullscreen></iframe>";
+    String FINAL_URL = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,20 +102,25 @@ public class MovieDetailActivity extends AppCompatActivity {
 
         creditsAdapter = new CreditsAdapter(this, castList);
         productionAdapter = new ProductionAdapter(this, productionCompanyList);
+        videoAdapter = new VideoAdapter(this, videoUrlsArrayList);
 
         recImageView = findViewById(R.id.back_temp);
 
 
         crewRecyclerView = findViewById(R.id.cast_recycler_view);
         prodrecyclerView = findViewById(R.id.production_recycler_view);
+        videosRecyclerView = findViewById(R.id.videos_recycler_view);
         productionCardView = findViewById(R.id.production_card_view);
         castCardView = findViewById(R.id.cast_card_view);
         ratingCardView = findViewById(R.id.rating_card_view);
         overviewCardView = findViewById(R.id.overview_card_view);
         releaseDateCardView = findViewById(R.id.release_date_card_view);
+        videoCardView = findViewById(R.id.video_card_view);
         crewRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayout.HORIZONTAL, false));
         prodrecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayout.HORIZONTAL, false));
+        videosRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayout.HORIZONTAL, false));
         crewRecyclerView.setAdapter(creditsAdapter);
+        videosRecyclerView.setAdapter(videoAdapter);
         prodrecyclerView.setAdapter(productionAdapter);
 //        ViewCompat.setTransitionName(findViewById(R.id.app_bar_layout), EXTRA_IMAGE);
         getAllMovieDetails();
@@ -173,9 +186,11 @@ public class MovieDetailActivity extends AppCompatActivity {
             System.out.println("Company in main are " + companies.getName());
         }
         getCredits();
+        getVideo();
 
 
         creditsAdapter.notifyDataSetChanged();
+        videoAdapter.notifyDataSetChanged();
 
         converseButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -197,7 +212,7 @@ public class MovieDetailActivity extends AppCompatActivity {
                     view.putExtra("image_type", "poster");
                     view.putExtra("movie_id", movieId);
                     startActivity(view);
-                }else{
+                } else {
                     Snackbar mySnackbar = Snackbar.make(getWindow().getDecorView(), "Poster Unavailable", Snackbar.LENGTH_LONG);
                     mySnackbar.show();
                 }
@@ -213,7 +228,7 @@ public class MovieDetailActivity extends AppCompatActivity {
                     view.putExtra("image_type", "backdrop");
                     view.putExtra("movie_id", movieId);
                     startActivity(view);
-                }else{
+                } else {
                     Snackbar mySnackbar = Snackbar.make(getWindow().getDecorView(), "Image Unavailable", Snackbar.LENGTH_LONG);
                     mySnackbar.show();
                 }
@@ -315,6 +330,46 @@ public class MovieDetailActivity extends AppCompatActivity {
 
         });
 
+    }
 
+    private void getVideo() {
+
+        System.out.println("get Video Movie Id  : " + movieId);
+
+        final Call<VideoDetails> videoDetailsCall = MovieAPI.getService().getVideoDetails(movieId, BuildConfig.TMDB_KEY);
+        videoDetailsCall.enqueue(new Callback<VideoDetails>() {
+            @Override
+            public void onResponse(Call<VideoDetails> call, Response<VideoDetails> response) {
+                VideoDetails videoDetailsObj = response.body();
+                Log.e("test debug ", "onResponse: " + videoDetailsObj.getId());
+                videosListArrayList.addAll(videoDetailsObj.getVideoList());
+
+
+                for (VideoList videoList : videosListArrayList) {
+                    FINAL_URL = FIRST_VIDEO_URL + videoList.getKey()+ SECOND_VIDEO_URL;
+                    videoUrlsArrayList.add(FINAL_URL);
+                }
+                System.out.println("videoUrlsArrayList.size() = " + videoUrlsArrayList.size());
+
+                if (response.body().getVideoList().isEmpty()) {
+                    videoCardView.setVisibility(View.GONE);
+                }
+
+                videoAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onFailure(Call<VideoDetails> call, Throwable t) {
+                if (t instanceof IOException) {
+                    Snackbar mySnackbar = Snackbar.make(findViewById(R.id.complete_layout), "No Network", Snackbar.LENGTH_LONG);
+                    mySnackbar.show();
+                    System.out.println("Failure is : " + t.getMessage());
+                } else {
+                    Snackbar mySnackbar = Snackbar.make(findViewById(R.id.complete_layout), "Error Occurred", Snackbar.LENGTH_LONG);
+                    mySnackbar.show();
+                    System.out.println("Failure is : " + t.getMessage());
+                }
+            }
+        });
     }
 }

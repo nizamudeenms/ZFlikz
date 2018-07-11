@@ -54,10 +54,10 @@ dependencies {
     implementation 'com.android.support:preference-v7:27.1.1'
 
     implementation 'ua.zabelnikiov:swipeLayout:1.0'
+    implementation files('libs/YouTubeAndroidPlayerApi.jar')
 
 
     implementation 'jp.wasabeef:blurry:2.1.1'
-    implementation "com.squareup.picasso:picasso:2.5.2"
     implementation fileTree(dir: "libs", include: ["*.jar"])
 
     implementation 'com.android.support.constraint:constraint-layout:1.1.2'

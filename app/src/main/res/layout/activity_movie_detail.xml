@@ -327,30 +327,25 @@
                 card_view:cardElevation="50dp">
 
                 <LinearLayout
-                    android:id="@+id/videos_layout"
-                    style="@style/ActivityLabelStyle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
-                    android:padding="5dp">
-
-                    <ImageView
-                        android:id="@+id/video_icon"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/rating"
-                        android:padding="5dp"
-                        android:src="@drawable/ic_video_library_black_24dp"
-                        android:tint="@color/light_font" />
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
 
                     <TextView
-                        android:id="@+id/video_label"
                         style="@style/NormalTextStyle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="5dp"
                         android:padding="5dp"
-                        android:text="@string/video_label" />
+                        android:text="Videos"
+                        android:textStyle="bold" />
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/videos_recycler_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/blackColorAccent70Percent"/>
+
                 </LinearLayout>
             </android.support.v7.widget.CardView>
 
