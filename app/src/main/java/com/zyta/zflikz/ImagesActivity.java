@@ -22,10 +22,14 @@ import ua.zabelnikov.swipelayout.layout.listener.OnLayoutSwipedListener;
 
 public class ImagesActivity extends AppCompatActivity implements OnLayoutSwipedListener {
     int movieId = 0;
+    String imageType = null;
     private ArrayList<Backdrop> backdropArrayList = new ArrayList<>();
+    private ArrayList<String> backdropPathArrayList = new ArrayList<>();
     private ArrayList<Poster> posterArrayList = new ArrayList<>();
+    private ArrayList<String> posterPathArrayList = new ArrayList<>();
     ImagesAdapter imagesAdapter;
     ViewPager viewPager;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,7 +38,7 @@ public class ImagesActivity extends AppCompatActivity implements OnLayoutSwipedL
 
         viewPager = findViewById(R.id.view_pager);
 
-
+        imageType = getIntent().getStringExtra("image_type");
         movieId = getIntent().getIntExtra("movie_id", 0);
 
         getImages();
@@ -82,16 +86,24 @@ public class ImagesActivity extends AppCompatActivity implements OnLayoutSwipedL
                 backdropArrayList.addAll(imagesObject.getBackdrops());
                 posterArrayList.addAll(imagesObject.getPosters());
 
-                System.out.println("posterArrayList = " + posterArrayList.size());
-//                for (Poster poster : posterArrayList) {
-//                    System.out.println("poster = " + poster.getFilePath());
-//                }
-                System.out.println("backdropArrayList = " + backdropArrayList.size());
+                for (Poster poster : posterArrayList) {
+                    posterPathArrayList.add(poster.getFilePath());
+                }
+                for (Backdrop backdrop : backdropArrayList) {
+                    backdropPathArrayList.add(backdrop.getFilePath());
+                }
 
-                imagesAdapter = new ImagesAdapter(posterArrayList, getApplicationContext());
-                imagesAdapter.setOnLayoutSwipedListener(ImagesActivity.this);
-                viewPager.setAdapter(imagesAdapter);
-                imagesAdapter.notifyDataSetChanged();
+                if (imageType.equals("poster")) {
+                    imagesAdapter = new ImagesAdapter(posterPathArrayList, getApplicationContext());
+                    imagesAdapter.setOnLayoutSwipedListener(ImagesActivity.this);
+                    viewPager.setAdapter(imagesAdapter);
+                    imagesAdapter.notifyDataSetChanged();
+                }else if(imageType.equals("backdrop")){
+                    imagesAdapter = new ImagesAdapter(backdropPathArrayList, getApplicationContext());
+                    imagesAdapter.setOnLayoutSwipedListener(ImagesActivity.this);
+                    viewPager.setAdapter(imagesAdapter);
+                    imagesAdapter.notifyDataSetChanged();
+                }
 
             }
 

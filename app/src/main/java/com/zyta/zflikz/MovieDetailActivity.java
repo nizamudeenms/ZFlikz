@@ -194,11 +194,27 @@ public class MovieDetailActivity extends AppCompatActivity {
                 System.out.println("posterPath = " + posterPath);
                 if (posterPath != null) {
                     Intent view = new Intent(getApplicationContext(), ImagesActivity.class);
-                    view.putExtra("poster_path", posterPath);
+                    view.putExtra("image_type", "poster");
                     view.putExtra("movie_id", movieId);
                     startActivity(view);
                 }else{
                     Snackbar mySnackbar = Snackbar.make(getWindow().getDecorView(), "Poster Unavailable", Snackbar.LENGTH_LONG);
+                    mySnackbar.show();
+                }
+            }
+        });
+
+        backDropImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                System.out.println("backdropPath = " + backdropPath);
+                if (backdropPath != null) {
+                    Intent view = new Intent(getApplicationContext(), ImagesActivity.class);
+                    view.putExtra("image_type", "backdrop");
+                    view.putExtra("movie_id", movieId);
+                    startActivity(view);
+                }else{
+                    Snackbar mySnackbar = Snackbar.make(getWindow().getDecorView(), "Image Unavailable", Snackbar.LENGTH_LONG);
                     mySnackbar.show();
                 }
             }

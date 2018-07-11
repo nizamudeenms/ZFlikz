@@ -20,13 +20,13 @@ import ua.zabelnikov.swipelayout.layout.listener.OnLayoutSwipedListener;
 
 public class ImagesAdapter extends PagerAdapter {
 
-    public final ArrayList<Poster> items;
+    public final ArrayList<String> items;
     private final Context mContext;
     private OnLayoutSwipedListener onLayoutSwipedListener;
-    String POSTER_BASE_URL = "http://image.tmdb.org/t/p/w500";
-    String posterPath = null;
+    private String POSTER_BASE_URL = "http://image.tmdb.org/t/p/w500";
+    private String posterPath = null;
 
-    public ImagesAdapter(ArrayList<Poster> items, Context context) {
+    public ImagesAdapter(ArrayList<String> items, Context context) {
         this.items = items;
         this.mContext = context;
         System.out.println("instantiated");
@@ -38,15 +38,15 @@ public class ImagesAdapter extends PagerAdapter {
 
     @Override
     public View instantiateItem(ViewGroup container, final int position) {
-        Poster poster = items.get(position);
-        System.out.println("postersLink in instance = " + poster.getFilePath());
+        String imageUrl = items.get(position);
+        System.out.println("postersLink in instance = " + imageUrl);
 
         LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         View view = inflater.inflate(R.layout.view_pager_item, null);
         ImageView imageView = (ImageView) view.findViewById(R.id.fullscreen_image_view);
 
-        posterPath = POSTER_BASE_URL + poster.getFilePath();
+        posterPath = POSTER_BASE_URL + imageUrl;
         System.out.println("posterPath = " + posterPath);
 
         GlideApp.with(mContext).load(posterPath).placeholder(R.drawable.zlikx_logo).into(imageView);
