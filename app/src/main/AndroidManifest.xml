@@ -19,8 +19,8 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".MainActivity"
-            android:theme="@style/AppTheme.MainActivityTheme"
-            android:screenOrientation="portrait" >
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.MainActivityTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -28,8 +28,8 @@
         </activity>
         <activity
             android:name=".MovieDetailActivity"
-            android:theme="@style/ConnectionTheme"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/ConnectionTheme" />
         <activity
             android:name=".SettingsActivity"
             android:label="@string/action_settings"
@@ -42,12 +42,16 @@
         </activity>
         <activity
             android:name=".ConverseActivity"
-            android:theme="@style/ConnectionTheme"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/ConnectionTheme" />
         <activity
             android:name=".ImageSelectionActivity"
-            android:theme="@style/ConnectionTheme"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/ConnectionTheme" />
+        <activity
+            android:name=".ImagesActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/ConnectionTheme" />
     </application>
 
 </manifest>

@@ -50,7 +50,7 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
 
 
         if (conversationMessages.get(position).getPostImageUrl() != null) {
-            GlideApp.with(cContext).load(conversationMessages.get(position).getPostImageUrl()).error(R.drawable.no_image_available).into(postImage);
+            GlideApp.with(cContext).load(conversationMessages.get(position).getPostImageUrl()).centerCrop().error(R.drawable.no_image_available).into(postImage);
             postImage.setVisibility(View.VISIBLE);
         }else {
             postImage.setVisibility(View.GONE);

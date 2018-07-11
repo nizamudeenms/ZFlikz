@@ -72,11 +72,10 @@ public class MovieDetailActivity extends AppCompatActivity {
     ImageView backDropImageView;
     TextView movieNameTextView;
     TextView overviewTextView, ratingTextView, releaseDateTextView;
-    CardView videoCardView, reviewCardView;
+    CardView ratingCardView, releaseDateCardView, overviewCardView, productionCardView, castCardView;
     ImageView recImageView;
     RecyclerView crewRecyclerView, prodrecyclerView;
     // FIXME: 03/07/18 set the linear layout to gone
-    CardView productiCardView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,7 +89,6 @@ public class MovieDetailActivity extends AppCompatActivity {
         final CoordinatorLayout linearLayout;
 
 
-
         movieId = getIntent().getIntExtra("id", 0);
         System.out.println("movieId ---------------- " + movieId);
 
@@ -102,7 +100,11 @@ public class MovieDetailActivity extends AppCompatActivity {
 
         crewRecyclerView = findViewById(R.id.cast_recycler_view);
         prodrecyclerView = findViewById(R.id.production_recycler_view);
-        productiCardView = findViewById(R.id.production_card_view);
+        productionCardView = findViewById(R.id.production_card_view);
+        castCardView = findViewById(R.id.cast_card_view);
+        ratingCardView = findViewById(R.id.rating_card_view);
+        overviewCardView = findViewById(R.id.overview_card_view);
+        releaseDateCardView = findViewById(R.id.release_date_card_view);
         crewRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayout.HORIZONTAL, false));
         prodrecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayout.HORIZONTAL, false));
         crewRecyclerView.setAdapter(creditsAdapter);
@@ -135,9 +137,25 @@ public class MovieDetailActivity extends AppCompatActivity {
 
 
         movieNameTextView.setText(title);
-        overviewTextView.setText(overview);
-        releaseDateTextView.setText(releaseDate);
-        ratingTextView.setText(String.valueOf(voteAverage));
+
+        if (overview == null || overview.isEmpty()) {
+            System.out.println("overview = " + overview);
+            overviewCardView.setVisibility(View.GONE);
+        } else {
+            overviewTextView.setText(overview);
+        }
+        if (releaseDate.isEmpty() || releaseDate == null) {
+            System.out.println("releaseDate = " + releaseDate);
+            releaseDateCardView.setVisibility(View.GONE);
+        } else {
+            releaseDateTextView.setText(releaseDate);
+        }
+        if (voteAverage == 0.0 || voteAverage == null) {
+            System.out.println("voteAverage = " + voteAverage);
+            ratingCardView.setVisibility(View.GONE);
+        } else {
+            ratingTextView.setText(String.valueOf(voteAverage));
+        }
 
         if (posterPath != null) {
             GlideApp.with(getApplicationContext()).load(posterPath).placeholder(R.drawable.zlikx_logo).into(posterImageView);
@@ -170,6 +188,22 @@ public class MovieDetailActivity extends AppCompatActivity {
             }
         });
 
+        posterImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                System.out.println("posterPath = " + posterPath);
+                if (posterPath != null) {
+                    Intent view = new Intent(getApplicationContext(), ImagesActivity.class);
+                    view.putExtra("poster_path", posterPath);
+                    view.putExtra("movie_id", movieId);
+                    startActivity(view);
+                }else{
+                    Snackbar mySnackbar = Snackbar.make(getWindow().getDecorView(), "Poster Unavailable", Snackbar.LENGTH_LONG);
+                    mySnackbar.show();
+                }
+            }
+        });
+
     }
 
 
@@ -185,6 +219,13 @@ public class MovieDetailActivity extends AppCompatActivity {
                 Log.e("test debug ", "onResponse: " + credits.getId());
                 castList.addAll(credits.getCast());
                 crewList.addAll(credits.getCrew());
+
+                System.out.println("castList.size() = " + castList.size());
+
+                if (response.body().getCast().isEmpty()) {
+                    castCardView.setVisibility(View.GONE);
+                }
+
                 creditsAdapter.notifyDataSetChanged();
             }
 
@@ -221,7 +262,7 @@ public class MovieDetailActivity extends AppCompatActivity {
                 Log.e("Movie Id received is :", "onResponse: " + response.body().getId() + "  Title : " + response.body().getTitle());
 
                 if (response.body().getProductionCompanies().isEmpty()) {
-                    productiCardView.setVisibility(View.GONE);
+                    productionCardView.setVisibility(View.GONE);
                 }
 
                 for (int i = 0; i < productionCompanyList.size(); i++) {
@@ -248,7 +289,7 @@ public class MovieDetailActivity extends AppCompatActivity {
                     mySnackbar.show();
                     System.out.println("Failure is : " + t.getMessage());
                 } else {
-                    Snackbar mySnackbar = Snackbar.make(findViewById(R.id.complete_layout),"Error Occurred", Snackbar.LENGTH_LONG);
+                    Snackbar mySnackbar = Snackbar.make(findViewById(R.id.complete_layout), "Error Occurred", Snackbar.LENGTH_LONG);
                     mySnackbar.show();
                     System.out.println("Failure is : " + t.getMessage());
 
@@ -257,9 +298,6 @@ public class MovieDetailActivity extends AppCompatActivity {
             }
 
         });
-
-
-
 
 
     }
