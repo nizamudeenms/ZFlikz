@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_black"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".view.MovieSearchActivity">
+
+    <EditText
+        android:id="@+id/movie_input_search"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/hint_search"
+        android:inputType="textNoSuggestions"
+        android:padding="10dp"
+        android:shadowColor="@color/color_white"
+        android:textColor="@color/color_white"
+        android:textColorHint="@color/color_white"
+        android:layout_margin="5dp"
+        android:textIsSelectable="false" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/movie_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/movie_input_search" />
+
+</RelativeLayout>

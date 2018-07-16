@@ -1,23 +1,27 @@
 package com.zyta.zflikz.utils;
 
+import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import com.zyta.zflikz.BuildConfig;
-import com.zyta.zflikz.model.Credits;
-import com.zyta.zflikz.model.ImageDetails;
-import com.zyta.zflikz.model.MovieDetails;
-import com.zyta.zflikz.model.PostList;
-import com.zyta.zflikz.model.VideoDetails;
 
-import retrofit2.Call;
+import java.io.IOException;
+import java.util.concurrent.TimeUnit;
+
+import okhttp3.Interceptor;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-import retrofit2.http.GET;
-import retrofit2.http.Path;
-import retrofit2.http.Query;
 
 public class MovieAPI {
 
     public static final String key = BuildConfig.TMDB_KEY;
     public static final String url = "https://api.themoviedb.org/3/";
+    private static String TAG = MovieAPI.class.getSimpleName();
+    private static Retrofit retrofit = null;
+    private static int REQUEST_TIMEOUT = 60;
+    private static OkHttpClient okHttpClient;
 
     public static PostService postService = null;
 
@@ -33,36 +37,55 @@ public class MovieAPI {
         return postService;
     }
 
-    public interface PostService {
-        @GET("movie/popular")
-        Call<PostList> getPopularMovies(@Query("api_key") String apiKey, @Query("page") int pageIndex);
-
-        @GET("discover/movie")
-        Call<PostList> getTrendingMovies(@Query("api_key") String apiKey,
-                                         @Query("sort_by") String sortBy,
-                                         @Query("primary_release_year") int primRelYear,
-                                         @Query("with_original_language") String orgLang,
-                                         @Query("page") int pageIndex);
 
 
-        @GET("movie/{movie_id}/credits")
-        Call<Credits> getCredits(@Path("movie_id") Integer movieId,
-                                 @Query("api_key") String apiKey);
+    public static Retrofit getClient() {
 
+        if (okHttpClient == null)
+            initOkHttp();
 
-
-        @GET("movie/{movie_id}")
-        Call<MovieDetails> getMovieDetails(@Path("movie_id") Integer movieId,
-                                           @Query("api_key") String apiKey);
-
-
-        @GET("movie/{movie_id}/images")
-        Call<ImageDetails> getImageDetails(@Path("movie_id") Integer movieId,
-                                           @Query("api_key") String apiKey);
-        @GET("movie/{movie_id}/videos")
-        Call<VideoDetails> getVideoDetails(@Path("movie_id") Integer movieId,
-                                           @Query("api_key") String apiKey);
+        if (retrofit == null) {
+            retrofit = new Retrofit.Builder()
+                    .baseUrl(url)
+                    .client(okHttpClient)
+                    .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build();
+        }
+        return retrofit;
     }
 
+    private static void initOkHttp() {
+        OkHttpClient.Builder httpClient = new OkHttpClient().newBuilder()
+                .connectTimeout(REQUEST_TIMEOUT, TimeUnit.SECONDS)
+                .readTimeout(REQUEST_TIMEOUT, TimeUnit.SECONDS)
+                .writeTimeout(REQUEST_TIMEOUT, TimeUnit.SECONDS);
+
+        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
+        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+
+        httpClient.addInterceptor(interceptor);
+
+        httpClient.addInterceptor(new Interceptor() {
+            @Override
+            public Response intercept(Chain chain) throws IOException {
+                Request original = chain.request();
+                Request.Builder requestBuilder = original.newBuilder()
+                        .addHeader("Accept", "application/json")
+                        .addHeader("Request-Type", "Android")
+                        .addHeader("Content-Type", "application/json");
+
+                Request request = requestBuilder.build();
+                return chain.proceed(request);
+            }
+        });
+
+        okHttpClient = httpClient.build();
+    }
+
+    public static void resetApiClient() {
+        retrofit = null;
+        okHttpClient = null;
+    }
 
 }

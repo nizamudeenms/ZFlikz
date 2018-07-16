@@ -9,7 +9,7 @@
     </style>
 
     <style name="ConnectionTheme" parent="FirebaseUI">
-        <item name="android:windowBackground">@drawable/tilerepeat</item>
+        <item name="android:windowBackground">@color/color_white</item>
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <item name="android:windowFullscreen">true</item>
@@ -20,6 +20,13 @@
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="CardViewStyle">
+        <item name="android:shadowColor">@color/color_white</item>
+        <item name="android:shadowRadius">5</item>
+        <item name="android:shadowDx">-5</item>
+        <item name="android:shadowDy">-5</item>
     </style>
 
     <style name="AppTheme.MainActivityTheme">
