@@ -102,7 +102,7 @@ public class MainActivity extends AppCompatActivity
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = mFirebaseAuth.getCurrentUser();
                 if (user != null) {
-                    Toast.makeText(MainActivity.this, "Signed in ", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(MainActivity.this, "Signed in ", Toast.LENGTH_SHORT).show();
                     onSigninListener(user.getDisplayName());
                     Uri xx = FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl();
                     if (xx != null) {
@@ -188,7 +188,7 @@ public class MainActivity extends AppCompatActivity
         if (requestCode == RC_SIGN_IN) {
             if (resultCode == RESULT_OK) {
                 // Sign-in succeeded, set up the UI
-                Toast.makeText(this, "Signed in!", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(this, "Signed in!", Toast.LENGTH_SHORT).show();
             } else if (resultCode == RESULT_CANCELED) {
                 // Sign in was canceled by the user, finish the activity
                 Toast.makeText(this, "Sign in canceled", Toast.LENGTH_SHORT).show();

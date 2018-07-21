@@ -77,7 +77,7 @@ public class MovieDetailActivity extends AppCompatActivity {
     ImageView posterImageView;
     ImageView backDropImageView;
     TextView movieNameTextView;
-    TextView overviewTextView, ratingTextView, releaseDateTextView;
+    TextView overviewTextView, ratingTextView, releaseDateTextView, completeCastTextView;
     CardView ratingCardView, releaseDateCardView, overviewCardView, productionCardView, castCardView, videoCardView;
     ImageView recImageView;
     RecyclerView crewRecyclerView, prodrecyclerView, videosRecyclerView;
@@ -130,6 +130,7 @@ public class MovieDetailActivity extends AppCompatActivity {
         overviewTextView = (TextView) findViewById(R.id.overview_label);
         ratingTextView = (TextView) findViewById(R.id.rating_label);
         releaseDateTextView = (TextView) findViewById(R.id.release_date_label);
+        completeCastTextView = (TextView) findViewById(R.id.complete_cast_text_view);
         backDropImageView = (ImageView) findViewById(R.id.back_drop_image);
         favoriteFAB = (FloatingActionButton) findViewById(R.id.favorite_fab);
 //        videoCardView = findViewById(R.id.video_card_view);
@@ -231,6 +232,30 @@ public class MovieDetailActivity extends AppCompatActivity {
                 } else {
                     Snackbar mySnackbar = Snackbar.make(getWindow().getDecorView(), "Image Unavailable", Snackbar.LENGTH_LONG);
                     mySnackbar.show();
+                }
+            }
+        });
+
+        completeCastTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                System.out.println("crewList = " + crewList.size());
+                System.out.println("castList = " + castList.size());
+
+
+                if (crewList.size() == 0 && castList.size() == 0) {
+                    Snackbar creditsSnackbar = Snackbar.make(getWindow().getDecorView(), "Full Credits Unavailable", Snackbar.LENGTH_LONG);
+                    creditsSnackbar.show();
+                } else {
+                    Intent fullCreditsView = new Intent(getApplicationContext(), FullCreditsActivity.class);
+                    if (castList.size() != 0) {
+                        fullCreditsView.putExtra("cast_list", castList);
+                    }
+                    if (crewList.size() != 0) {
+                        fullCreditsView.putExtra("crew_list", crewList);
+                    }
+                    startActivity(fullCreditsView);
                 }
             }
         });
@@ -346,7 +371,7 @@ public class MovieDetailActivity extends AppCompatActivity {
 
 
                 for (VideoList videoList : videosListArrayList) {
-                    FINAL_URL = FIRST_VIDEO_URL + videoList.getKey()+ SECOND_VIDEO_URL;
+                    FINAL_URL = FIRST_VIDEO_URL + videoList.getKey() + SECOND_VIDEO_URL;
                     videoUrlsArrayList.add(FINAL_URL);
                 }
                 System.out.println("videoUrlsArrayList.size() = " + videoUrlsArrayList.size());

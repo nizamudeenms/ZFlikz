@@ -14,4 +14,5 @@
     <color name="blackColorAccent20Percent">#33000000</color>
     <color name="blackColorAccent40Percent">#99000000</color>
     <color name="blackColorAccent70Percent">#E6000000</color>
+    <color name="deep_orange">#FF5722</color>
 </resources>

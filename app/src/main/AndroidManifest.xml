@@ -57,6 +57,10 @@
             android:name=".MovieSearchActivity"
             android:screenOrientation="portrait"
             android:theme="@style/ConnectionTheme" />
+        <activity
+            android:name=".FullCreditsActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/ConnectionTheme" />
     </application>
 
 </manifest>
