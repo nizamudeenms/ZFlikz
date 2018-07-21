@@ -24,13 +24,13 @@ public class FullCreditsAdapter extends SectionedRecyclerViewAdapter<FullCredits
     ArrayList<Crew> crewList;
     OnItemClickListener onItemClickListener;
     Context mContext;
-    int totalDept = 0;
+    ArrayList<FullCredits> fullCreditsArrayList = new ArrayList<FullCredits>();
 
-    Map<String, List<Crew>> crewMap = new HashMap<String, List<Crew>>();
+    Map<String, List<FullCredits>> crewMap = new HashMap<String, List<FullCredits>>();
 
 
     public interface OnItemClickListener {
-        void onItemClicked(Crew crew);
+        void onItemClicked(FullCredits fullCredits);
 
         void onSubheaderClicked(int position);
     }
@@ -80,12 +80,50 @@ public class FullCreditsAdapter extends SectionedRecyclerViewAdapter<FullCredits
         this.crewList = crewList;
         this.mContext = context;
 
-        for (Crew crew : crewList) {
-            String key = crew.getDepartment();
-            if (crewMap.get(key) == null) {
-                crewMap.put(key, new ArrayList<Crew>());
+
+
+
+        for (int i = 0; i < castList.size(); i++) {
+            FullCredits fullCredits = new FullCredits();
+            fullCredits.setCastId(castList.get(i).getCastId());
+            fullCredits.setSub(castList.get(i).getCharacter());
+            fullCredits.setCreditId(castList.get(i).getCreditId());
+            fullCredits.setGender(castList.get(i).getGender());
+            fullCredits.setId(castList.get(i).getId());
+            fullCredits.setName(castList.get(i).getName());
+            fullCredits.setOrder(castList.get(i).getOrder());
+            if (castList.get(i).getProfilePath() != null) {
+                fullCredits.setProfilePath(castList.get(i).getProfilePath());
             }
-            crewMap.get(key).add(crew);
+            fullCredits.setDepartment("Cast");
+            fullCreditsArrayList.add(fullCredits);
+        }
+
+        System.out.println("fullCreditsArrayList.size() = " + fullCreditsArrayList.size());
+
+        for (int i = 0; i < crewList.size(); i++) {
+            FullCredits fullCredits = new FullCredits();
+            fullCredits.setCastId(null);
+            fullCredits.setSub(crewList.get(i).getJob());
+            fullCredits.setCreditId(crewList.get(i).getCreditId());
+            fullCredits.setGender(crewList.get(i).getGender());
+            fullCredits.setId(crewList.get(i).getId());
+            fullCredits.setName(crewList.get(i).getName());
+            fullCredits.setOrder(null);
+            if (crewList.get(i).getProfilePath() != null) {
+                fullCredits.setProfilePath(crewList.get(i).getProfilePath().toString());
+            }
+            fullCredits.setDepartment(crewList.get(i).getDepartment());
+            fullCreditsArrayList.add(fullCredits);
+        }
+        System.out.println("fullCreditsArrayList.size() = " + fullCreditsArrayList.size());
+
+        for (FullCredits fullCredits : fullCreditsArrayList) {
+            String key = fullCredits.getDepartment();
+            if (crewMap.get(key) == null) {
+                crewMap.put(key, new ArrayList<FullCredits>());
+            }
+            crewMap.get(key).add(fullCredits);
         }
 
     }
@@ -94,12 +132,13 @@ public class FullCreditsAdapter extends SectionedRecyclerViewAdapter<FullCredits
     @Override
     public boolean onPlaceSubheaderBetweenItems(int position) {
         System.out.println("position = " + position);
-        System.out.println("position = " + crewList.size());
-        final Crew crew = crewList.get(position);
-        final Crew nextCrew = crewList.get(position+1);
+//        System.out.println("position = " + crewList.size());
+//        final Crew crew = crewList.get(position);
+//        final Crew nextCrew = crewList.get(position + 1);
+        final FullCredits fullCredits = fullCreditsArrayList.get(position);
+        final FullCredits nextFullCredits = fullCreditsArrayList.get(position +1);
 
-
-        return !crew.getDepartment().equals(nextCrew.getDepartment());
+        return !fullCredits.getDepartment().equals(nextFullCredits.getDepartment());
     }
 
     @Override
@@ -115,21 +154,21 @@ public class FullCreditsAdapter extends SectionedRecyclerViewAdapter<FullCredits
 
     @Override
     public void onBindItemViewHolder(CreditContentHolder holder, int itemPosition) {
-        final Crew crew = crewList.get(itemPosition);
+//        final Crew crew = crewList.get(itemPosition);
+        final  FullCredits fullCredits = fullCreditsArrayList.get(itemPosition);
 
-
-        holder.castNameTextView.setText(crew.getJob());
-        holder.castPersonTextView.setText(crew.getName());
+        holder.castNameTextView.setText(fullCredits.getSub());
+        holder.castPersonTextView.setText(fullCredits.getName());
 //        totalDept++;
 
-        if (crewList.get(itemPosition).getProfilePath() != null) {
-            GlideApp.with(mContext).load("http://image.tmdb.org/t/p/w185" + crewList.get(itemPosition).getProfilePath()).placeholder(R.drawable.zlikx_logo).into(holder.castImageView);
+        if (fullCreditsArrayList.get(itemPosition).getProfilePath() != null) {
+            GlideApp.with(mContext).load("http://image.tmdb.org/t/p/w185" + fullCreditsArrayList.get(itemPosition).getProfilePath()).placeholder(R.drawable.zlikx_logo).into(holder.castImageView);
         } else {
             GlideApp.with(mContext)
                     .load(R.drawable.no_image_available)
                     .into(holder.castImageView);
         }
-        holder.itemView.setOnClickListener(v -> onItemClickListener.onItemClicked(crew));
+        holder.itemView.setOnClickListener(v -> onItemClickListener.onItemClicked(fullCredits));
 
 
     }
@@ -147,15 +186,16 @@ public class FullCreditsAdapter extends SectionedRecyclerViewAdapter<FullCredits
 
         subheaderHolder.itemView.setOnClickListener(v -> onItemClickListener.onSubheaderClicked(subheaderHolder.getAdapterPosition()));
 
-        final Crew nextCrew = crewList.get(nextItemPosition);
-        System.out.println("crewMap.get(nextCrew.getDepartment()).size() = " + crewMap.get(nextCrew.getDepartment()).size());
+//        final Crew nextCrew = crewList.get(nextItemPosition);
+        final FullCredits nextFullCredits = fullCreditsArrayList.get(nextItemPosition);
+        System.out.println("crewMap.get(nextCrew.getDepartment()).size() = " + crewMap.get(nextFullCredits.getDepartment()).size());
 
-        subheaderHolder.mSubheaderText.setText(nextCrew.getDepartment() + " (" + crewMap.get(nextCrew.getDepartment()).size() + ")");
+        subheaderHolder.mSubheaderText.setText(nextFullCredits.getDepartment() + " (" + crewMap.get(nextFullCredits.getDepartment()).size() + ")");
     }
 
     @Override
     public int getItemSize() {
-        return crewList.size();
+        return fullCreditsArrayList.size();
     }
 
     public void setOnItemClickListener(OnItemClickListener onItemClickListener) {

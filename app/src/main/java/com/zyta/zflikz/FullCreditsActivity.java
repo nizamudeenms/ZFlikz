@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView;
 
 import com.zyta.zflikz.model.Cast;
 import com.zyta.zflikz.model.Crew;
+import com.zyta.zflikz.model.FullCredits;
 import com.zyta.zflikz.model.FullCreditsAdapter;
 
 import java.util.ArrayList;
@@ -54,7 +55,7 @@ public class FullCreditsActivity extends AppCompatActivity implements FullCredit
     }
 
     @Override
-    public void onItemClicked(Crew crew) {
+    public void onItemClicked(FullCredits fullCredits) {
 //        final int index = castList.indexOf(cast);
 //        castList.remove(cast);
 //        mSectionedRecyclerAdapter.notifyItemRemovedAtPosition(index);
