@@ -249,12 +249,8 @@ public class MovieDetailActivity extends AppCompatActivity {
                     creditsSnackbar.show();
                 } else {
                     Intent fullCreditsView = new Intent(getApplicationContext(), FullCreditsActivity.class);
-                    if (castList.size() != 0) {
-                        fullCreditsView.putExtra("cast_list", castList);
-                    }
-                    if (crewList.size() != 0) {
-                        fullCreditsView.putExtra("crew_list", crewList);
-                    }
+                    fullCreditsView.putExtra("cast_list", castList);
+                    fullCreditsView.putExtra("crew_list", crewList);
                     startActivity(fullCreditsView);
                 }
             }
