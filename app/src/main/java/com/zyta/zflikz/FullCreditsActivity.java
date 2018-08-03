@@ -17,6 +17,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
+import jp.wasabeef.recyclerview.animators.FlipInTopXAnimator;
+
 public class FullCreditsActivity extends AppCompatActivity implements FullCreditsAdapter.OnItemClickListener {
     RecyclerView creditsRecyclerview;
     private ArrayList<Crew> crewList = new ArrayList<>();
@@ -48,8 +50,9 @@ public class FullCreditsActivity extends AppCompatActivity implements FullCredit
         mSectionedRecyclerAdapter = new FullCreditsAdapter(castList, crewList, this);
 
         mSectionedRecyclerAdapter.setOnItemClickListener(this);
-
+        creditsRecyclerview.setItemAnimator(new FlipInTopXAnimator());
         creditsRecyclerview.setAdapter(mSectionedRecyclerAdapter);
+
 
         mSectionedRecyclerAdapter.notifyDataChanged();
         mSectionedRecyclerAdapter.collapseAllSections();

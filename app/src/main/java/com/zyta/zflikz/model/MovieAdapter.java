@@ -26,6 +26,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MyViewHolder
         this.movies = movies;
     }
 
+
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
@@ -56,8 +57,8 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MyViewHolder
             public void onClick(View v) {
                 Intent intent = new Intent(mContext, MovieDetailActivity.class);
 //                intent.putExtra("poster_url", "http://image.tmdb.org/t/p/w780" + movies.get(position).getPosterPath());
-                intent.putExtra("poster_url", (movies.get(position).getPosterPath() == null) ? null : "http://image.tmdb.org/t/p/w500" + movies.get(position).getPosterPath()  );
-                intent.putExtra("backdrop_url", (movies.get(position).getBackdropPath() == null) ? null : "http://image.tmdb.org/t/p/w500" + movies.get(position).getBackdropPath()  );
+                intent.putExtra("poster_url", (movies.get(position).getPosterPath() == null) ? null : "http://image.tmdb.org/t/p/w500" + movies.get(position).getPosterPath());
+                intent.putExtra("backdrop_url", (movies.get(position).getBackdropPath() == null) ? null : "http://image.tmdb.org/t/p/w500" + movies.get(position).getBackdropPath());
 //                if (movies.get(position).getBackdropPath() == null) {
 //                    intent.putExtra("backdrop_url",movies.get(position).getBackdropPath());
 //                } else {
@@ -79,6 +80,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MyViewHolder
         if (null == movies) return 0;
         return movies.size();
     }
+
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public ImageView thumbnail;
