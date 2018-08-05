@@ -6,6 +6,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.ScaleAnimation;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -14,6 +16,7 @@ import com.zyta.zflikz.MovieDetailActivity;
 import com.zyta.zflikz.R;
 
 import java.util.List;
+import java.util.Random;
 
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MyViewHolder> {
     String TAG = MovieAdapter.class.getSimpleName();
@@ -73,6 +76,21 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MyViewHolder
                 mContext.startActivity(intent);
             }
         });
+//        notifyItemChanged(position);
+        setAnimation(holder.itemView, position);
+
+    }
+
+    int mLastPosition = -1;
+
+    private void setAnimation(View itemView, int position) {
+        if (position > mLastPosition) {
+            ScaleAnimation anim = new ScaleAnimation(0.0f, 1.0f, 0.0f, 1.0f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+            anim.setDuration(new Random().nextInt(501));//to make duration random number between [0,501)
+            itemView.startAnimation(anim);
+            mLastPosition = position;
+        }
+
     }
 
     @Override
@@ -96,26 +114,6 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MyViewHolder
             thumbnail = (ImageView) view.findViewById(R.id.thumbnail);
             titleOnPoster = view.findViewById(R.id.movie_title_on_poster);
         }
-
-//        @Override
-//        public void onClick(View v) {
-//            int position = getAdapterPosition();
-//            movies.moveToPosition(position);
-//
-//            Intent intent = new Intent(this.context, MovieDetailActivity.class);
-//            intent.putExtra("poster_url", movies.getString(movies.getColumnIndex(MovieContract.MovieEntry.COLUMN_POSTER_URL)));
-//            intent.putExtra("backdrop_url", movies.getString(movies.getColumnIndex(MovieContract.MovieEntry.COLUMN_BACKDROP_URL)));
-//            intent.putExtra("id", movies.getString(movies.getColumnIndex(MovieContract.MovieEntry.COLUMN_MOVIE_ID)));
-//            intent.putExtra("overview", movies.getString(movies.getColumnIndex(MovieContract.MovieEntry.COLUMN_OVERVIEW)));
-//            intent.putExtra("release_date", movies.getString(movies.getColumnIndex(MovieContract.MovieEntry.COLUMN_RELEASE_DATE)));
-//            intent.putExtra("title", movies.getString(movies.getColumnIndex(MovieContract.MovieEntry.COLUMN_TITLE)));
-//            intent.putExtra("vote_average", movies.getString(movies.getColumnIndex(MovieContract.MovieEntry.COLUMN_VOTE_AVERAGE)));
-//            intent.putExtra("favorite", movies.getString(movies.getColumnIndex(MovieContract.MovieEntry.COLUMN_FAVORITE)));
-//            this.context.startActivity(intent);
-//
-//        }
     }
-
-
 }
 

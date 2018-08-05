@@ -13,7 +13,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.preference.PreferenceManager;
-import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -39,6 +38,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import jp.wasabeef.recyclerview.adapters.SlideInLeftAnimationAdapter;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -78,7 +78,7 @@ public class MainActivity extends AppCompatActivity
 
 
     Boolean isScrolling = false;
-
+    SlideInLeftAnimationAdapter slideInLeftAnimationAdapter;
 
     int currentItems, totalItems, scrollOutItems;
 
@@ -151,7 +151,6 @@ public class MainActivity extends AppCompatActivity
         final RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getApplicationContext(), getResources().getInteger(R.integer.grid_number_cols));
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setAdapter(mAdapter);
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setHasFixedSize(true);
 
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -266,7 +265,7 @@ public class MainActivity extends AppCompatActivity
             startActivity(startSettingsActivity);
             finish();
             return true;
-        } else if(id == R.id.action_search){
+        } else if (id == R.id.action_search) {
             Intent startSearchActivity = new Intent(getApplicationContext(), MovieSearchActivity.class);
             startActivity(startSearchActivity);
             finish();
