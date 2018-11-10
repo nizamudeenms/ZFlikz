@@ -165,7 +165,7 @@ public class FullCreditsAdapter extends SectionedRecyclerViewAdapter<FullCredits
             GlideApp.with(mContext).load("http://image.tmdb.org/t/p/w185" + fullCreditsArrayList.get(itemPosition).getProfilePath()).placeholder(R.drawable.zlikx_logo).into(holder.castImageView);
         } else {
             GlideApp.with(mContext)
-                    .load(R.drawable.no_image_available)
+                    .load(R.drawable.person_placeholder)
                     .into(holder.castImageView);
         }
         holder.itemView.setOnClickListener(v -> onItemClickListener.onItemClicked(fullCredits));

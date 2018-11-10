@@ -61,6 +61,10 @@
             android:name=".FullCreditsActivity"
             android:screenOrientation="portrait"
             android:theme="@style/ConnectionTheme" />
+
+        <meta-data
+            android:name="preloaded_fonts"
+            android:resource="@array/preloaded_fonts" />
     </application>
 
 </manifest>

@@ -111,7 +111,6 @@ public class MainActivity extends AppCompatActivity
                         System.out.println("user.getEmail(" + user.getEmail());
                         profileName.setText(user.getDisplayName());
                         profileEmail.setText(user.getEmail());
-
                     }
                 } else {
                     startActivityForResult(

@@ -13,6 +13,7 @@ import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
@@ -81,8 +82,8 @@ public class MovieDetailActivity extends AppCompatActivity {
     CardView ratingCardView, releaseDateCardView, overviewCardView, productionCardView, castCardView, videoCardView;
     ImageView recImageView;
     RecyclerView crewRecyclerView, prodrecyclerView, videosRecyclerView;
-    final String FIRST_VIDEO_URL = "<iframe width=\"100%\" height=\"100%\" src=\"https://www.youtube.com/embed/";
-    final String SECOND_VIDEO_URL = "\" frameborder=\"0\" allowfullscreen></iframe>";
+    final String FIRST_VIDEO_URL = "<body style=\"margin:0 0 0 0; padding:0 0 0 0; \"><iframe   style=\"width: 100%; height: 100%;\" frameborder=\"0\" framespacing=\"0\" src=\"https://www.youtube.com/embed/";
+    final String SECOND_VIDEO_URL = "\"  allowfullscreen ></iframe></body>";
     String FINAL_URL = null;
 
     @Override
@@ -258,6 +259,16 @@ public class MovieDetailActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event)
+    {
+        if ((keyCode == KeyEvent.KEYCODE_BACK))
+        {
+            System.out.println("back pressed and exited");
+            finish();
+        }
+        return super.onKeyDown(keyCode, event);
+    }
 
     private void getCredits() {
 
@@ -368,6 +379,7 @@ public class MovieDetailActivity extends AppCompatActivity {
 
                 for (VideoList videoList : videosListArrayList) {
                     FINAL_URL = FIRST_VIDEO_URL + videoList.getKey() + SECOND_VIDEO_URL;
+                    System.out.println("FINAL_URL = " + FINAL_URL);
                     videoUrlsArrayList.add(FINAL_URL);
                 }
                 System.out.println("videoUrlsArrayList.size() = " + videoUrlsArrayList.size());

@@ -51,7 +51,7 @@
 
 
     <style name="TitleTextStyle" parent="ConnectionTheme">
-        <item name="android:fontFamily">sans-serif-light</item>
+        <item name="android:fontFamily">sans-serif</item>
         <item name="android:textColor">@color/text_shadow_white</item>
         <item name="android:shadowColor">@color/text_shadow</item>
         <item name="android:shadowRadius">2</item>
