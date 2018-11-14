@@ -30,6 +30,9 @@ import com.zyta.zflikz.model.MovieDetails;
 import com.zyta.zflikz.model.ProductionAdapter;
 import com.zyta.zflikz.model.ProductionCompany;
 import com.zyta.zflikz.model.ProductionCountry;
+import com.zyta.zflikz.model.Review;
+import com.zyta.zflikz.model.ReviewAdapter;
+import com.zyta.zflikz.model.ReviewDetails;
 import com.zyta.zflikz.model.SpokenLanguage;
 import com.zyta.zflikz.model.VideoAdapter;
 import com.zyta.zflikz.model.VideoDetails;
@@ -71,17 +74,20 @@ public class MovieDetailActivity extends AppCompatActivity {
     private ArrayList<SpokenLanguage> spokenLanguagesList = new ArrayList<>();
     private ArrayList<VideoList> videosListArrayList = new ArrayList<>();
     private ArrayList<String> videoUrlsArrayList = new ArrayList<>();
+    private ArrayList<Review> reviewsList = new ArrayList<>();
+
     CreditsAdapter creditsAdapter;
     ProductionAdapter productionAdapter;
     VideoAdapter videoAdapter;
+    ReviewAdapter reviewAdapter;
     //    MovieDetails movieDetails = new MovieDetails();
     ImageView posterImageView;
     ImageView backDropImageView;
     TextView movieNameTextView;
     TextView overviewTextView, ratingTextView, releaseDateTextView, completeCastTextView;
-    CardView ratingCardView, releaseDateCardView, overviewCardView, productionCardView, castCardView, videoCardView;
+    CardView ratingCardView, releaseDateCardView, overviewCardView, productionCardView, castCardView, videoCardView,reviewCardView;
     ImageView recImageView;
-    RecyclerView crewRecyclerView, prodrecyclerView, videosRecyclerView;
+    RecyclerView crewRecyclerView, prodrecyclerView, videosRecyclerView, reviewsRecylerView;
     final String FIRST_VIDEO_URL = "<body style=\"margin:0 0 0 0; padding:0 0 0 0; \"><iframe   style=\"width: 100%; height: 100%;\" frameborder=\"0\" framespacing=\"0\" src=\"https://www.youtube.com/embed/";
     final String SECOND_VIDEO_URL = "\"  allowfullscreen ></iframe></body>";
     String FINAL_URL = null;
@@ -104,6 +110,7 @@ public class MovieDetailActivity extends AppCompatActivity {
         creditsAdapter = new CreditsAdapter(this, castList);
         productionAdapter = new ProductionAdapter(this, productionCompanyList);
         videoAdapter = new VideoAdapter(this, videoUrlsArrayList);
+        reviewAdapter = new ReviewAdapter(this,reviewsList);
 
         recImageView = findViewById(R.id.back_temp);
 
@@ -117,12 +124,17 @@ public class MovieDetailActivity extends AppCompatActivity {
         overviewCardView = findViewById(R.id.overview_card_view);
         releaseDateCardView = findViewById(R.id.release_date_card_view);
         videoCardView = findViewById(R.id.video_card_view);
+        reviewsRecylerView = findViewById(R.id.reviews_recycler_view);
+        reviewCardView = findViewById(R.id.review_card_view);
+
         crewRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayout.HORIZONTAL, false));
         prodrecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayout.HORIZONTAL, false));
         videosRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayout.HORIZONTAL, false));
+        reviewsRecylerView.setLayoutManager(new LinearLayoutManager(this, LinearLayout.HORIZONTAL, false));
         crewRecyclerView.setAdapter(creditsAdapter);
         videosRecyclerView.setAdapter(videoAdapter);
         prodrecyclerView.setAdapter(productionAdapter);
+        reviewsRecylerView.setAdapter(reviewAdapter);
 //        ViewCompat.setTransitionName(findViewById(R.id.app_bar_layout), EXTRA_IMAGE);
         getAllMovieDetails();
 
@@ -134,8 +146,7 @@ public class MovieDetailActivity extends AppCompatActivity {
         completeCastTextView = (TextView) findViewById(R.id.complete_cast_text_view);
         backDropImageView = (ImageView) findViewById(R.id.back_drop_image);
         favoriteFAB = (FloatingActionButton) findViewById(R.id.favorite_fab);
-//        videoCardView = findViewById(R.id.video_card_view);
-//        reviewCardView = findViewById(R.id.review_card_view);
+//      videoCardView = findViewById(R.id.video_card_view);
         linearLayout = findViewById(R.id.complete_layout);
 
         converseButton = findViewById(R.id.con_button);
@@ -148,8 +159,6 @@ public class MovieDetailActivity extends AppCompatActivity {
         releaseDate = "Release Date : " + getIntent().getStringExtra("release_date");
         voteAverage = (getIntent().getExtras().getDouble("vote_average"));
         backdropPath = getIntent().getStringExtra("backdrop_url");
-        backdropPath = getIntent().getStringExtra("backdrop_url");
-
 
         movieNameTextView.setText(title);
 
@@ -189,10 +198,12 @@ public class MovieDetailActivity extends AppCompatActivity {
         }
         getCredits();
         getVideo();
+        getReviews();
 
 
         creditsAdapter.notifyDataSetChanged();
         videoAdapter.notifyDataSetChanged();
+//        reviewAdapter.notifyDataSetChanged();
 
         converseButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -256,14 +267,55 @@ public class MovieDetailActivity extends AppCompatActivity {
                 }
             }
         });
+        reviewAdapter.notifyDataSetChanged();
 
     }
 
+    private void getReviews() {
+
+        System.out.println("Inside Get Reviews : Movie Id  : " + movieId);
+
+        final Call<ReviewDetails> reviews = MovieAPI.getService().getReviews(movieId, BuildConfig.TMDB_KEY);
+        reviews.enqueue(new Callback<ReviewDetails>() {
+            @Override
+            public void onResponse(Call<ReviewDetails> call, Response<ReviewDetails> response) {
+                ReviewDetails reviewDetails = response.body();
+
+                System.out.println("reviewDetails : "+ reviewDetails.getId());
+
+                Log.e("Movie Id received is :", "Reviews onResponse: " + response.body().getId() + "  Title : " + reviewDetails.getReviews().size());
+
+                reviewsList.addAll(reviewDetails.getReviews());
+                reviewAdapter.notifyDataSetChanged();
+
+
+                System.out.println("reviewsList.size() = " + reviewsList.size());
+
+                if (reviewDetails.getReviews().size() == 0) {
+                    reviewCardView.setVisibility(View.GONE);
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<ReviewDetails> call, Throwable t) {
+                if (t instanceof IOException) {
+                    Snackbar mySnackbar = Snackbar.make(findViewById(R.id.complete_layout), "No Network", Snackbar.LENGTH_LONG);
+                    mySnackbar.show();
+                    System.out.println("Failure is : " + t.getMessage());
+                } else {
+                    Snackbar mySnackbar = Snackbar.make(findViewById(R.id.complete_layout), "Error Occurred", Snackbar.LENGTH_LONG);
+                    mySnackbar.show();
+                    System.out.println("Failure is : " + t.getMessage());
+                }
+            }
+
+        });
+    }
+
     @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event)
-    {
-        if ((keyCode == KeyEvent.KEYCODE_BACK))
-        {
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if ((keyCode == KeyEvent.KEYCODE_BACK)) {
             System.out.println("back pressed and exited");
             finish();
         }
@@ -406,3 +458,5 @@ public class MovieDetailActivity extends AppCompatActivity {
         });
     }
 }
+
+

@@ -47,8 +47,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@+id/upper_layout"
-            android:orientation="vertical"
-           >
+            android:orientation="vertical">
 
 
             <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
@@ -64,10 +63,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:fitsSystemWindows="true"
+                    android:foreground="@drawable/gradient_shape"
                     android:scaleType="centerCrop"
-                    app:layout_collapseMode="parallax"
-                    android:foreground="@drawable/gradient_shape"/>
-
+                    app:layout_collapseMode="parallax" />
 
 
                 <!--<android.support.v7.widget.Toolbar-->
@@ -97,12 +95,12 @@
                         style="@style/TitleTextStyle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="5dp"
-                        android:layout_marginEnd="5dp"
-                        android:layout_marginLeft="5dp"
-                        android:layout_marginRight="5dp"
                         android:layout_marginStart="5dp"
+                        android:layout_marginLeft="5dp"
                         android:layout_marginTop="20dp"
+                        android:layout_marginEnd="5dp"
+                        android:layout_marginRight="5dp"
+                        android:layout_marginBottom="5dp"
                         android:layout_toRightOf="@+id/poster"
                         android:fontFamily="@font/helvetica_neue_bold"
                         android:padding="5sp"
@@ -110,16 +108,17 @@
 
                     <Button
                         android:id="@+id/con_button"
+                        style="@style/buttonStyle"
                         android:layout_width="180dp"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/movie_name"
                         android:layout_margin="10dp"
                         android:layout_toEndOf="@+id/poster"
-                        android:background="@color/blackColorAccent70Percent"
+                        android:background="@drawable/button_selector"
                         android:padding="5dp"
-                        android:text="Converse"
-                        android:textColor="@color/color_white"
-                        android:textSize="20dp" />
+                        android:text="CONVERSE"
+
+                        />
 
                 </RelativeLayout>
 
@@ -146,7 +145,7 @@
 
                     <TextView
                         android:id="@+id/overview"
-                        style="@style/NormalTextStyle"
+                        style="@style/SubTitleTextStyle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="5dp"
@@ -155,7 +154,7 @@
 
                     <TextView
                         android:id="@+id/overview_label"
-                        style="@style/NormalTextStyle"
+                        style="@style/smallTextStyle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="right"
@@ -192,7 +191,7 @@
 
                     <TextView
                         android:id="@+id/rating_label"
-                        style="@style/NormalTextStyle"
+                        style="@style/smallTextStyle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="5dp"
@@ -230,7 +229,7 @@
 
                     <TextView
                         android:id="@+id/release_date_label"
-                        style="@style/NormalTextStyle"
+                        style="@style/smallTextStyle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="5dp"
@@ -256,7 +255,7 @@
                     android:orientation="vertical">
 
                     <TextView
-                        style="@style/NormalTextStyle"
+                        style="@style/SubTitleTextStyle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="5dp"
@@ -271,7 +270,7 @@
 
                     <TextView
                         android:id="@+id/complete_cast_text_view"
-                        style="@style/NormalTextStyle"
+                        style="@style/smallTextStyle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="bottom|end"
@@ -302,7 +301,7 @@
                     android:orientation="vertical">
 
                     <TextView
-                        style="@style/NormalTextStyle"
+                        style="@style/SubTitleTextStyle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="5dp"
@@ -334,7 +333,7 @@
                     android:orientation="vertical">
 
                     <TextView
-                        style="@style/NormalTextStyle"
+                        style="@style/SubTitleTextStyle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="5dp"
@@ -346,7 +345,7 @@
                         android:id="@+id/videos_recycler_view"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@color/blackColorAccent70Percent"/>
+                        android:background="@color/blackColorAccent70Percent" />
 
                 </LinearLayout>
             </android.support.v7.widget.CardView>
@@ -361,32 +360,36 @@
                 app:cardCornerRadius="5dp"
                 app:cardElevation="5dp">
 
-                <LinearLayout
-                    android:id="@+id/review_layout_detail"
-                    style="@style/ActivityLabelStyle"
-                    android:layout_width="wrap_content"
+                <FrameLayout
+                    android:id="@+id/review_frame_layout"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
-                    android:padding="5dp">
+                 >
 
-                    <ImageView
-                        android:id="@+id/review_icon"
-                        android:layout_width="wrap_content"
+                    <LinearLayout
+                        android:id="@+id/review_linear_layout"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="start"
-                        android:padding="5dp"
-                        android:src="@drawable/ic_rate_review_black_24dp"
-                        android:tint="@color/light_font" />
+                        android:orientation="vertical">
 
-                    <TextView
-                        android:id="@+id/review_label"
-                        style="@style/NormalTextStyle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="5dp"
-                        android:padding="5dp"
-                        android:text="@string/lorem_ipsum" />
-                </LinearLayout>
+                        <TextView
+                            style="@style/SubTitleTextStyle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="5dp"
+                            android:padding="5dp"
+                            android:text="Reviews"
+                            android:textStyle="bold" />
+
+
+                        <android.support.v7.widget.RecyclerView
+                            android:id="@+id/reviews_recycler_view"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@color/blackColorAccent70Percent" />
+
+                    </LinearLayout>
+                </FrameLayout>
             </android.support.v7.widget.CardView>
 
             <android.support.design.widget.FloatingActionButton

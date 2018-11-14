@@ -16,6 +16,6 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="200dp"
         android:layout_marginLeft="50dp"
-        style="@style/NormalTextStyle"      />
+        style="@style/smallTextStyle"      />
 
 </FrameLayout>

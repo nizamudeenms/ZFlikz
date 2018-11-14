@@ -4,6 +4,7 @@ import com.zyta.zflikz.model.Credits;
 import com.zyta.zflikz.model.ImageDetails;
 import com.zyta.zflikz.model.MovieDetails;
 import com.zyta.zflikz.model.PostList;
+import com.zyta.zflikz.model.ReviewDetails;
 import com.zyta.zflikz.model.SearchResults;
 import com.zyta.zflikz.model.VideoDetails;
 
@@ -29,6 +30,9 @@ public interface PostService {
     Call<Credits> getCredits(@Path("movie_id") Integer movieId,
                              @Query("api_key") String apiKey);
 
+    @GET("movie/{movie_id}/reviews")
+    Call<ReviewDetails> getReviews(@Path("movie_id") Integer movieId,
+                                   @Query("api_key") String apiKey);
 
 
     @GET("movie/{movie_id}")

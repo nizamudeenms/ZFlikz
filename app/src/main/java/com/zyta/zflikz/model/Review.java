@@ -1,40 +1,58 @@
+
 package com.zyta.zflikz.model;
 
-public class Review {
-    private String reviewerName;
-    private String reviewContent;
-    private String reviewUrl;
-    private String reviewId;
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
-    public String getReviewerName() {
-        return reviewerName;
+import java.io.Serializable;
+
+public class Review implements Serializable
+{
+
+    @SerializedName("author")
+    @Expose
+    private String author;
+    @SerializedName("content")
+    @Expose
+    private String content;
+    @SerializedName("id")
+    @Expose
+    private String id;
+    @SerializedName("url")
+    @Expose
+    private String url;
+    private final static long serialVersionUID = 4425366436591075873L;
+
+    public String getAuthor() {
+        return author;
     }
 
-    public void setReviewerName(String reviewerName) {
-        this.reviewerName = reviewerName;
+    public void setAuthor(String author) {
+        this.author = author;
     }
 
-    public String getReviewContent() {
-        return reviewContent;
+    public String getContent() {
+        return content;
     }
 
-    public void setReviewContent(String reviewContent) {
-        this.reviewContent = reviewContent;
+    public void setContent(String content) {
+        this.content = content;
     }
 
-    public String getReviewUrl() {
-        return reviewUrl;
+    public String getId() {
+        return id;
     }
 
-    public void setReviewUrl(String reviewUrl) {
-        this.reviewUrl = reviewUrl;
+    public void setId(String id) {
+        this.id = id;
     }
 
-    public String getReviewId() {
-        return reviewId;
+    public String getUrl() {
+        return url;
     }
 
-    public void setReviewId(String reviewId) {
-        this.reviewId = reviewId;
+    public void setUrl(String url) {
+        this.url = url;
     }
+
 }

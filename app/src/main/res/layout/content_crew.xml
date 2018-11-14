@@ -25,25 +25,23 @@
 
         <TextView
             android:id="@+id/cast_name_text_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="2dp"
-            android:padding="1dp"
-            android:background="@color/color_black"
-            android:fontFamily="sans-serif-light"
-            android:text="Sample text example text"
-            android:textColor="@color/color_white"
-            android:textSize="15sp" />
-
-        <TextView
-            android:id="@+id/cast_char_text_view"
             style="@style/smallTextStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="2dp"
-            android:padding="1dp"
             android:background="@color/color_black"
-            android:text="Sample text example text" />
+            android:padding="1dp"
+            android:text="Cast Name" />
+
+        <TextView
+            android:id="@+id/cast_char_text_view"
+            style="@style/VerySmallTextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="2dp"
+            android:background="@color/color_black"
+            android:padding="1dp"
+            android:text="Character Name" />
 
     </LinearLayout>
 </android.support.v7.widget.CardView>
