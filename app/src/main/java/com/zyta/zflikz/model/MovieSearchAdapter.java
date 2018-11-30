@@ -1,6 +1,7 @@
-package com.zyta.zflikz;
+package com.zyta.zflikz.model;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,7 +10,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.zyta.zflikz.model.Searches;
+import com.zyta.zflikz.MovieDetailActivity;
+import com.zyta.zflikz.PersonActivity;
+import com.zyta.zflikz.R;
 
 import java.util.List;
 
@@ -49,6 +52,14 @@ public class MovieSearchAdapter extends RecyclerView.Adapter<MovieSearchAdapter.
                         .load(R.drawable.ic_launcher_foreground)
                         .into(holder.searchImage);
             }
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(context, PersonActivity.class);
+                    intent.putExtra("personId", result.getId());
+                    context.startActivity(intent);
+                }
+            });
         } else if (result.getMediaType().equals("movie")) {
             System.out.println("movie Name= " + result.getTitle());
             holder.searchName.setText(result.getTitle());
@@ -62,6 +73,15 @@ public class MovieSearchAdapter extends RecyclerView.Adapter<MovieSearchAdapter.
                         .load(R.drawable.ic_launcher_foreground)
                         .into(holder.searchImage);
             }
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(context, MovieDetailActivity.class);
+                    intent.putExtra("id", result.getId());
+                    context.startActivity(intent);
+                }
+            });
+
         }
 
     }

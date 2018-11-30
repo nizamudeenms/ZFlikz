@@ -30,7 +30,7 @@
     <string name="hint_search">Search Movie or People</string>
     <string name="born_on">Born :\t</string>
     <string name="born_place">Birth Place :\t</string>
-    <string name="known_for">Known for : \t</string>
+    <string name="known_for">Well known for : \t</string>
     <string name="release_date">Release Date : \t</string>
 
 </resources>

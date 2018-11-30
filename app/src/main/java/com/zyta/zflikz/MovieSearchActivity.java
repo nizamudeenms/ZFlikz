@@ -16,6 +16,7 @@ import android.widget.EditText;
 
 import com.jakewharton.rxbinding2.widget.RxTextView;
 import com.jakewharton.rxbinding2.widget.TextViewTextChangeEvent;
+import com.zyta.zflikz.model.MovieSearchAdapter;
 import com.zyta.zflikz.model.SearchResults;
 import com.zyta.zflikz.model.Searches;
 import com.zyta.zflikz.utils.MovieAPI;
@@ -46,7 +47,7 @@ public class MovieSearchActivity extends AppCompatActivity implements MovieSearc
     private MovieSearchAdapter mAdapter;
     private List<SearchResults> searchResultsArrayList = new ArrayList<>();
     private List<Searches> resultArrayList = new ArrayList<>();
-    private String API_KEY = "9b31264aec7cd32ff6ff94ebceecb01b";
+    private String API_KEY = BuildConfig.TMDB_KEY;
 
     @BindView(R.id.movie_input_search)
     EditText movieInputSearch;

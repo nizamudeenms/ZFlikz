@@ -17,7 +17,7 @@
     <android.support.design.widget.AppBarLayout
         android:id="@+id/app_bar_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:fitsSystemWindows="true"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
@@ -28,27 +28,84 @@
             android:fitsSystemWindows="true"
             app:layout_scrollFlags="scroll|enterAlwaysCollapsed">
 
-            <com.zyta.zflikz.ThreeByFourImageView
-                android:id="@+id/person_back_drop_image"
+            <LinearLayout
+                android:id="@+id/person_bio_frame_layout"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:fitsSystemWindows="true"
-                android:foreground="@drawable/gradient_shape"
-                android:scaleType="centerCrop"
-                app:layout_collapseMode="parallax" />
+                android:layout_height="fill_parent"
+                android:background="@color/color_black"
+                android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/person_name_textview"
-                style="@style/AinslieTitleTextStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom"
-                android:layout_margin="5sp"
-                android:padding="2sp"
-                android:text="Person" />
+                <RelativeLayout
+                    android:id="@+id/person_relative_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
 
+                    <com.zyta.zflikz.ThreeByFourImageView
+                        android:id="@+id/person_back_drop_image"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fitsSystemWindows="true"
+                        android:foreground="@drawable/gradient_shape"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/zlikx_logo"
+                        app:layout_collapseMode="parallax" />
+
+                    <TextView
+                        android:id="@+id/person_name_textview"
+                        style="@style/AinslieTitleTextStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBottom="@id/person_back_drop_image"
+                        android:layout_margin="5sp"
+                        android:gravity="bottom"
+                        android:padding="2sp"
+                        android:text="Person" />
+                </RelativeLayout>
+
+                <LinearLayout
+                    android:id="@+id/person_bio_linear_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:background="@color/color_black"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/person_known_for_text_view"
+                        style="@style/AinslieMediumTextStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom"
+                        android:layout_margin="5sp"
+                        android:padding="2sp"
+                        android:text="Known for" />
+
+                    <TextView
+                        android:id="@+id/person_born_on_text_view"
+                        style="@style/AinslieMediumTextStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/person_known_for_text_view"
+                        android:layout_gravity="center_vertical"
+                        android:layout_margin="5sp"
+                        android:padding="2sp"
+                        android:text="Born on " />
+
+
+                    <TextView
+                        android:id="@+id/person_birth_place_text_view"
+                        style="@style/AinslieMediumTextStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/person_born_on_text_view"
+                        android:layout_gravity="center_vertical"
+                        android:layout_margin="5sp"
+                        android:padding="2sp"
+                        android:text="Birth Place " />
+                </LinearLayout>
+            </LinearLayout>
         </android.support.design.widget.CollapsingToolbarLayout>
-
     </android.support.design.widget.AppBarLayout>
 
 
@@ -60,7 +117,6 @@
         android:clipToPadding="false"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-
         <LinearLayout
             android:id="@+id/person_lower_layout"
             android:layout_width="match_parent"
@@ -68,56 +124,8 @@
             android:layout_below="@+id/upper_layout"
             android:orientation="vertical">
 
-
-            <LinearLayout
-                android:id="@+id/person_bio_linear_layout"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/color_black"
-                android:orientation="vertical"
-                android:gravity="center"
-                >
-
-                <TextView
-                    android:id="@+id/person_known_for_text_view"
-                    style="@style/AinslieMediumTextStyle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_weight="1"
-                    android:layout_margin="5sp"
-                    android:padding="2sp"
-                    android:text="Known for" />
-
-                <TextView
-                    android:id="@+id/person_born_on_text_view"
-                    style="@style/AinslieMediumTextStyle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_margin="5sp"
-                    android:layout_weight="2"
-                    android:padding="2sp"
-                    android:text="Born on " />
-
-
-                <TextView
-                    android:id="@+id/person_birth_place_text_view"
-                    style="@style/AinslieMediumTextStyle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="5sp"
-                    android:layout_gravity="center_vertical"
-                    android:layout_weight="3"
-                    android:padding="2sp"
-                    android:text="Birth Place " />
-
-
-            </LinearLayout>
-
-
             <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
-                android:id="@+id/overview_card_view"
+                android:id="@+id/person_bio_card_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -196,14 +204,7 @@
                         android:text="Complete Filmography >>"
                         android:textStyle="bold" />
                 </LinearLayout>
-
-
             </android.support.v7.widget.CardView>
-
-
         </LinearLayout>
-
     </android.support.v4.widget.NestedScrollView>
-
-
 </android.support.design.widget.CoordinatorLayout>

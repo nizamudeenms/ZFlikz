@@ -34,8 +34,8 @@ import retrofit2.Response;
 public class PersonActivity extends AppCompatActivity  {
     TextView personNameTextView, personBiographyTextView, personBornOnTextView, personPlaceOfBirth, personKnownForTextView, completeFilmographyTextView;
     ImageView personImageView, personBackgroundImageView;
-    LinearLayout personLinearLayout;
-    CardView personCardView;
+//    LinearLayout personLinearLayout;
+    CardView personCardView, personBioCardView;
     PersonCastAdapter personCastAdapter;
     RecyclerView personCreditsRecyclerView;
     ArrayList<PersonCast> castList = new ArrayList<>();
@@ -44,7 +44,7 @@ public class PersonActivity extends AppCompatActivity  {
 
 
     int personId;
-    String birthday = null, birthPlace = null;
+    String birthday, birthPlace;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,7 +55,7 @@ public class PersonActivity extends AppCompatActivity  {
 
         personCastAdapter = new PersonCastAdapter(this, castList);
 
-        personLinearLayout = findViewById(R.id.person_bio_linear_layout);
+//        personLinearLayout = findViewById(R.id.person_bio_linear_layout);
         personImageView = findViewById(R.id.person_back_drop_image);
         personBackgroundImageView = findViewById(R.id.person_background_image_view);
         personNameTextView = findViewById(R.id.person_name_textview);
@@ -64,6 +64,7 @@ public class PersonActivity extends AppCompatActivity  {
         personPlaceOfBirth = findViewById(R.id.person_birth_place_text_view);
         personKnownForTextView = findViewById(R.id.person_known_for_text_view);
         personCardView= findViewById(R.id.person_cast_card_view);
+        personBioCardView= findViewById(R.id.person_bio_card_view);
         personCreditsRecyclerView= findViewById(R.id.person_cast_recycler_view);
         completeFilmographyTextView = findViewById(R.id.person_complete_cast_text_view);
 
@@ -77,8 +78,8 @@ public class PersonActivity extends AppCompatActivity  {
         getPersonDetails();
         getPersonCredits();
 
-        LinearLayout.LayoutParams parms = new LinearLayout.LayoutParams(width, tempHeight);
-        personLinearLayout.setLayoutParams(parms);
+//        LinearLayout.LayoutParams parms = new LinearLayout.LayoutParams(width, tempHeight);
+//        personLinearLayout.setLayoutParams(parms);
 
         completeFilmographyTextView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -112,7 +113,8 @@ public class PersonActivity extends AppCompatActivity  {
                 PersonDetails personDetails = response.body();
 
                 try {
-                    if (personDetails.getBirthday() != null) {
+                    birthday = personDetails.getBirthday();
+                    if (birthday != null) {
                         SimpleDateFormat fromSystem = new SimpleDateFormat("yyyy-MM-dd");
                         SimpleDateFormat myFormat = new SimpleDateFormat("dd-MMMM-yyyy");
 
@@ -125,11 +127,34 @@ public class PersonActivity extends AppCompatActivity  {
                 }
 
                 personNameTextView.setText(personDetails.getName());
-                personBiographyTextView.setText(personDetails.getBiography());
-                personBornOnTextView.setText(birthday);
-                birthPlace = getString(R.string.born_place) + personDetails.getPlaceOfBirth();
-                personPlaceOfBirth.setText(birthPlace);
-                personKnownForTextView.setText(getString(R.string.known_for) + personDetails.getKnownForDepartment());
+
+
+                if (birthday == null || birthday.isEmpty()) {
+                    personBornOnTextView.setVisibility(View.GONE);
+                } else {
+                    personBornOnTextView.setText(birthday);
+                }
+
+                if (personDetails.getPlaceOfBirth() == null || personDetails.getPlaceOfBirth().isEmpty()) {
+                    personPlaceOfBirth.setVisibility(View.GONE);
+                } else {
+                    birthPlace = getString(R.string.born_place) + personDetails.getPlaceOfBirth();
+                    personPlaceOfBirth.setText(birthPlace);
+                }
+
+                if (personDetails.getBiography() == null || personDetails.getBiography().isEmpty()) {
+                    personBiographyTextView.setVisibility(View.GONE);
+                    personBioCardView.setVisibility(View.GONE);
+
+                } else {
+                    personBiographyTextView.setText(personDetails.getBiography());
+                }
+
+                if (personDetails.getKnownForDepartment() == null || personDetails.getKnownForDepartment().isEmpty()) {
+                    personKnownForTextView.setVisibility(View.GONE);
+                } else {
+                    personKnownForTextView.setText(getString(R.string.known_for) + personDetails.getKnownForDepartment());
+                }
 
                 if (personDetails.getProfilePath() != null) {
                     GlideApp.with(getApplicationContext()).load("http://image.tmdb.org/t/p/w500" + personDetails.getProfilePath()).centerCrop().error(R.drawable.person_placeholder).into(personImageView);
