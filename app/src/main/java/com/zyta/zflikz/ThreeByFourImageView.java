@@ -6,17 +6,17 @@ import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.widget.ImageView;
 
-public class SquareImageView  extends ImageView {
+public class ThreeByFourImageView  extends ImageView {
 
-    public SquareImageView(Context context) {
+    public ThreeByFourImageView(Context context) {
         super(context);
     }
 
-    public SquareImageView(Context context, AttributeSet attrs) {
+    public ThreeByFourImageView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public SquareImageView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public ThreeByFourImageView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
 
@@ -27,8 +27,8 @@ public class SquareImageView  extends ImageView {
 //        int width = displayMetrics.widthPixels;
         int height = displayMetrics.heightPixels;
         int width = getMeasuredWidth();
-//        int tempHeight  = height /4;
-//        tempHeight = tempHeight * 3;
-        setMeasuredDimension(width, width);
+        int tempHeight  = height /5;
+        tempHeight = tempHeight * 4;
+        setMeasuredDimension(width, tempHeight);
     }
 }

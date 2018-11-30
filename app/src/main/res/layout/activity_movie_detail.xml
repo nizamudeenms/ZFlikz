@@ -102,7 +102,6 @@
                         android:layout_marginRight="5dp"
                         android:layout_marginBottom="5dp"
                         android:layout_toRightOf="@+id/poster"
-                        android:fontFamily="@font/helvetica_neue_bold"
                         android:padding="5sp"
                         android:text="Sample" />
 
@@ -232,8 +231,8 @@
                         style="@style/smallTextStyle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_margin="5dp"
                         android:padding="5dp"
+                        android:layout_margin="5dp"
                         android:text="@string/video_label" />
                 </LinearLayout>
             </android.support.v7.widget.CardView>
@@ -392,6 +391,39 @@
                 </FrameLayout>
             </android.support.v7.widget.CardView>
 
+            <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/similiar_movie_card_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="5dp"
+                android:backgroundTint="@color/blackColorAccent70Percent"
+                card_view:cardCornerRadius="2dp"
+                card_view:cardElevation="50dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        style="@style/SubTitleTextStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+                        android:padding="5dp"
+                        android:text="Similar Movies"
+                        android:textStyle="bold" />
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/similiar_movie_recycler_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/blackColorAccent70Percent" />
+
+                </LinearLayout>
+            </android.support.v7.widget.CardView>
+
             <android.support.design.widget.FloatingActionButton
                 android:id="@+id/favorite_fab"
                 android:layout_width="wrap_content"
@@ -404,7 +436,6 @@
                 app:rippleColor="@android:color/holo_blue_light" />
 
         </LinearLayout>
-
 
     </android.support.v4.widget.NestedScrollView>
 

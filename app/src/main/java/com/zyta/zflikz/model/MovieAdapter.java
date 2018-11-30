@@ -60,19 +60,19 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MyViewHolder
             public void onClick(View v) {
                 Intent intent = new Intent(mContext, MovieDetailActivity.class);
 //                intent.putExtra("poster_url", "http://image.tmdb.org/t/p/w780" + movies.get(position).getPosterPath());
-                intent.putExtra("poster_url", (movies.get(position).getPosterPath() == null) ? null : "http://image.tmdb.org/t/p/w500" + movies.get(position).getPosterPath());
-                intent.putExtra("backdrop_url", (movies.get(position).getBackdropPath() == null) ? null : "http://image.tmdb.org/t/p/w500" + movies.get(position).getBackdropPath());
+//                intent.putExtra("poster_url", (movies.get(position).getPosterPath() == null) ? null : "http://image.tmdb.org/t/p/w500" + movies.get(position).getPosterPath());
+//                intent.putExtra("backdrop_url", (movies.get(position).getBackdropPath() == null) ? null : "http://image.tmdb.org/t/p/w500" + movies.get(position).getBackdropPath());
 //                if (movies.get(position).getBackdropPath() == null) {
 //                    intent.putExtra("backdrop_url",movies.get(position).getBackdropPath());
 //                } else {
 //                    intent.putExtra("backdrop_url", "http://image.tmdb.org/t/p/w780" + movies.get(position).getBackdropPath());
 //                }
                 intent.putExtra("id", movies.get(position).getId());
-                intent.putExtra("overview", movies.get(position).getOverview());
-                intent.putExtra("release_date", movies.get(position).getReleaseDate());
-                intent.putExtra("title", movies.get(position).getTitle());
-                intent.putExtra("vote_average", movies.get(position).getVoteAverage());
-                intent.putExtra("favorite", movies.get(position).getVoteCount());
+//                intent.putExtra("overview", movies.get(position).getOverview());
+//                intent.putExtra("release_date", movies.get(position).getReleaseDate());
+//                intent.putExtra("title", movies.get(position).getTitle());
+//                intent.putExtra("vote_average", movies.get(position).getVoteAverage());
+//                intent.putExtra("favorite", movies.get(position).getVoteCount());
                 mContext.startActivity(intent);
             }
         });

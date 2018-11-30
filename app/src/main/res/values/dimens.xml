@@ -10,6 +10,8 @@
     <dimen name="row_padding">10dp</dimen>
     <dimen name="card_elevation">4dp</dimen>
     <dimen name="grid_image_size">120dp</dimen>
+    <dimen name="person_grid_image_width">140dp</dimen>
+    <dimen name="person_grid_image_height">140dp</dimen>
     <dimen name="overlap_size">26dp</dimen>
     <integer name="grid_number_cols">2</integer>
 </resources>

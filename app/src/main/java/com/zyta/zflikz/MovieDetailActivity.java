@@ -1,13 +1,9 @@
 package com.zyta.zflikz;
 
 import android.content.Intent;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
@@ -16,7 +12,6 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -33,6 +28,9 @@ import com.zyta.zflikz.model.ProductionCountry;
 import com.zyta.zflikz.model.Review;
 import com.zyta.zflikz.model.ReviewAdapter;
 import com.zyta.zflikz.model.ReviewDetails;
+import com.zyta.zflikz.model.SimiliarMovie;
+import com.zyta.zflikz.model.SimiliarMovieAdapter;
+import com.zyta.zflikz.model.SimiliarMovieDetails;
 import com.zyta.zflikz.model.SpokenLanguage;
 import com.zyta.zflikz.model.VideoAdapter;
 import com.zyta.zflikz.model.VideoDetails;
@@ -40,8 +38,9 @@ import com.zyta.zflikz.model.VideoList;
 import com.zyta.zflikz.utils.MovieAPI;
 
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -49,23 +48,13 @@ import retrofit2.Response;
 
 
 public class MovieDetailActivity extends AppCompatActivity {
-    private SQLiteDatabase mMovieDb;
-    Cursor favoriteMovies;
-    String isFavorite = "N";
     private Integer movieId = null;
-    private Boolean video = null;
     private Double voteAverage = 0.0;
     private String title = null;
-    private Double popularity = 0.0;
     private String posterPath = null;
-    private String originalLanguage = null;
-    private String originalTitle = null;
-    private List<Integer> genreIds = null;
     private String backdropPath = null;
-    private Boolean adult = null;
     private String overview = null;
     private String releaseDate = null;
-    private Integer voteCount = null;
     private ArrayList<Crew> crewList = new ArrayList<>();
     private ArrayList<Cast> castList = new ArrayList<>();
     private ArrayList<ProductionCompany> productionCompanyList = new ArrayList<>();
@@ -75,22 +64,27 @@ public class MovieDetailActivity extends AppCompatActivity {
     private ArrayList<VideoList> videosListArrayList = new ArrayList<>();
     private ArrayList<String> videoUrlsArrayList = new ArrayList<>();
     private ArrayList<Review> reviewsList = new ArrayList<>();
+    private ArrayList<SimiliarMovie> similiarMoviesList = new ArrayList<>();
 
     CreditsAdapter creditsAdapter;
     ProductionAdapter productionAdapter;
     VideoAdapter videoAdapter;
     ReviewAdapter reviewAdapter;
-    //    MovieDetails movieDetails = new MovieDetails();
+    SimiliarMovieAdapter similiarMovieAdapter;
     ImageView posterImageView;
     ImageView backDropImageView;
     TextView movieNameTextView;
     TextView overviewTextView, ratingTextView, releaseDateTextView, completeCastTextView;
-    CardView ratingCardView, releaseDateCardView, overviewCardView, productionCardView, castCardView, videoCardView,reviewCardView;
+    CardView ratingCardView, releaseDateCardView, overviewCardView, productionCardView, castCardView, videoCardView, reviewCardView, similiarMovieCardView;
     ImageView recImageView;
-    RecyclerView crewRecyclerView, prodrecyclerView, videosRecyclerView, reviewsRecylerView;
+    RecyclerView crewRecyclerView, prodrecyclerView, videosRecyclerView, reviewsRecylerView, similiarMovieRecyclerView;
     final String FIRST_VIDEO_URL = "<body style=\"margin:0 0 0 0; padding:0 0 0 0; \"><iframe   style=\"width: 100%; height: 100%;\" frameborder=\"0\" framespacing=\"0\" src=\"https://www.youtube.com/embed/";
     final String SECOND_VIDEO_URL = "\"  allowfullscreen ></iframe></body>";
     String FINAL_URL = null;
+
+    interface CastItemClicked {
+        void castClicked(Bundle b);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,9 +93,9 @@ public class MovieDetailActivity extends AppCompatActivity {
 
         Button converseButton;
         final FloatingActionButton favoriteFAB;
-        final NestedScrollView scrollView;
-        final FrameLayout frameLayout;
-        final CoordinatorLayout linearLayout;
+//        final NestedScrollView scrollView;
+//        final FrameLayout frameLayout;
+//        final CoordinatorLayout linearLayout;
 
 
         movieId = getIntent().getIntExtra("id", 0);
@@ -110,7 +104,8 @@ public class MovieDetailActivity extends AppCompatActivity {
         creditsAdapter = new CreditsAdapter(this, castList);
         productionAdapter = new ProductionAdapter(this, productionCompanyList);
         videoAdapter = new VideoAdapter(this, videoUrlsArrayList);
-        reviewAdapter = new ReviewAdapter(this,reviewsList);
+        reviewAdapter = new ReviewAdapter(this, reviewsList);
+        similiarMovieAdapter = new SimiliarMovieAdapter(this, similiarMoviesList);
 
         recImageView = findViewById(R.id.back_temp);
 
@@ -126,15 +121,19 @@ public class MovieDetailActivity extends AppCompatActivity {
         videoCardView = findViewById(R.id.video_card_view);
         reviewsRecylerView = findViewById(R.id.reviews_recycler_view);
         reviewCardView = findViewById(R.id.review_card_view);
+        similiarMovieRecyclerView = findViewById(R.id.similiar_movie_recycler_view);
+        similiarMovieCardView = findViewById(R.id.similiar_movie_card_view);
 
         crewRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayout.HORIZONTAL, false));
         prodrecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayout.HORIZONTAL, false));
         videosRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayout.HORIZONTAL, false));
         reviewsRecylerView.setLayoutManager(new LinearLayoutManager(this, LinearLayout.HORIZONTAL, false));
+        similiarMovieRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayout.HORIZONTAL, false));
         crewRecyclerView.setAdapter(creditsAdapter);
         videosRecyclerView.setAdapter(videoAdapter);
         prodrecyclerView.setAdapter(productionAdapter);
         reviewsRecylerView.setAdapter(reviewAdapter);
+        similiarMovieRecyclerView.setAdapter(similiarMovieAdapter);
 //        ViewCompat.setTransitionName(findViewById(R.id.app_bar_layout), EXTRA_IMAGE);
         getAllMovieDetails();
 
@@ -147,58 +146,24 @@ public class MovieDetailActivity extends AppCompatActivity {
         backDropImageView = (ImageView) findViewById(R.id.back_drop_image);
         favoriteFAB = (FloatingActionButton) findViewById(R.id.favorite_fab);
 //      videoCardView = findViewById(R.id.video_card_view);
-        linearLayout = findViewById(R.id.complete_layout);
+//        linearLayout = findViewById(R.id.complete_layout);
 
         converseButton = findViewById(R.id.con_button);
 
 
-        backdropPath = getIntent().getStringExtra("backdrop_url");
-        posterPath = getIntent().getStringExtra("poster_url");
-        overview = getIntent().getStringExtra("overview");
-        title = getIntent().getStringExtra("title");
-        releaseDate = "Release Date : " + getIntent().getStringExtra("release_date");
-        voteAverage = (getIntent().getExtras().getDouble("vote_average"));
-        backdropPath = getIntent().getStringExtra("backdrop_url");
-
-        movieNameTextView.setText(title);
-
-        if (overview == null || overview.isEmpty()) {
-            System.out.println("overview = " + overview);
-            overviewCardView.setVisibility(View.GONE);
-        } else {
-            overviewTextView.setText(overview);
-        }
-        if (releaseDate.isEmpty() || releaseDate == null) {
-            System.out.println("releaseDate = " + releaseDate);
-            releaseDateCardView.setVisibility(View.GONE);
-        } else {
-            releaseDateTextView.setText(releaseDate);
-        }
-        if (voteAverage == 0.0 || voteAverage == null) {
-            System.out.println("voteAverage = " + voteAverage);
-            ratingCardView.setVisibility(View.GONE);
-        } else {
-            ratingTextView.setText(String.valueOf(voteAverage));
-        }
-
-        if (posterPath != null) {
-            GlideApp.with(getApplicationContext()).load(posterPath).placeholder(R.drawable.zlikx_logo).into(posterImageView);
-            GlideApp.with(getApplicationContext()).load((backdropPath == null) ? posterPath : backdropPath).placeholder(R.drawable.zlikx_logo).into(backDropImageView);
-            GlideApp.with(getApplicationContext()).load((backdropPath == null) ? posterPath : backdropPath).placeholder(R.drawable.zlikx_logo).transform(new BlurTransformation(getApplicationContext())).into(recImageView);
-        } else {
-            GlideApp.with(getApplicationContext()).load(R.drawable.no_image_available).placeholder(R.drawable.zlikx_logo).into(posterImageView);
-            GlideApp.with(getApplicationContext()).load((backdropPath == null) ? R.drawable.no_image_available : backdropPath).placeholder(R.drawable.zlikx_logo).into(backDropImageView);
-            GlideApp.with(getApplicationContext()).load((backdropPath == null) ? R.drawable.no_image_available : backdropPath).placeholder(R.drawable.zlikx_logo).transform(new BlurTransformation(getApplicationContext())).into(recImageView);
-        }
-        System.out.println("titele here is : " + title);
+//        backdropPath = getIntent().getStringExtra("backdrop_url");
+//        posterPath = getIntent().getStringExtra("poster_url");
+//        overview = getIntent().getStringExtra("overview");
+//        title = getIntent().getStringExtra("title");
+//        releaseDate = "Release Date : " + getIntent().getStringExtra("release_date");
+//        voteAverage = (getIntent().getExtras().getDouble("vote_average"));
+//        backdropPath = getIntent().getStringExtra("backdrop_url");
 
 
-        for (ProductionCompany companies : productionCompanyList) {
-            System.out.println("Company in main are " + companies.getName());
-        }
         getCredits();
         getVideo();
         getReviews();
+        getSimiliarMovies();
 
 
         creditsAdapter.notifyDataSetChanged();
@@ -261,13 +226,53 @@ public class MovieDetailActivity extends AppCompatActivity {
                     creditsSnackbar.show();
                 } else {
                     Intent fullCreditsView = new Intent(getApplicationContext(), FullCreditsActivity.class);
+                    fullCreditsView.putExtra("type", "movie");
                     fullCreditsView.putExtra("cast_list", castList);
                     fullCreditsView.putExtra("crew_list", crewList);
                     startActivity(fullCreditsView);
                 }
             }
         });
+
         reviewAdapter.notifyDataSetChanged();
+
+    }
+
+    private void getSimiliarMovies() {
+        System.out.println("Inside Get Similiar Movies : Movie Id  : " + movieId);
+
+        final Call<SimiliarMovieDetails> similiarMovieCall = MovieAPI.getService().getSimiliarMovies(movieId, BuildConfig.TMDB_KEY);
+        similiarMovieCall.enqueue(new Callback<SimiliarMovieDetails>() {
+            @Override
+            public void onResponse(Call<SimiliarMovieDetails> call, Response<SimiliarMovieDetails> response) {
+                SimiliarMovieDetails similiarMovieDetails = response.body();
+
+                System.out.println("reviewDetails : " + similiarMovieDetails.getSimiliarMovies().size());
+
+                similiarMoviesList.addAll(similiarMovieDetails.getSimiliarMovies());
+                similiarMovieAdapter.notifyDataSetChanged();
+
+                System.out.println("similiarMoviesList = " + similiarMoviesList.size());
+                if (similiarMovieDetails.getSimiliarMovies().size() == 0) {
+                    similiarMovieCardView.setVisibility(View.GONE);
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<SimiliarMovieDetails> call, Throwable t) {
+                if (t instanceof IOException) {
+                    Snackbar mySnackbar = Snackbar.make(findViewById(R.id.complete_layout), "No Network", Snackbar.LENGTH_LONG);
+                    mySnackbar.show();
+                    System.out.println("Failure is : " + t.getMessage());
+                } else {
+                    Snackbar mySnackbar = Snackbar.make(findViewById(R.id.complete_layout), "Error Occurred", Snackbar.LENGTH_LONG);
+                    mySnackbar.show();
+                    System.out.println("Failure is : " + t.getMessage());
+                }
+            }
+
+        });
 
     }
 
@@ -281,7 +286,7 @@ public class MovieDetailActivity extends AppCompatActivity {
             public void onResponse(Call<ReviewDetails> call, Response<ReviewDetails> response) {
                 ReviewDetails reviewDetails = response.body();
 
-                System.out.println("reviewDetails : "+ reviewDetails.getId());
+                System.out.println("reviewDetails : " + reviewDetails.getId());
 
                 Log.e("Movie Id received is :", "Reviews onResponse: " + response.body().getId() + "  Title : " + reviewDetails.getReviews().size());
 
@@ -392,6 +397,53 @@ public class MovieDetailActivity extends AppCompatActivity {
                 overview = movieDetails.getOverview();
                 releaseDate = movieDetails.getReleaseDate();
                 voteAverage = movieDetails.getVoteAverage();
+                title = movieDetails.getTitle();
+                posterPath = movieDetails.getPosterPath();
+                backdropPath = movieDetails.getBackdropPath();
+
+                movieNameTextView.setText(title);
+
+
+                if (overview == null || overview.isEmpty()) {
+                    System.out.println("overview = " + overview);
+                    overviewCardView.setVisibility(View.GONE);
+                } else {
+                    overviewTextView.setText(overview);
+                }
+                if (releaseDate.isEmpty() || releaseDate == null) {
+                    System.out.println("releaseDate = " + releaseDate);
+                    releaseDateCardView.setVisibility(View.GONE);
+                } else {
+                    try {
+                        SimpleDateFormat fromSystem = new SimpleDateFormat("yyyy-MM-dd");
+                        SimpleDateFormat myFormat = new SimpleDateFormat("dd-MMMM-yyyy");
+
+                        String reformattedStr = myFormat.format(fromSystem.parse(releaseDate));
+                        releaseDate = getString(R.string.release_date) + reformattedStr;
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                    releaseDateTextView.setText(releaseDate);
+                }
+                if (voteAverage == 0.0 || voteAverage == null) {
+                    System.out.println("voteAverage = " + voteAverage);
+                    ratingCardView.setVisibility(View.GONE);
+                } else {
+                    ratingTextView.setText(String.valueOf(voteAverage));
+                }
+
+                if (posterPath != null) {
+                    posterPath = "http://image.tmdb.org/t/p/w500" + posterPath;
+                    backdropPath = "http://image.tmdb.org/t/p/w500" + backdropPath;
+                    GlideApp.with(getApplicationContext()).load(posterPath).placeholder(R.drawable.zlikx_logo).into(posterImageView);
+                    GlideApp.with(getApplicationContext()).load((backdropPath == null) ? posterPath : backdropPath).placeholder(R.drawable.zlikx_logo).into(backDropImageView);
+                    GlideApp.with(getApplicationContext()).load((backdropPath == null) ? posterPath : backdropPath).placeholder(R.drawable.zlikx_logo).transform(new BlurTransformation(getApplicationContext())).into(recImageView);
+                } else {
+                    GlideApp.with(getApplicationContext()).load(R.drawable.no_image_available).placeholder(R.drawable.zlikx_logo).into(posterImageView);
+                    GlideApp.with(getApplicationContext()).load((backdropPath == null) ? R.drawable.no_image_available : backdropPath).placeholder(R.drawable.zlikx_logo).into(backDropImageView);
+                    GlideApp.with(getApplicationContext()).load((backdropPath == null) ? R.drawable.no_image_available : backdropPath).placeholder(R.drawable.zlikx_logo).transform(new BlurTransformation(getApplicationContext())).into(recImageView);
+                }
+
 
             }
 
@@ -457,6 +509,7 @@ public class MovieDetailActivity extends AppCompatActivity {
             }
         });
     }
+
 }
 
 

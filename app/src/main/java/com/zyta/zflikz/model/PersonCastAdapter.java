@@ -11,50 +11,50 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.zyta.zflikz.GlideApp;
-import com.zyta.zflikz.PersonActivity;
+import com.zyta.zflikz.MovieDetailActivity;
 import com.zyta.zflikz.R;
 
 import java.util.ArrayList;
 
-public class CreditsAdapter extends RecyclerView.Adapter<CreditsAdapter.CreditsHolder> {
+public class PersonCastAdapter extends RecyclerView.Adapter<PersonCastAdapter.PersonCreditsHolder> {
 
-    private ArrayList<Cast> castArrayList = new ArrayList<Cast>();
+    private ArrayList<PersonCast> castArrayList = new ArrayList<PersonCast>();
     Context mContext;
 
 
-    public CreditsAdapter(Context context, ArrayList<Cast> castArrayList) {
+    public PersonCastAdapter(Context context, ArrayList<PersonCast> castArrayList) {
         mContext = context;
         this.castArrayList = castArrayList;
     }
 
     @NonNull
     @Override
-    public CreditsHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public PersonCreditsHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         mContext = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(mContext);
         View view = inflater.inflate(R.layout.content_crew, parent, false);
-        return new CreditsHolder(view,mContext, castArrayList);
+        return new PersonCreditsHolder(view, mContext, castArrayList);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull CreditsHolder holder, int position) {
+    public void onBindViewHolder(@NonNull PersonCreditsHolder holder, int position) {
         castArrayList.get(position);
         ImageView castImage = holder.castImage;
         TextView castName = holder.castName;
         TextView castChar = holder.castChar;
-        if (castArrayList.get(position).getProfilePath() != null) {
-            GlideApp.with(mContext).load("http://image.tmdb.org/t/p/w185" + castArrayList.get(position).getProfilePath()).centerCrop().placeholder(R.drawable.zlikx_logo).into(castImage);
-        }else {
+        if (castArrayList.get(position).getPosterPath() != null) {
+            GlideApp.with(mContext).load("http://image.tmdb.org/t/p/w185" + castArrayList.get(position).getPosterPath()).centerCrop().placeholder(R.drawable.zlikx_logo).into(castImage);
+        } else {
             GlideApp.with(mContext).load(R.drawable.person_placeholder).placeholder(R.drawable.zlikx_logo).into(castImage);
         }
-        castName.setText(castArrayList.get(position).getName());
+        castName.setText(castArrayList.get(position).getTitle());
         castChar.setText(castArrayList.get(position).getCharacter());
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(mContext, PersonActivity.class);
-                intent.putExtra("personId", castArrayList.get(position).getId());
+                Intent intent = new Intent(mContext, MovieDetailActivity.class);
+                intent.putExtra("id", castArrayList.get(position).getId());
                 mContext.startActivity(intent);
             }
         });
@@ -67,13 +67,13 @@ public class CreditsAdapter extends RecyclerView.Adapter<CreditsAdapter.CreditsH
         return castArrayList.size();
     }
 
-    public class CreditsHolder extends RecyclerView.ViewHolder{
+    public class PersonCreditsHolder extends RecyclerView.ViewHolder {
         ImageView castImage;
         TextView castName, castChar;
-        ArrayList<Cast> castArrayList;
+        ArrayList<PersonCast> castArrayList;
         Context context;
 
-        public CreditsHolder(View itemView,Context mContext, ArrayList<Cast> castArrayList) {
+        public PersonCreditsHolder(View itemView, Context mContext, ArrayList<PersonCast> castArrayList) {
             super(itemView);
             this.castArrayList = castArrayList;
             this.context = mContext;

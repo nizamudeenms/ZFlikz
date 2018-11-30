@@ -12,6 +12,9 @@ import com.zyta.zflikz.model.Cast;
 import com.zyta.zflikz.model.Crew;
 import com.zyta.zflikz.model.FullCredits;
 import com.zyta.zflikz.model.FullCreditsAdapter;
+import com.zyta.zflikz.model.PersonCast;
+import com.zyta.zflikz.model.PersonCrew;
+import com.zyta.zflikz.model.PersonFullCreditsAdapter;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -19,14 +22,21 @@ import java.util.Comparator;
 
 import jp.wasabeef.recyclerview.animators.FlipInTopXAnimator;
 
-public class FullCreditsActivity extends AppCompatActivity implements FullCreditsAdapter.OnItemClickListener {
+public class FullCreditsActivity extends AppCompatActivity implements FullCreditsAdapter.OnItemClickListener,PersonFullCreditsAdapter.OnItemClickListener {
     RecyclerView creditsRecyclerview;
     private ArrayList<Crew> crewList = new ArrayList<>();
     private ArrayList<Cast> castList = new ArrayList<>();
+
+    private ArrayList<PersonCrew> personCrewArrayList = new ArrayList<>();
+    private ArrayList<PersonCast> personCastArrayList = new ArrayList<>();
+
     private Comparator<Crew> crewComparator;
+    private Comparator<PersonCrew> personCrewComparator;
     private FullCreditsAdapter mSectionedRecyclerAdapter;
+    private PersonFullCreditsAdapter personFullCreditsAdapter;
     FloatingActionButton myFab;
     Boolean isExpanded = false;
+    String type = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,64 +45,92 @@ public class FullCreditsActivity extends AppCompatActivity implements FullCredit
 
         creditsRecyclerview = findViewById(R.id.credits_recycler_view);
         creditsRecyclerview.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-
-        crewList = (ArrayList<Crew>) getIntent().getSerializableExtra("crew_list");
-
-        castList = (ArrayList<Cast>) getIntent().getSerializableExtra("cast_list");
-
-
-        this.crewComparator = (o1, o2) -> o1.getDepartment().compareTo(o2.getDepartment());
-
-        if (!crewList.isEmpty()) {
-            Collections.sort(crewList, crewComparator);
-        }
-
-        mSectionedRecyclerAdapter = new FullCreditsAdapter(castList, crewList, this);
-
-        mSectionedRecyclerAdapter.setOnItemClickListener(this);
         creditsRecyclerview.setItemAnimator(new FlipInTopXAnimator());
-        creditsRecyclerview.setAdapter(mSectionedRecyclerAdapter);
+        type = getIntent().getSerializableExtra("type").toString();
 
+        if(type.equals("person")) {
+            personCrewArrayList = (ArrayList<PersonCrew>) getIntent().getSerializableExtra("crew_list");
+            personCastArrayList = (ArrayList<PersonCast>) getIntent().getSerializableExtra("cast_list");
+            this.personCrewComparator = (o1, o2) -> o1.getDepartment().compareTo(o2.getDepartment());
+            if (!personCrewArrayList.isEmpty()) {
+                Collections.sort(personCrewArrayList, personCrewComparator);
+            }
+            personFullCreditsAdapter = new PersonFullCreditsAdapter(personCastArrayList, personCrewArrayList, this);
+            personFullCreditsAdapter.setOnItemClickListener(this);
+            personFullCreditsAdapter.notifyDataChanged();
+            creditsRecyclerview.setAdapter(personFullCreditsAdapter);
+            personFullCreditsAdapter.collapseAllSections();
 
-        mSectionedRecyclerAdapter.notifyDataChanged();
-        mSectionedRecyclerAdapter.collapseAllSections();
+        } else if(type.equals("movie")) {
+            crewList = (ArrayList<Crew>) getIntent().getSerializableExtra("crew_list");
+            castList = (ArrayList<Cast>) getIntent().getSerializableExtra("cast_list");
+            this.crewComparator = (o1, o2) -> o1.getDepartment().compareTo(o2.getDepartment());
+            if (!crewList.isEmpty()) {
+                Collections.sort(crewList, crewComparator);
+            }
+            mSectionedRecyclerAdapter = new FullCreditsAdapter(castList, crewList, this);
+            mSectionedRecyclerAdapter.setOnItemClickListener(this);
+            creditsRecyclerview.setAdapter(mSectionedRecyclerAdapter);
+            mSectionedRecyclerAdapter.notifyDataChanged();
+            mSectionedRecyclerAdapter.collapseAllSections();
+        }
 
         myFab = (FloatingActionButton) findViewById(R.id.more_fab);
         myFab.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 System.out.println("isExpanded = " + isExpanded);
                 if (!isExpanded) {
-                    mSectionedRecyclerAdapter.expandAllSections();
+                    if (type.equals("person")) {
+                        personFullCreditsAdapter.expandAllSections();
+                    } else if(type.equals("movie")){
+                        mSectionedRecyclerAdapter.expandAllSections();
+                    }
                     myFab.setImageResource(R.drawable.ic_keyboard_arrow_up_black_24dp);
                     isExpanded = true;
                     Toast.makeText(FullCreditsActivity.this, "Expanded all Sections", Toast.LENGTH_SHORT).show();
                 } else {
-                    mSectionedRecyclerAdapter.collapseAllSections();
+                    if (type.equals("person")) {
+                        personFullCreditsAdapter.collapseAllSections();
+                    } else if(type.equals("movie")){
+                        mSectionedRecyclerAdapter.collapseAllSections();
+                    }
                     myFab.setImageResource(R.drawable.ic_keyboard_arrow_down_black_24dp);
                     isExpanded = false;
                     Toast.makeText(FullCreditsActivity.this, "Collapsed all Sections", Toast.LENGTH_SHORT).show();
-
                 }
             }
         });
 
     }
+//
+//    @Override
+//    public void onItemClicked(FullCredits fullCredits) {
+////        final int index = castList.indexOf(cast);
+////        castList.remove(cast);
+////        mSectionedRecyclerAdapter.notifyItemRemovedAtPosition(index);
+//    }
 
     @Override
     public void onItemClicked(FullCredits fullCredits) {
-//        final int index = castList.indexOf(cast);
+//        final int index = castList.indexOf(fullCredits);
 //        castList.remove(cast);
 //        mSectionedRecyclerAdapter.notifyItemRemovedAtPosition(index);
     }
 
     @Override
     public void onSubheaderClicked(int position) {
-        if (mSectionedRecyclerAdapter.isSectionExpanded(mSectionedRecyclerAdapter.getSectionIndex(position))) {
-            mSectionedRecyclerAdapter.collapseSection(mSectionedRecyclerAdapter.getSectionIndex(position));
-            Toast.makeText(this, "Collapsed all sections", Toast.LENGTH_SHORT).show();
-        } else {
-            mSectionedRecyclerAdapter.expandSection(mSectionedRecyclerAdapter.getSectionIndex(position));
-            Toast.makeText(this, "Expanded all sections", Toast.LENGTH_SHORT).show();
+        if (type.equals("person")) {
+            if (personFullCreditsAdapter.isSectionExpanded(personFullCreditsAdapter.getSectionIndex(position))) {
+                personFullCreditsAdapter.collapseSection(personFullCreditsAdapter.getSectionIndex(position));
+            } else {
+                personFullCreditsAdapter.expandSection(personFullCreditsAdapter.getSectionIndex(position));
+            }
+        } else if(type.equals("movie")) {
+            if (mSectionedRecyclerAdapter.isSectionExpanded(mSectionedRecyclerAdapter.getSectionIndex(position))) {
+                mSectionedRecyclerAdapter.collapseSection(mSectionedRecyclerAdapter.getSectionIndex(position));
+            } else {
+                mSectionedRecyclerAdapter.expandSection(mSectionedRecyclerAdapter.getSectionIndex(position));
+            }
         }
     }
 }
