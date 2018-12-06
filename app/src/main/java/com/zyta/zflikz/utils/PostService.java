@@ -5,6 +5,7 @@ import com.zyta.zflikz.model.ImageDetails;
 import com.zyta.zflikz.model.MovieDetails;
 import com.zyta.zflikz.model.PersonCreditDetails;
 import com.zyta.zflikz.model.PersonDetails;
+import com.zyta.zflikz.model.PersonImageDetails;
 import com.zyta.zflikz.model.PostList;
 import com.zyta.zflikz.model.ReviewDetails;
 import com.zyta.zflikz.model.SearchResults;
@@ -61,6 +62,10 @@ public interface PostService {
     @GET("person/{person_id}/movie_credits")
     Call<PersonCreditDetails> getPersonCredits(@Path("person_id") Integer personId,
                                                @Query("api_key") String apiKey);
+
+    @GET("person/{person_id}/images")
+    Call<PersonImageDetails> getPersonImageDetails(@Path("person_id") Integer personId,
+                                                   @Query("api_key") String apiKey);
 
     @GET("search/multi")
     Single<SearchResults> getSearchResults(@Query("api_key") String apiKey,

@@ -16,12 +16,20 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.drawee.drawable.ProgressBarDrawable;
+import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
+import com.facebook.drawee.view.SimpleDraweeView;
+import com.stfalcon.frescoimageviewer.ImageViewer;
+import com.zyta.zflikz.model.Backdrop;
 import com.zyta.zflikz.model.Cast;
 import com.zyta.zflikz.model.Credits;
 import com.zyta.zflikz.model.CreditsAdapter;
 import com.zyta.zflikz.model.Crew;
 import com.zyta.zflikz.model.Genre;
+import com.zyta.zflikz.model.ImageDetails;
 import com.zyta.zflikz.model.MovieDetails;
+import com.zyta.zflikz.model.Poster;
 import com.zyta.zflikz.model.ProductionAdapter;
 import com.zyta.zflikz.model.ProductionCompany;
 import com.zyta.zflikz.model.ProductionCountry;
@@ -66,12 +74,19 @@ public class MovieDetailActivity extends AppCompatActivity {
     private ArrayList<Review> reviewsList = new ArrayList<>();
     private ArrayList<SimiliarMovie> similiarMoviesList = new ArrayList<>();
 
+    ArrayList<Backdrop> backdropArrayList = new ArrayList<>();
+    ArrayList<String> backdropPathArrayList = new ArrayList<>();
+
+    ArrayList<Poster> posterArrayList = new ArrayList<>();
+    ArrayList<String> posterPathArrayList = new ArrayList<>();
+
+    String POSTER_BASE_URL = "http://image.tmdb.org/t/p/w500";
+
     CreditsAdapter creditsAdapter;
     ProductionAdapter productionAdapter;
     VideoAdapter videoAdapter;
     ReviewAdapter reviewAdapter;
     SimiliarMovieAdapter similiarMovieAdapter;
-    ImageView posterImageView;
     ImageView backDropImageView;
     TextView movieNameTextView;
     TextView overviewTextView, ratingTextView, releaseDateTextView, completeCastTextView;
@@ -82,6 +97,9 @@ public class MovieDetailActivity extends AppCompatActivity {
     final String SECOND_VIDEO_URL = "\"  allowfullscreen ></iframe></body>";
     String FINAL_URL = null;
 
+
+    SimpleDraweeView posterSimpleDraweeView;
+
     interface CastItemClicked {
         void castClicked(Bundle b);
     }
@@ -89,7 +107,9 @@ public class MovieDetailActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Fresco.initialize(this);
         setContentView(R.layout.activity_movie_detail);
+
 
         Button converseButton;
         final FloatingActionButton favoriteFAB;
@@ -124,6 +144,8 @@ public class MovieDetailActivity extends AppCompatActivity {
         similiarMovieRecyclerView = findViewById(R.id.similiar_movie_recycler_view);
         similiarMovieCardView = findViewById(R.id.similiar_movie_card_view);
 
+        posterSimpleDraweeView = findViewById(R.id.poster_simple_drawee_view);
+
         crewRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayout.HORIZONTAL, false));
         prodrecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayout.HORIZONTAL, false));
         videosRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayout.HORIZONTAL, false));
@@ -137,7 +159,7 @@ public class MovieDetailActivity extends AppCompatActivity {
 //        ViewCompat.setTransitionName(findViewById(R.id.app_bar_layout), EXTRA_IMAGE);
         getAllMovieDetails();
 
-        posterImageView = (ImageView) findViewById(R.id.poster);
+//        posterImageView = (ImageView) findViewById(R.id.poster);
         movieNameTextView = (TextView) findViewById(R.id.movie_name);
         overviewTextView = (TextView) findViewById(R.id.overview_label);
         ratingTextView = (TextView) findViewById(R.id.rating_label);
@@ -150,20 +172,16 @@ public class MovieDetailActivity extends AppCompatActivity {
 
         converseButton = findViewById(R.id.con_button);
 
-
-//        backdropPath = getIntent().getStringExtra("backdrop_url");
-//        posterPath = getIntent().getStringExtra("poster_url");
-//        overview = getIntent().getStringExtra("overview");
-//        title = getIntent().getStringExtra("title");
-//        releaseDate = "Release Date : " + getIntent().getStringExtra("release_date");
-//        voteAverage = (getIntent().getExtras().getDouble("vote_average"));
-//        backdropPath = getIntent().getStringExtra("backdrop_url");
+        GenericDraweeHierarchyBuilder hierarchyBuilder = GenericDraweeHierarchyBuilder.newInstance(getResources())
+                .setFailureImage(R.drawable.no_image_available)
+                .setProgressBarImage(new ProgressBarDrawable());
 
 
         getCredits();
         getVideo();
         getReviews();
         getSimiliarMovies();
+        getImages();
 
 
         creditsAdapter.notifyDataSetChanged();
@@ -181,19 +199,26 @@ public class MovieDetailActivity extends AppCompatActivity {
             }
         });
 
-        posterImageView.setOnClickListener(new View.OnClickListener() {
+        posterSimpleDraweeView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 System.out.println("posterPath = " + posterPath);
-                if (posterPath != null) {
-                    Intent view = new Intent(getApplicationContext(), ImagesActivity.class);
-                    view.putExtra("image_type", "poster");
-                    view.putExtra("movie_id", movieId);
-                    startActivity(view);
-                } else {
-                    Snackbar mySnackbar = Snackbar.make(getWindow().getDecorView(), "Poster Unavailable", Snackbar.LENGTH_LONG);
-                    mySnackbar.show();
-                }
+//                if (posterPath != null) {
+//                    Intent view = new Intent(getApplicationContext(), ImagesActivity.class);
+//                    view.putExtra("image_type", "poster");
+//                    view.putExtra("movie_id", movieId);
+//                    startActivity(view);
+//                } else {
+//                    Snackbar mySnackbar = Snackbar.make(getWindow().getDecorView(), "Poster Unavailable", Snackbar.LENGTH_LONG);
+//                    mySnackbar.show();
+//                }
+
+
+
+                new ImageViewer.Builder<>(MovieDetailActivity.this, posterPathArrayList)
+                        .setStartPosition(0)
+                        .setCustomDraweeHierarchyBuilder(hierarchyBuilder)
+                        .show();
             }
         });
 
@@ -201,15 +226,21 @@ public class MovieDetailActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 System.out.println("backdropPath = " + backdropPath);
-                if (backdropPath != null) {
-                    Intent view = new Intent(getApplicationContext(), ImagesActivity.class);
-                    view.putExtra("image_type", "backdrop");
-                    view.putExtra("movie_id", movieId);
-                    startActivity(view);
-                } else {
-                    Snackbar mySnackbar = Snackbar.make(getWindow().getDecorView(), "Image Unavailable", Snackbar.LENGTH_LONG);
-                    mySnackbar.show();
-                }
+//                if (backdropPath != null) {
+//                    Intent view = new Intent(getApplicationContext(), ImagesActivity.class);
+//                    view.putExtra("image_type", "backdrop");
+//                    view.putExtra("movie_id", movieId);
+//                    startActivity(view);
+//                } else {
+//                    Snackbar mySnackbar = Snackbar.make(getWindow().getDecorView(), "Image Unavailable", Snackbar.LENGTH_LONG);
+//                    mySnackbar.show();
+//                }
+
+
+                new ImageViewer.Builder<>(MovieDetailActivity.this, backdropPathArrayList)
+                        .setStartPosition(0)
+                        .setCustomDraweeHierarchyBuilder(hierarchyBuilder)
+                        .show();
             }
         });
 
@@ -433,13 +464,13 @@ public class MovieDetailActivity extends AppCompatActivity {
                 }
 
                 if (posterPath != null) {
-                    posterPath = "http://image.tmdb.org/t/p/w500" + posterPath;
-                    backdropPath = "http://image.tmdb.org/t/p/w500" + backdropPath;
-                    GlideApp.with(getApplicationContext()).load(posterPath).placeholder(R.drawable.zlikx_logo).into(posterImageView);
+                    posterPath = "http://image.tmdb.org/t/p/w342" + posterPath;
+                    backdropPath = "http://image.tmdb.org/t/p/w342" + backdropPath;
+                    GlideApp.with(getApplicationContext()).load(posterPath).placeholder(R.drawable.zlikx_logo).into(posterSimpleDraweeView);
                     GlideApp.with(getApplicationContext()).load((backdropPath == null) ? posterPath : backdropPath).placeholder(R.drawable.zlikx_logo).into(backDropImageView);
                     GlideApp.with(getApplicationContext()).load((backdropPath == null) ? posterPath : backdropPath).placeholder(R.drawable.zlikx_logo).transform(new BlurTransformation(getApplicationContext())).into(recImageView);
                 } else {
-                    GlideApp.with(getApplicationContext()).load(R.drawable.no_image_available).placeholder(R.drawable.zlikx_logo).into(posterImageView);
+                    GlideApp.with(getApplicationContext()).load(R.drawable.no_image_available).placeholder(R.drawable.zlikx_logo).into(posterSimpleDraweeView);
                     GlideApp.with(getApplicationContext()).load((backdropPath == null) ? R.drawable.no_image_available : backdropPath).placeholder(R.drawable.zlikx_logo).into(backDropImageView);
                     GlideApp.with(getApplicationContext()).load((backdropPath == null) ? R.drawable.no_image_available : backdropPath).placeholder(R.drawable.zlikx_logo).transform(new BlurTransformation(getApplicationContext())).into(recImageView);
                 }
@@ -505,6 +536,52 @@ public class MovieDetailActivity extends AppCompatActivity {
                     Snackbar mySnackbar = Snackbar.make(findViewById(R.id.complete_layout), "Error Occurred", Snackbar.LENGTH_LONG);
                     mySnackbar.show();
                     System.out.println("Failure is : " + t.getMessage());
+                }
+            }
+        });
+    }
+
+    private void getImages() {
+
+        System.out.println("Movie Id  : " + movieId);
+
+
+        final Call<ImageDetails> imageDetails = MovieAPI.getService().getImageDetails(movieId, BuildConfig.TMDB_KEY);
+        imageDetails.enqueue(new Callback<ImageDetails>() {
+            @Override
+            public void onResponse(Call<ImageDetails> call, Response<ImageDetails> response) {
+                ImageDetails imagesObject = response.body();
+                Log.e("get Image details", "onResponse: " + imagesObject.getId());
+
+
+                backdropArrayList.addAll(imagesObject.getBackdrops());
+                posterArrayList.addAll(imagesObject.getPosters());
+
+                for (Poster poster : posterArrayList) {
+                    posterPathArrayList.add(POSTER_BASE_URL+poster.getFilePath());
+                }
+                for (Backdrop backdrop : backdropArrayList) {
+                    backdropPathArrayList.add(POSTER_BASE_URL+backdrop.getFilePath());
+                }
+
+//
+//                new ImageViewer.Builder<>(MovieDetailActivity.this, posterPathArrayList)
+//                        .setStartPosition(0)
+//                        .show();
+
+            }
+
+
+            @Override
+            public void onFailure(Call<ImageDetails> call, Throwable t) {
+                if (t instanceof IOException) {
+                    System.out.println("Failure is : " + t.getMessage());
+                    Snackbar mySnackbar = Snackbar.make(findViewById(R.id.images_activity_frame_layout), "No Network", Snackbar.LENGTH_LONG);
+                    mySnackbar.show();
+                } else {
+                    System.out.println("Failure is : " + t.getMessage());
+                    Snackbar mySnackbar = Snackbar.make(findViewById(R.id.images_activity_frame_layout), "Error Occurred", Snackbar.LENGTH_LONG);
+                    mySnackbar.show();
                 }
             }
         });

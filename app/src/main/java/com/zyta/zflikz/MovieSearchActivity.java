@@ -64,8 +64,6 @@ public class MovieSearchActivity extends AppCompatActivity implements MovieSearc
         setContentView(R.layout.activity_movie_search);
 
         unbinder = ButterKnife.bind(this);
-
-
         mAdapter = new MovieSearchAdapter(this, resultArrayList, this);
 
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
@@ -75,7 +73,6 @@ public class MovieSearchActivity extends AppCompatActivity implements MovieSearc
         movieRecyclerView.setAdapter(mAdapter);
 
         whiteNotificationBar(movieRecyclerView);
-
 
         apiService = MovieAPI.getClient().create(PostService.class);
 

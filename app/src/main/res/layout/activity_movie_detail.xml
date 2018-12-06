@@ -1,4 +1,5 @@
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/complete_layout"
     android:layout_width="match_parent"
@@ -83,12 +84,12 @@
                     android:fitsSystemWindows="true"
                     app:layout_collapseMode="parallax">
 
-                    <ImageView
-                        android:id="@+id/poster"
+                    <com.facebook.drawee.view.SimpleDraweeView
+                        android:id="@+id/poster_simple_drawee_view"
                         android:layout_width="140dp"
                         android:layout_height="200dp"
                         android:layout_margin="10dp"
-                        android:src="@mipmap/ic_launcher_round" />
+                        />
 
                     <TextView
                         android:id="@+id/movie_name"
@@ -101,7 +102,7 @@
                         android:layout_marginEnd="5dp"
                         android:layout_marginRight="5dp"
                         android:layout_marginBottom="5dp"
-                        android:layout_toRightOf="@+id/poster"
+                        android:layout_toRightOf="@+id/poster_simple_drawee_view"
                         android:padding="5sp"
                         android:text="Sample" />
 
@@ -112,7 +113,7 @@
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/movie_name"
                         android:layout_margin="10dp"
-                        android:layout_toEndOf="@+id/poster"
+                        android:layout_toEndOf="@+id/poster_simple_drawee_view"
                         android:background="@drawable/button_selector"
                         android:padding="5dp"
                         android:text="CONVERSE"

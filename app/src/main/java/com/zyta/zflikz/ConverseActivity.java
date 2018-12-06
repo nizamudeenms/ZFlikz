@@ -245,9 +245,6 @@ public class ConverseActivity extends AppCompatActivity {
     void attachListener() {
         if (mChildEventListener == null) {
             System.out.println("inside attach listener");
-
-//            if(conversationAdapter.getItemCount() == 0){
-//            }
             mDatabaseReference.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {

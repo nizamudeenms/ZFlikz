@@ -14,12 +14,18 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.drawee.drawable.ProgressBarDrawable;
+import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
+import com.stfalcon.frescoimageviewer.ImageViewer;
 import com.zyta.zflikz.model.PersonCast;
 import com.zyta.zflikz.model.PersonCastAdapter;
 import com.zyta.zflikz.model.PersonCreditDetails;
 import com.zyta.zflikz.model.PersonCrew;
 import com.zyta.zflikz.model.PersonDetails;
 import com.zyta.zflikz.model.PersonFullCreditsAdapter;
+import com.zyta.zflikz.model.PersonImage;
+import com.zyta.zflikz.model.PersonImageDetails;
 import com.zyta.zflikz.utils.MovieAPI;
 
 import java.io.IOException;
@@ -31,16 +37,19 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class PersonActivity extends AppCompatActivity  {
+public class PersonActivity extends AppCompatActivity {
     TextView personNameTextView, personBiographyTextView, personBornOnTextView, personPlaceOfBirth, personKnownForTextView, completeFilmographyTextView;
     ImageView personImageView, personBackgroundImageView;
-//    LinearLayout personLinearLayout;
+    //    LinearLayout personLinearLayout;
     CardView personCardView, personBioCardView;
     PersonCastAdapter personCastAdapter;
     RecyclerView personCreditsRecyclerView;
     ArrayList<PersonCast> castList = new ArrayList<>();
     ArrayList<PersonCrew> crewList = new ArrayList<>();
     private PersonFullCreditsAdapter personFullCreditsAdapter;
+    ArrayList<PersonImage> personImageArrayList = new ArrayList<>();
+    ArrayList<String> personImagePathArrayList = new ArrayList<>();
+    String POSTER_BASE_URL = "http://image.tmdb.org/t/p/w500";
 
 
     int personId;
@@ -49,13 +58,14 @@ public class PersonActivity extends AppCompatActivity  {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Fresco.initialize(this);
+
         setContentView(R.layout.activity_person);
 
         personId = getIntent().getIntExtra("personId", 0);
 
         personCastAdapter = new PersonCastAdapter(this, castList);
 
-//        personLinearLayout = findViewById(R.id.person_bio_linear_layout);
         personImageView = findViewById(R.id.person_back_drop_image);
         personBackgroundImageView = findViewById(R.id.person_background_image_view);
         personNameTextView = findViewById(R.id.person_name_textview);
@@ -63,9 +73,9 @@ public class PersonActivity extends AppCompatActivity  {
         personBornOnTextView = findViewById(R.id.person_born_on_text_view);
         personPlaceOfBirth = findViewById(R.id.person_birth_place_text_view);
         personKnownForTextView = findViewById(R.id.person_known_for_text_view);
-        personCardView= findViewById(R.id.person_cast_card_view);
-        personBioCardView= findViewById(R.id.person_bio_card_view);
-        personCreditsRecyclerView= findViewById(R.id.person_cast_recycler_view);
+        personCardView = findViewById(R.id.person_cast_card_view);
+        personBioCardView = findViewById(R.id.person_bio_card_view);
+        personCreditsRecyclerView = findViewById(R.id.person_cast_recycler_view);
         completeFilmographyTextView = findViewById(R.id.person_complete_cast_text_view);
 
         personCreditsRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayout.HORIZONTAL, false));
@@ -77,9 +87,8 @@ public class PersonActivity extends AppCompatActivity  {
         int tempHeight = height / 5;
         getPersonDetails();
         getPersonCredits();
+        getPersonImages();
 
-//        LinearLayout.LayoutParams parms = new LinearLayout.LayoutParams(width, tempHeight);
-//        personLinearLayout.setLayoutParams(parms);
 
         completeFilmographyTextView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -87,7 +96,6 @@ public class PersonActivity extends AppCompatActivity  {
 
                 System.out.println("crewList = " + crewList.size());
                 System.out.println("castList = " + castList.size());
-
 
                 if (crewList.size() == 0 && castList.size() == 0) {
                     Snackbar creditsSnackbar = Snackbar.make(getWindow().getDecorView(), "Full Credits Unavailable", Snackbar.LENGTH_LONG);
@@ -99,6 +107,35 @@ public class PersonActivity extends AppCompatActivity  {
                     fullCreditsView.putExtra("crew_list", crewList);
                     startActivity(fullCreditsView);
                 }
+            }
+        });
+
+        personImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//                new ImageViewer.Builder<>(PersonActivity.this, personImagePathArrayList)
+//                        .setStartPosition(0)
+//                        .show();
+
+                GenericDraweeHierarchyBuilder hierarchyBuilder = GenericDraweeHierarchyBuilder.newInstance(getResources())
+                        .setFailureImage(R.drawable.no_image_available)
+                        .setProgressBarImage(new ProgressBarDrawable());
+
+                ImageViewer.Builder builder = new ImageViewer.Builder<>(PersonActivity.this, personImagePathArrayList)
+                        .setStartPosition(0)
+                        .setCustomDraweeHierarchyBuilder(hierarchyBuilder);
+
+                builder.show();
+//                if (crewList.size() == 0 && castList.size() == 0) {
+//                    Snackbar creditsSnackbar = Snackbar.make(getWindow().getDecorView(), "Full Credits Unavailable", Snackbar.LENGTH_LONG);
+//                    creditsSnackbar.show();
+//                } else {
+//                    Intent fullscreenImageIntent = new Intent(getApplicationContext(), FullscreenImageActivity.class);
+//                    fullscreenImageIntent.putExtra("type", "person");
+//                    fullscreenImageIntent.putExtra("person_image_list", personImagePathArrayList);
+////                    fullscreenImageIntent.putExtra("crew_list", crewList);
+//                    startActivity(fullscreenImageIntent);
+//                }
             }
         });
     }
@@ -213,6 +250,40 @@ public class PersonActivity extends AppCompatActivity  {
                     Snackbar mySnackbar = Snackbar.make(findViewById(R.id.person_coordinator_layout), "Error Occurred", Snackbar.LENGTH_LONG);
                     mySnackbar.show();
                     System.out.println("Failure is : " + t.getMessage());
+                }
+            }
+        });
+    }
+
+    private void getPersonImages() {
+
+        System.out.println("Person Id  person images : " + personId);
+
+
+        final Call<PersonImageDetails> imageDetails = MovieAPI.getService().getPersonImageDetails(personId, BuildConfig.TMDB_KEY);
+        imageDetails.enqueue(new Callback<PersonImageDetails>() {
+            @Override
+            public void onResponse(Call<PersonImageDetails> call, Response<PersonImageDetails> response) {
+                PersonImageDetails imagesObject = response.body();
+                Log.e("get Image details", "onResponse: " + imagesObject.getId());
+
+                personImageArrayList.addAll(imagesObject.getPersonImage());
+
+                for (PersonImage personImage : personImageArrayList) {
+                    personImagePathArrayList.add(POSTER_BASE_URL + personImage.getFilePath());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<PersonImageDetails> call, Throwable t) {
+                if (t instanceof IOException) {
+                    System.out.println("Failure is : " + t.getMessage());
+                    Snackbar mySnackbar = Snackbar.make(findViewById(R.id.person_coordinator_layout), "No Network", Snackbar.LENGTH_LONG);
+                    mySnackbar.show();
+                } else {
+                    System.out.println("Failure is : " + t.getMessage());
+                    Snackbar mySnackbar = Snackbar.make(findViewById(R.id.person_coordinator_layout), "Error Occurred", Snackbar.LENGTH_LONG);
+                    mySnackbar.show();
                 }
             }
         });
