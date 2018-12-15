@@ -246,6 +246,7 @@ public class ImageSelectionActivity extends AppCompatActivity {
 //                    localUri = Uri.parse(returnValue.get(0));
                     localUri = Uri.fromFile(new File(returnValue.get(0)));
                     postImageUrl = returnValue.toString();
+                    mSendButton.setEnabled(true);
 
 //            StorageReference storageReference = mStorageReference.child(data.getData().getLastPathSegment());
 //            storageReference.putFile(data.getData()).addOnSuccessListener(this, new OnSuccessListener<UploadTask.TaskSnapshot>() {

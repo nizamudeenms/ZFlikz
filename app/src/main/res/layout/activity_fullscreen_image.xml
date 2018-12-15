@@ -11,7 +11,7 @@
         android:id="@+id/fullscreen_simple_drawee_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        fresco:progressBarImage="@drawable/loading_android"
+        fresco:progressBarImage="@drawable/zlikx_logo"
         />
 
 </android.support.constraint.ConstraintLayout>

@@ -32,5 +32,8 @@
     <string name="born_place">Birth Place :\t</string>
     <string name="known_for">Well known for : \t</string>
     <string name="release_date">Release Date : \t</string>
+    <string name="compose_shortcut_short_label1">Zlikx</string>
+    <string name="compose_shortcut_long_label1">Zlikx Short</string>
+    <string name="compose_disabled_message1">Zlikx Disabled</string>
 
 </resources>

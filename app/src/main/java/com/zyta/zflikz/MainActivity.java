@@ -1,8 +1,11 @@
 package com.zyta.zflikz;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
@@ -11,6 +14,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.GridLayoutManager;
@@ -22,8 +26,9 @@ import android.view.View;
 import android.widget.AbsListView;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestBuilder;
 import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.firebase.ui.auth.AuthUI;
 import com.google.firebase.auth.FirebaseAuth;
@@ -62,6 +67,8 @@ public class MainActivity extends AppCompatActivity
     private MovieAdapter mAdapter;
     private RecyclerView recyclerView;
 
+    boolean isAppInstalled = false;
+    public SharedPreferences appPreferences;
 
     final String GET_POPULAR = "popular";
     final String GET_TOP = "top_rated";
@@ -92,6 +99,10 @@ public class MainActivity extends AppCompatActivity
 
         setSupportActionBar(toolbar);
 
+        appPreferences = android.preference.PreferenceManager.getDefaultSharedPreferences(this);
+        isAppInstalled = appPreferences.getBoolean("isAppInstalled", false);
+        installShortcut(isAppInstalled);
+
 
         mFirebaseAuth = FirebaseAuth.getInstance();
 
@@ -104,9 +115,15 @@ public class MainActivity extends AppCompatActivity
                 if (user != null) {
 //                    Toast.makeText(MainActivity.this, "Signed in ", Toast.LENGTH_SHORT).show();
                     onSigninListener(user.getDisplayName());
+                    System.out.println("user.getPhotoUrl() = " + user.getPhotoUrl());
                     Uri xx = FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl();
+                    System.out.println("xx.toString() = " + xx.toString());
+
+                    RequestBuilder<Drawable> thumbnail = Glide.with(getApplicationContext())
+                            .load(R.drawable.zlikx_logo_bg_blur);
+
                     if (xx != null) {
-                        GlideApp.with(getApplicationContext()).load(xx).placeholder(R.mipmap.ic_launcher).transform(new CircleCrop()).into(profileImage);
+                        GlideApp.with(getApplicationContext()).load(xx).placeholder(R.mipmap.ic_launcher).error(R.mipmap.ic_launcher).transform(new CircleCrop()).into(profileImage);
                         System.out.println("user.getDisplayName()" + user.getDisplayName());
                         System.out.println("user.getEmail(" + user.getEmail());
                         profileName.setText(user.getDisplayName());
@@ -152,6 +169,8 @@ public class MainActivity extends AppCompatActivity
         recyclerView.setAdapter(mAdapter);
         recyclerView.setHasFixedSize(true);
 
+        setupSharedPreferences();
+
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
@@ -175,25 +194,25 @@ public class MainActivity extends AppCompatActivity
 
             }
         });
-        setupSharedPreferences();
+
         getData();
     }
 
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == RC_SIGN_IN) {
-            if (resultCode == RESULT_OK) {
-                // Sign-in succeeded, set up the UI
-//                Toast.makeText(this, "Signed in!", Toast.LENGTH_SHORT).show();
-            } else if (resultCode == RESULT_CANCELED) {
-                // Sign in was canceled by the user, finish the activity
-                Toast.makeText(this, "Sign in canceled", Toast.LENGTH_SHORT).show();
-                finish();
-            }
-        }
-    }
+//
+//    @Override
+//    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//        if (requestCode == RC_SIGN_IN) {
+//            if (resultCode == RESULT_OK) {
+//                // Sign-in succeeded, set up the UI
+////                Toast.makeText(this, "Signed in!", Toast.LENGTH_SHORT).show();
+//            } else if (resultCode == RESULT_CANCELED) {
+//                // Sign in was canceled by the user, finish the activity
+//                Toast.makeText(this, "Sign in canceled", Toast.LENGTH_SHORT).show();
+//                finish();
+//            }
+//        }
+//    }
 
     private void setupSharedPreferences() {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
@@ -279,14 +298,17 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_settings) {
-            Intent startSettingsActivity = new Intent(this, SettingsActivity.class);
-            startActivity(startSettingsActivity);
-//            this.finish();
-        } else if (id == R.id.action_search) {
-
-        } else if (id == R.id.nav_send) {
-
+//        if (id == R.id.nav_settings) {
+//            Intent startSettingsActivity = new Intent(this, SettingsActivity.class);
+//            startActivity(startSettingsActivity);
+////            this.finish();
+//        } else
+        if (id == R.id.nav_share) {
+            Intent intent = new Intent(Intent.ACTION_SEND);
+            intent.setType("text/plain");
+            intent.putExtra(Intent.EXTRA_SUBJECT, "Zlikx");
+            intent.putExtra(Intent.EXTRA_TEXT, "Hey check out my app at: https://play.google.com/store/apps/details?id=com.google.android.apps.plus\n");
+            startActivity(Intent.createChooser(intent, "choose one"));
         } else if (id == R.id.nav_sign_out) {
             AuthUI.getInstance().signOut(this);
         }
@@ -356,15 +378,106 @@ public class MainActivity extends AppCompatActivity
                     Snackbar mySnackbar = Snackbar.make(findViewById(R.id.main_activity_layout), "No Network", Snackbar.LENGTH_LONG);
                     mySnackbar.show();
                     System.out.println("Failure is : " + t.getMessage());
+                    AlertDialog.Builder builder;
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        builder = new AlertDialog.Builder(MainActivity.this, android.R.style.Theme_Material_Dialog_Alert);
+                    } else {
+                        builder = new AlertDialog.Builder(MainActivity.this);
+                    }
+                    builder.setTitle("Internet Access Required")
+                            .setMessage("Unable to Continue. Please Check Internet and try again\"")
+                            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    finish();
+                                }
+                            })
+                            .setCancelable(false)
+                            .setIcon(android.R.drawable.ic_dialog_alert)
+                            .show();
                 } else {
                     Snackbar mySnackbar = Snackbar.make(findViewById(R.id.main_activity_layout), "Error Occurred", Snackbar.LENGTH_LONG);
                     mySnackbar.show();
                     System.out.println("Failure is : " + t.getMessage());
+                    AlertDialog.Builder builder;
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        builder = new AlertDialog.Builder(MainActivity.this, android.R.style.Theme_Material_Dialog_Alert);
+                    } else {
+                        builder = new AlertDialog.Builder(MainActivity.this);
+                    }
+                    builder.setTitle("Internet Access Required")
+                            .setMessage("Unable to Continue. Please Check Internet and try again\"")
+                            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    finish();
+                                }
+                            })
+                            .setCancelable(false)
+                            .setIcon(android.R.drawable.ic_dialog_alert)
+                            .show();
                 }
             }
         });
 
 
     }
+
+    private void installShortcut(Boolean isAppInstalled) {
+        System.out.println("MainActivity.installShortcut");
+
+        if (!isAppInstalled) {
+            if (Build.VERSION.SDK_INT < 26) {
+                System.out.println("MainActivity.installShortcut inside");
+                Intent shortcutIntent = new Intent(getApplicationContext(), MainActivity.class);
+                shortcutIntent.setAction(Intent.ACTION_MAIN);
+                Intent intent = new Intent();
+                intent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, shortcutIntent);
+                intent.putExtra(Intent.EXTRA_SHORTCUT_NAME, "Zlikx");
+                intent.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, Intent.ShortcutIconResource
+                        .fromContext(getApplicationContext(), R.mipmap.ic_launcher_round));
+                intent.setAction("com.android.launcher.action.INSTALL_SHORTCUT");
+                getApplicationContext().sendBroadcast(intent);
+
+                SharedPreferences.Editor editor = appPreferences.edit();
+                editor.putBoolean("isAppInstalled", true);
+                editor.apply();
+            } else {
+                System.out.println("Oreo shortcut not installed");
+//                Intent shortcutIntent = new Intent(this, MainActivity.class);
+//                shortcutIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                shortcutIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                shortcutIntent.setAction(Intent.ACTION_MAIN);
+//
+//                ShortcutInfoCompat shortcut = new ShortcutInfoCompat.Builder(this, "zlikx")
+//                        .setShortLabel(getResources().getString(R.string.app_name))
+//                        .setIcon(IconCompat.createWithResource(getApplicationContext(), R.mipmap.ic_launcher))
+//                        .setIntent(shortcutIntent)
+//                        .build();
+//                ShortcutManagerCompat.requestPinShortcut(this, shortcut, null);
+
+//                ShortcutManager shortcutManager = null;
+//                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N_MR1) {
+//                    shortcutManager = mContext.getSystemService(ShortcutManager.class);
+//                }
+//                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//                    if (shortcutManager != null) {
+//                        if (shortcutManager.isRequestPinShortcutSupported()) {
+//                            ShortcutInfo shortcut = new ShortcutInfo.Builder(mContext, uniqueid)
+//                                    .setShortLabel("Demo")
+//                                    .setLongLabel("Open the Android Document")
+//                                    .setIcon(Icon.createWithResource(mContext, R.drawable.andi))
+//                                    .setIntent(new Intent(Intent.ACTION_VIEW,
+//                                            Uri.parse("https://stackoverflow.com")))
+//                                    .build();
+//
+//                            shortcutManager.requestPinShortcut(shortcut, null);
+//                        } else
+//                            Toast.makeText(mContext, "Pinned shortcuts are not supported!", Toast.LENGTH_SHORT).show();
+//                    }
+//                }
+
+            }
+        }
+    }
+
 
 }

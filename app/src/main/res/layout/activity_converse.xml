@@ -59,6 +59,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
             android:enabled="false"
+            android:textColor="@color/color_black"
             android:text="Send" />
 
     </LinearLayout>

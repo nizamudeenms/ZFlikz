@@ -48,7 +48,7 @@ public class ConverseActivity extends AppCompatActivity {
 
 
     private ProgressBar mProgressBar;
-    private ImageView mPhotoPickerButton;
+    private ImageView mPhotoPickerButton, postImageView;
     private EditText mMessageEditText;
     private Button mSendButton;
     private String mUsername;

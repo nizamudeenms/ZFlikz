@@ -50,7 +50,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MyViewHolder
         if (movies.get(position).getPosterPath() != null) {
             GlideApp.with(mContext).load("http://image.tmdb.org/t/p/w500" + movies.get(position).getPosterPath()).placeholder(R.drawable.zlikx_logo).into(im);
         } else {
-            GlideApp.with(mContext).load(R.drawable.no_image_available).placeholder(R.drawable.zlikx_logo).into(im);
+            GlideApp.with(mContext).load(R.drawable.zlikx_logo_bg_blur_grey).placeholder(R.drawable.zlikx_logo).into(im);
             titleOnPoster.setText(movies.get(position).getTitle());
             titleOnPoster.setVisibility(View.VISIBLE);
         }

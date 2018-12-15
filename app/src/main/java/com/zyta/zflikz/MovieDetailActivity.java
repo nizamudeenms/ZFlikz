@@ -2,7 +2,6 @@ package com.zyta.zflikz;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
@@ -112,11 +111,6 @@ public class MovieDetailActivity extends AppCompatActivity {
 
 
         Button converseButton;
-        final FloatingActionButton favoriteFAB;
-//        final NestedScrollView scrollView;
-//        final FrameLayout frameLayout;
-//        final CoordinatorLayout linearLayout;
-
 
         movieId = getIntent().getIntExtra("id", 0);
         System.out.println("movieId ---------------- " + movieId);
@@ -156,19 +150,15 @@ public class MovieDetailActivity extends AppCompatActivity {
         prodrecyclerView.setAdapter(productionAdapter);
         reviewsRecylerView.setAdapter(reviewAdapter);
         similiarMovieRecyclerView.setAdapter(similiarMovieAdapter);
-//        ViewCompat.setTransitionName(findViewById(R.id.app_bar_layout), EXTRA_IMAGE);
         getAllMovieDetails();
 
-//        posterImageView = (ImageView) findViewById(R.id.poster);
         movieNameTextView = (TextView) findViewById(R.id.movie_name);
         overviewTextView = (TextView) findViewById(R.id.overview_label);
         ratingTextView = (TextView) findViewById(R.id.rating_label);
         releaseDateTextView = (TextView) findViewById(R.id.release_date_label);
         completeCastTextView = (TextView) findViewById(R.id.complete_cast_text_view);
         backDropImageView = (ImageView) findViewById(R.id.back_drop_image);
-        favoriteFAB = (FloatingActionButton) findViewById(R.id.favorite_fab);
-//      videoCardView = findViewById(R.id.video_card_view);
-//        linearLayout = findViewById(R.id.complete_layout);
+//        favoriteFAB = (FloatingActionButton) findViewById(R.id.favorite_fab);
 
         converseButton = findViewById(R.id.con_button);
 
@@ -186,13 +176,11 @@ public class MovieDetailActivity extends AppCompatActivity {
 
         creditsAdapter.notifyDataSetChanged();
         videoAdapter.notifyDataSetChanged();
-//        reviewAdapter.notifyDataSetChanged();
 
         converseButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MovieDetailActivity.this, ConverseActivity.class);
-                System.out.println("movieId ::::::::::: " + movieId);
                 intent.putExtra("movieId", movieId);
                 intent.putExtra("backDropImagePath", backdropPath);
                 MovieDetailActivity.this.startActivity(intent);
@@ -202,19 +190,6 @@ public class MovieDetailActivity extends AppCompatActivity {
         posterSimpleDraweeView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                System.out.println("posterPath = " + posterPath);
-//                if (posterPath != null) {
-//                    Intent view = new Intent(getApplicationContext(), ImagesActivity.class);
-//                    view.putExtra("image_type", "poster");
-//                    view.putExtra("movie_id", movieId);
-//                    startActivity(view);
-//                } else {
-//                    Snackbar mySnackbar = Snackbar.make(getWindow().getDecorView(), "Poster Unavailable", Snackbar.LENGTH_LONG);
-//                    mySnackbar.show();
-//                }
-
-
-
                 new ImageViewer.Builder<>(MovieDetailActivity.this, posterPathArrayList)
                         .setStartPosition(0)
                         .setCustomDraweeHierarchyBuilder(hierarchyBuilder)
@@ -225,18 +200,6 @@ public class MovieDetailActivity extends AppCompatActivity {
         backDropImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                System.out.println("backdropPath = " + backdropPath);
-//                if (backdropPath != null) {
-//                    Intent view = new Intent(getApplicationContext(), ImagesActivity.class);
-//                    view.putExtra("image_type", "backdrop");
-//                    view.putExtra("movie_id", movieId);
-//                    startActivity(view);
-//                } else {
-//                    Snackbar mySnackbar = Snackbar.make(getWindow().getDecorView(), "Image Unavailable", Snackbar.LENGTH_LONG);
-//                    mySnackbar.show();
-//                }
-
-
                 new ImageViewer.Builder<>(MovieDetailActivity.this, backdropPathArrayList)
                         .setStartPosition(0)
                         .setCustomDraweeHierarchyBuilder(hierarchyBuilder)
@@ -270,7 +233,6 @@ public class MovieDetailActivity extends AppCompatActivity {
     }
 
     private void getSimiliarMovies() {
-        System.out.println("Inside Get Similiar Movies : Movie Id  : " + movieId);
 
         final Call<SimiliarMovieDetails> similiarMovieCall = MovieAPI.getService().getSimiliarMovies(movieId, BuildConfig.TMDB_KEY);
         similiarMovieCall.enqueue(new Callback<SimiliarMovieDetails>() {
@@ -308,8 +270,6 @@ public class MovieDetailActivity extends AppCompatActivity {
     }
 
     private void getReviews() {
-
-        System.out.println("Inside Get Reviews : Movie Id  : " + movieId);
 
         final Call<ReviewDetails> reviews = MovieAPI.getService().getReviews(movieId, BuildConfig.TMDB_KEY);
         reviews.enqueue(new Callback<ReviewDetails>() {
@@ -360,8 +320,6 @@ public class MovieDetailActivity extends AppCompatActivity {
 
     private void getCredits() {
 
-        System.out.println("Movie Id  : " + movieId);
-
         final Call<Credits> credits = MovieAPI.getService().getCredits(movieId, BuildConfig.TMDB_KEY);
         credits.enqueue(new Callback<Credits>() {
             @Override
@@ -397,7 +355,6 @@ public class MovieDetailActivity extends AppCompatActivity {
     }
 
     private void getAllMovieDetails() {
-        System.out.println("getMovieDetails Movie Id  : " + movieId);
 
         final Call<MovieDetails> movieDetailsCall = MovieAPI.getService().getMovieDetails(movieId, BuildConfig.TMDB_KEY);
         movieDetailsCall.enqueue(new Callback<MovieDetails>() {
@@ -470,9 +427,9 @@ public class MovieDetailActivity extends AppCompatActivity {
                     GlideApp.with(getApplicationContext()).load((backdropPath == null) ? posterPath : backdropPath).placeholder(R.drawable.zlikx_logo).into(backDropImageView);
                     GlideApp.with(getApplicationContext()).load((backdropPath == null) ? posterPath : backdropPath).placeholder(R.drawable.zlikx_logo).transform(new BlurTransformation(getApplicationContext())).into(recImageView);
                 } else {
-                    GlideApp.with(getApplicationContext()).load(R.drawable.no_image_available).placeholder(R.drawable.zlikx_logo).into(posterSimpleDraweeView);
-                    GlideApp.with(getApplicationContext()).load((backdropPath == null) ? R.drawable.no_image_available : backdropPath).placeholder(R.drawable.zlikx_logo).into(backDropImageView);
-                    GlideApp.with(getApplicationContext()).load((backdropPath == null) ? R.drawable.no_image_available : backdropPath).placeholder(R.drawable.zlikx_logo).transform(new BlurTransformation(getApplicationContext())).into(recImageView);
+                    GlideApp.with(getApplicationContext()).load(R.drawable.zlikx_logo_bg_blur).placeholder(R.drawable.zlikx_logo).into(posterSimpleDraweeView);
+                    GlideApp.with(getApplicationContext()).load((backdropPath == null) ? R.drawable.zlikx_logo_bg_blur : backdropPath).placeholder(R.drawable.zlikx_logo).into(backDropImageView);
+                    GlideApp.with(getApplicationContext()).load((backdropPath == null) ? R.drawable.zlikx_logo_bg_blur : backdropPath).placeholder(R.drawable.zlikx_logo).transform(new BlurTransformation(getApplicationContext())).into(recImageView);
                 }
 
 
@@ -500,8 +457,6 @@ public class MovieDetailActivity extends AppCompatActivity {
     }
 
     private void getVideo() {
-
-        System.out.println("get Video Movie Id  : " + movieId);
 
         final Call<VideoDetails> videoDetailsCall = MovieAPI.getService().getVideoDetails(movieId, BuildConfig.TMDB_KEY);
         videoDetailsCall.enqueue(new Callback<VideoDetails>() {
@@ -543,16 +498,12 @@ public class MovieDetailActivity extends AppCompatActivity {
 
     private void getImages() {
 
-        System.out.println("Movie Id  : " + movieId);
-
-
         final Call<ImageDetails> imageDetails = MovieAPI.getService().getImageDetails(movieId, BuildConfig.TMDB_KEY);
         imageDetails.enqueue(new Callback<ImageDetails>() {
             @Override
             public void onResponse(Call<ImageDetails> call, Response<ImageDetails> response) {
                 ImageDetails imagesObject = response.body();
                 Log.e("get Image details", "onResponse: " + imagesObject.getId());
-
 
                 backdropArrayList.addAll(imagesObject.getBackdrops());
                 posterArrayList.addAll(imagesObject.getPosters());
@@ -563,14 +514,7 @@ public class MovieDetailActivity extends AppCompatActivity {
                 for (Backdrop backdrop : backdropArrayList) {
                     backdropPathArrayList.add(POSTER_BASE_URL+backdrop.getFilePath());
                 }
-
-//
-//                new ImageViewer.Builder<>(MovieDetailActivity.this, posterPathArrayList)
-//                        .setStartPosition(0)
-//                        .show();
-
             }
-
 
             @Override
             public void onFailure(Call<ImageDetails> call, Throwable t) {

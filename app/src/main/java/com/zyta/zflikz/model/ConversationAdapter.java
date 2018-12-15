@@ -1,6 +1,7 @@
 package com.zyta.zflikz.model;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.bumptech.glide.request.RequestOptions;
+import com.zyta.zflikz.FullscreenImageActivity;
 import com.zyta.zflikz.GlideApp;
 import com.zyta.zflikz.R;
 
@@ -40,6 +42,7 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
     @Override
     public void onBindViewHolder(@NonNull ConvViewHolder holder, int position) {
         conversationMessages.get(position);
+        ImageView shareImage = holder.shareImage;
         ImageView postImage = holder.postPhotoImageView;
         TextView postText = holder.postMessageTextView;
         ImageView profileImage = holder.authorPPImageview;
@@ -60,6 +63,27 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
         profileName.setText(conversationMessages.get(position).getPostAuthor());
         profilePostTime.setText(conversationMessages.get(position).getPostDate());
 
+
+        postImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(cContext, FullscreenImageActivity.class);
+                intent.putExtra("post_image_path", conversationMessages.get(position).getPostImageUrl());
+                cContext.startActivity(intent);
+
+            }
+        });
+
+        shareImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_SEND);
+                intent.setType("text/plain");
+                intent.putExtra(Intent.EXTRA_SUBJECT, "Zlikx");
+                intent.putExtra(Intent.EXTRA_TEXT, "Hey check out this conversation at: https://www.zlikz.com\n");
+                cContext.startActivity(Intent.createChooser(intent, "choose one"));
+            }
+        });
     }
 
     @Override
@@ -71,7 +95,7 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
 
     public class ConvViewHolder extends RecyclerView.ViewHolder {
         TextView postMessageTextView;
-        ImageView postPhotoImageView, authorPPImageview;
+        ImageView postPhotoImageView, authorPPImageview, shareImage;
         TextView authorNameTextView, authorPostdateTextView;
         Context cContext;
         List<ConversationMessage> conversationMessages;
@@ -85,6 +109,7 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
             authorPPImageview = itemView.findViewById(R.id.con_profile_image_view);
             authorNameTextView = itemView.findViewById(R.id.con_profile_text_view_name);
             authorPostdateTextView = itemView.findViewById(R.id.con_profile_text_view_date);
+            shareImage = itemView.findViewById(R.id.post_share_icon_view);
         }
     }
 }

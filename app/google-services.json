@@ -23,6 +23,22 @@
           }
         },
         {
+          "client_id": "982751883405-f5d5fjlqmhffkhpkmv051h1f1l8aihvk.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.zyta.zflikz",
+            "certificate_hash": "7f8a1a02035f6d5e9e342bc03eee2a60188b7c8d"
+          }
+        },
+        {
+          "client_id": "982751883405-bf9e43i2vcs58tdhe66745sf90aldhlq.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.zyta.zflikz",
+            "certificate_hash": "4d9c96e297cbd396efa65d258efd8b7aa46d9aef"
+          }
+        },
+        {
           "client_id": "982751883405-hlvbvmekolmgd7q2is62hmumbghbsjvq.apps.googleusercontent.com",
           "client_type": 3
         }
