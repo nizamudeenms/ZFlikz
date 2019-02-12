@@ -19,6 +19,9 @@ import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.drawable.ProgressBarDrawable;
 import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
 import com.stfalcon.frescoimageviewer.ImageViewer;
 import com.zyta.zflikz.model.Backdrop;
 import com.zyta.zflikz.model.Cast;
@@ -96,6 +99,7 @@ public class MovieDetailActivity extends AppCompatActivity {
     final String SECOND_VIDEO_URL = "\"  allowfullscreen ></iframe></body>";
     String FINAL_URL = null;
 
+    private AdView mAdView;
 
     SimpleDraweeView posterSimpleDraweeView;
 
@@ -229,6 +233,11 @@ public class MovieDetailActivity extends AppCompatActivity {
         });
 
         reviewAdapter.notifyDataSetChanged();
+
+        MobileAds.initialize(this, "ca-app-pub-1865534838493345~1681246593");
+        mAdView = findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
 
     }
 

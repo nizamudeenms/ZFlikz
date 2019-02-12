@@ -16,7 +16,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -31,6 +30,9 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestBuilder;
 import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.firebase.ui.auth.AuthUI;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.zyta.zflikz.model.MovieAdapter;
@@ -49,7 +51,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, SharedPreferences.OnSharedPreferenceChangeListener {
+        implements NavigationView.OnNavigationItemSelectedListener{
 
     FirebaseAuth mFirebaseAuth;
     FirebaseAuth.AuthStateListener mFirebaseAuthListener;
@@ -66,6 +68,7 @@ public class MainActivity extends AppCompatActivity
     private ArrayList<Result> movies = new ArrayList<>();
     private MovieAdapter mAdapter;
     private RecyclerView recyclerView;
+    private AdView mAdView;
 
     boolean isAppInstalled = false;
     public SharedPreferences appPreferences;
@@ -77,7 +80,7 @@ public class MainActivity extends AppCompatActivity
     private Parcelable listState;
     private int PAGE_NO = 1;
     private int TOT_PAGES = 0;
-    String ORG_LANG = "te";
+    String ORG_LANG = null;
     final int PRIM_REL_YEAR = 2018;
     final String SORT_BY = "popularity.desc";
 
@@ -99,10 +102,13 @@ public class MainActivity extends AppCompatActivity
 
         setSupportActionBar(toolbar);
 
-        appPreferences = android.preference.PreferenceManager.getDefaultSharedPreferences(this);
-        isAppInstalled = appPreferences.getBoolean("isAppInstalled", false);
-        installShortcut(isAppInstalled);
+        SharedPreferences myPrefs = getPreferences(MODE_PRIVATE);
+        String langPreference = myPrefs.getString("ORG_LANG", "en");
+        SharedPreferences.Editor editor = myPrefs.edit();
+        editor.putString("ORG_LANG", langPreference);
+        editor.commit();
 
+        ORG_LANG = langPreference;
 
         mFirebaseAuth = FirebaseAuth.getInstance();
 
@@ -169,7 +175,7 @@ public class MainActivity extends AppCompatActivity
         recyclerView.setAdapter(mAdapter);
         recyclerView.setHasFixedSize(true);
 
-        setupSharedPreferences();
+//        setupSharedPreferences();
 
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -196,6 +202,11 @@ public class MainActivity extends AppCompatActivity
         });
 
         getData();
+
+        MobileAds.initialize(this, "ca-app-pub-1865534838493345~1681246593");
+        mAdView = findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
     }
 
 //
@@ -214,25 +225,66 @@ public class MainActivity extends AppCompatActivity
 //        }
 //    }
 
-    private void setupSharedPreferences() {
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+    private void languageSpinner() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+        builder.setTitle("Please select a Language");
 
-        loadColorFromPreferences(sharedPreferences);
+        String[] listItems;
+        listItems = getResources().getStringArray(R.array.pref_lang_option_labels);
 
-        // Register the listener
-        sharedPreferences.registerOnSharedPreferenceChangeListener(this);
-    }
+        builder.setSingleChoiceItems(listItems, -1, new DialogInterface.OnClickListener() {
 
-    private void loadColorFromPreferences(SharedPreferences sharedPreferences) {
-        ORG_LANG = sharedPreferences.getString("lang", "en");
-//        getData();
-    }
-
-
-    @Override
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        loadColorFromPreferences(sharedPreferences);
-
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (listItems[which]) {
+                    case "English":
+                        ORG_LANG = "en";
+                        break;
+                    case "Hindi":
+                        ORG_LANG = "hi";
+                        break;
+                    case "Tamil":
+                        ORG_LANG = "ta";
+                        break;
+                    case "Telugu":
+                        ORG_LANG = "te";
+                        break;
+                    case "Malayalam":
+                        ORG_LANG = "ml";
+                        break;
+                    case "Kannada":
+                        ORG_LANG = "kn";
+                        break;
+                    case "Bengali":
+                        ORG_LANG = "bn";
+                        break;
+                    case "Punjabi":
+                        ORG_LANG = "pa";
+                        break;
+                    case "Nepali":
+                        ORG_LANG = "ne";
+                        break;
+                    case "Gujarati":
+                        ORG_LANG = "gu";
+                        break;
+                    case "Marathi":
+                        ORG_LANG = "mr";
+                        break;
+                    case "Oriya":
+                        ORG_LANG = "or";
+                        break;
+                }
+                SharedPreferences myPrefs = getPreferences(MODE_PRIVATE);
+                SharedPreferences.Editor editor = myPrefs.edit();
+                editor.putString("ORG_LANG", ORG_LANG);
+                editor.commit();
+                dialog.dismiss();
+                finish();
+                startActivity(getIntent());
+                getData();
+            }
+        });
+        builder.show();
     }
 
     @Override
@@ -279,9 +331,10 @@ public class MainActivity extends AppCompatActivity
 
         int id = item.getItemId();
         if (id == R.id.action_language) {
-            Intent startSettingsActivity = new Intent(this, SettingsActivity.class);
-            startActivity(startSettingsActivity);
-            finish();
+//            Intent startSettingsActivity = new Intent(this, SettingsActivity.class);
+//            startActivity(startSettingsActivity);
+//            finish();
+            languageSpinner();
             return true;
         } else if (id == R.id.action_search) {
             Intent startSearchActivity = new Intent(getApplicationContext(), MovieSearchActivity.class);
@@ -310,6 +363,7 @@ public class MainActivity extends AppCompatActivity
             intent.putExtra(Intent.EXTRA_TEXT, "Hey check out my app at: https://play.google.com/store/apps/details?id=com.google.android.apps.plus\n");
             startActivity(Intent.createChooser(intent, "choose one"));
         } else if (id == R.id.nav_sign_out) {
+            System.out.println("signout called");
             AuthUI.getInstance().signOut(this);
         }
 
@@ -419,64 +473,6 @@ public class MainActivity extends AppCompatActivity
         });
 
 
-    }
-
-    private void installShortcut(Boolean isAppInstalled) {
-        System.out.println("MainActivity.installShortcut");
-
-        if (!isAppInstalled) {
-            if (Build.VERSION.SDK_INT < 26) {
-                System.out.println("MainActivity.installShortcut inside");
-                Intent shortcutIntent = new Intent(getApplicationContext(), MainActivity.class);
-                shortcutIntent.setAction(Intent.ACTION_MAIN);
-                Intent intent = new Intent();
-                intent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, shortcutIntent);
-                intent.putExtra(Intent.EXTRA_SHORTCUT_NAME, "Zlikx");
-                intent.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, Intent.ShortcutIconResource
-                        .fromContext(getApplicationContext(), R.mipmap.ic_launcher_round));
-                intent.setAction("com.android.launcher.action.INSTALL_SHORTCUT");
-                getApplicationContext().sendBroadcast(intent);
-
-                SharedPreferences.Editor editor = appPreferences.edit();
-                editor.putBoolean("isAppInstalled", true);
-                editor.apply();
-            } else {
-                System.out.println("Oreo shortcut not installed");
-//                Intent shortcutIntent = new Intent(this, MainActivity.class);
-//                shortcutIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//                shortcutIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//                shortcutIntent.setAction(Intent.ACTION_MAIN);
-//
-//                ShortcutInfoCompat shortcut = new ShortcutInfoCompat.Builder(this, "zlikx")
-//                        .setShortLabel(getResources().getString(R.string.app_name))
-//                        .setIcon(IconCompat.createWithResource(getApplicationContext(), R.mipmap.ic_launcher))
-//                        .setIntent(shortcutIntent)
-//                        .build();
-//                ShortcutManagerCompat.requestPinShortcut(this, shortcut, null);
-
-//                ShortcutManager shortcutManager = null;
-//                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N_MR1) {
-//                    shortcutManager = mContext.getSystemService(ShortcutManager.class);
-//                }
-//                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-//                    if (shortcutManager != null) {
-//                        if (shortcutManager.isRequestPinShortcutSupported()) {
-//                            ShortcutInfo shortcut = new ShortcutInfo.Builder(mContext, uniqueid)
-//                                    .setShortLabel("Demo")
-//                                    .setLongLabel("Open the Android Document")
-//                                    .setIcon(Icon.createWithResource(mContext, R.drawable.andi))
-//                                    .setIntent(new Intent(Intent.ACTION_VIEW,
-//                                            Uri.parse("https://stackoverflow.com")))
-//                                    .build();
-//
-//                            shortcutManager.requestPinShortcut(shortcut, null);
-//                        } else
-//                            Toast.makeText(mContext, "Pinned shortcuts are not supported!", Toast.LENGTH_SHORT).show();
-//                    }
-//                }
-
-            }
-        }
     }
 
 

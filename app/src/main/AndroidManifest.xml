@@ -74,7 +74,11 @@
         <activity
             android:name=".FullscreenImageActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/ConnectionTheme"></activity>
+            android:theme="@style/ConnectionTheme" />
+
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-1865534838493345~1681246593" />
     </application>
 
 </manifest>
