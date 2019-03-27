@@ -25,7 +25,7 @@ public interface PostService {
     @GET("discover/movie")
     Call<PostList> getTrendingMovies(@Query("api_key") String apiKey,
                                      @Query("sort_by") String sortBy,
-                                     @Query("primary_release_year") int primRelYear,
+                                     @Query("release_date.lte") String primRelYear,
                                      @Query("with_original_language") String orgLang,
                                      @Query("page") int pageIndex);
 

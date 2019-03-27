@@ -1,11 +1,9 @@
 package com.zyta.zflikz;
 
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
-import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.zyta.zflikz.model.Backdrop;
 import com.zyta.zflikz.model.ImageDetails;
 import com.zyta.zflikz.model.ImagesAdapter;
@@ -15,6 +13,8 @@ import com.zyta.zflikz.utils.MovieAPI;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.viewpager.widget.ViewPager;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;

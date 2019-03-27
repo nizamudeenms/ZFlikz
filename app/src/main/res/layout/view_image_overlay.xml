@@ -1,0 +1,29 @@
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+
+    <ImageButton
+        android:id="@+id/btnShare"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_margin="10dp"
+        android:background="@color/color_black"
+        android:padding="10dp"
+        android:src="@drawable/ic_menu_share"
+        android:tint="@color/color_white" />
+
+    <!--<ImageView-->
+    <!--android:id="@+id/ic_download_button"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:layout_alignParentEnd="true"-->
+    <!--android:layout_alignParentRight="true"-->
+    <!--android:src="@drawable/ic_action_download"-->
+    <!--android:tint="@color/color_black" />-->
+
+
+</merge>

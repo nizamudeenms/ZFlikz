@@ -2,11 +2,6 @@ package com.zyta.zflikz;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.CardView;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
@@ -17,6 +12,7 @@ import android.widget.TextView;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.drawable.ProgressBarDrawable;
 import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
+import com.google.android.material.snackbar.Snackbar;
 import com.stfalcon.frescoimageviewer.ImageViewer;
 import com.zyta.zflikz.model.PersonCast;
 import com.zyta.zflikz.model.PersonCastAdapter;
@@ -33,6 +29,10 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -117,15 +117,20 @@ public class PersonActivity extends AppCompatActivity {
 //                        .setStartPosition(0)
 //                        .show();
 
-                GenericDraweeHierarchyBuilder hierarchyBuilder = GenericDraweeHierarchyBuilder.newInstance(getResources())
-                        .setFailureImage(R.drawable.no_image_available)
-                        .setProgressBarImage(new ProgressBarDrawable());
+                if (personImagePathArrayList.size() != 0) {
+                    GenericDraweeHierarchyBuilder hierarchyBuilder = GenericDraweeHierarchyBuilder.newInstance(getResources())
+                            .setFailureImage(R.drawable.no_image_available)
+                            .setProgressBarImage(new ProgressBarDrawable());
 
-                ImageViewer.Builder builder = new ImageViewer.Builder<>(PersonActivity.this, personImagePathArrayList)
-                        .setStartPosition(0)
-                        .setCustomDraweeHierarchyBuilder(hierarchyBuilder);
+                    ImageViewer.Builder builder = new ImageViewer.Builder<>(PersonActivity.this, personImagePathArrayList)
+                            .setStartPosition(0)
+                            .setCustomDraweeHierarchyBuilder(hierarchyBuilder);
+                    builder.show();
+                } else {
+                    Snackbar backDropImagesSnackBar = Snackbar.make(getWindow().getDecorView(), "Image Unavailable", Snackbar.LENGTH_LONG);
+                    backDropImagesSnackBar.show();
+                }
 
-                builder.show();
 //                if (crewList.size() == 0 && castList.size() == 0) {
 //                    Snackbar creditsSnackbar = Snackbar.make(getWindow().getDecorView(), "Full Credits Unavailable", Snackbar.LENGTH_LONG);
 //                    creditsSnackbar.show();

@@ -1,24 +1,13 @@
 package com.zyta.zflikz;
 
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Parcelable;
-import android.support.annotation.NonNull;
-import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -26,15 +15,16 @@ import android.widget.AbsListView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.RequestBuilder;
 import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
+import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserInfo;
 import com.zyta.zflikz.model.MovieAdapter;
 import com.zyta.zflikz.model.PostList;
 import com.zyta.zflikz.model.Result;
@@ -45,13 +35,22 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import jp.wasabeef.recyclerview.adapters.SlideInLeftAnimationAdapter;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener{
+        implements NavigationView.OnNavigationItemSelectedListener {
 
     FirebaseAuth mFirebaseAuth;
     FirebaseAuth.AuthStateListener mFirebaseAuthListener;
@@ -62,35 +61,28 @@ public class MainActivity extends AppCompatActivity
             new AuthUI.IdpConfig.TwitterBuilder().build(),
             new AuthUI.IdpConfig.FacebookBuilder().build(),
             new AuthUI.IdpConfig.GoogleBuilder().build());
-    ImageView profileImage;
-    TextView profileName, profileEmail;
+    ImageView profileImageImageView;
+    TextView profileNameTextView, profileEmailTextView;
     private String TAG = MainActivity.class.getSimpleName();
     private ArrayList<Result> movies = new ArrayList<>();
     private MovieAdapter mAdapter;
     private RecyclerView recyclerView;
     private AdView mAdView;
 
-    boolean isAppInstalled = false;
-    public SharedPreferences appPreferences;
 
-    final String GET_POPULAR = "popular";
-    final String GET_TOP = "top_rated";
-    final String GET_FAV = "favorite";
-    public String sortBy = GET_POPULAR;
-    private Parcelable listState;
     private int PAGE_NO = 1;
     private int TOT_PAGES = 0;
     String ORG_LANG = null;
-    final int PRIM_REL_YEAR = 2018;
-    final String SORT_BY = "popularity.desc";
-
-    private static final int PAGE_START = 1;
+    final String PRIM_REL_YEAR = "2020";
+    final String SORT_BY = "release_date.desc";
 
 
     Boolean isScrolling = false;
-    SlideInLeftAnimationAdapter slideInLeftAnimationAdapter;
 
     int currentItems, totalItems, scrollOutItems;
+    private String profileEmail, profileName;
+    Uri profilePhotoUrl;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,7 +90,7 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.inflateMenu(R.menu.main);
-        toolbar.setBackgroundColor(getResources().getColor(R.color.blackColorAccent40Percent));
+        toolbar.setBackgroundColor(ContextCompat.getColor(this, R.color.blackColorAccent40Percent));
 
         setSupportActionBar(toolbar);
 
@@ -107,6 +99,23 @@ public class MainActivity extends AppCompatActivity
         SharedPreferences.Editor editor = myPrefs.edit();
         editor.putString("ORG_LANG", langPreference);
         editor.commit();
+
+
+//         RequestListener<Bitmap> requestListener = new RequestListener<Bitmap>() {
+//            @Override
+//            public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Bitmap> target, boolean isFirstResource) {
+//                // todo log exception to central service or something like that
+//
+//                // important to return false so the error placeholder can be placed
+//                return false;
+//            }
+//
+//            @Override
+//            public boolean onResourceReady(Bitmap resource, Object model, Target<Bitmap> target, DataSource dataSource, boolean isFirstResource) {
+//                // everything worked out, so probably nothing to do
+//                return false;
+//            }
+//        };
 
         ORG_LANG = langPreference;
 
@@ -119,21 +128,23 @@ public class MainActivity extends AppCompatActivity
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = mFirebaseAuth.getCurrentUser();
                 if (user != null) {
-//                    Toast.makeText(MainActivity.this, "Signed in ", Toast.LENGTH_SHORT).show();
                     onSigninListener(user.getDisplayName());
-                    System.out.println("user.getPhotoUrl() = " + user.getPhotoUrl());
                     Uri xx = FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl();
-                    System.out.println("xx.toString() = " + xx.toString());
-
-                    RequestBuilder<Drawable> thumbnail = Glide.with(getApplicationContext())
-                            .load(R.drawable.zlikx_logo_bg_blur);
 
                     if (xx != null) {
-                        GlideApp.with(getApplicationContext()).load(xx).placeholder(R.mipmap.ic_launcher).error(R.mipmap.ic_launcher).transform(new CircleCrop()).into(profileImage);
-                        System.out.println("user.getDisplayName()" + user.getDisplayName());
-                        System.out.println("user.getEmail(" + user.getEmail());
-                        profileName.setText(user.getDisplayName());
-                        profileEmail.setText(user.getEmail());
+                        for (UserInfo profile : user.getProviderData()) {
+                            // Id of the provider (ex: google.com)
+                            String providerId = profile.getProviderId();
+                            // UID specific to the provider
+                            String uid = profile.getUid();
+                            // Name, email address, and profile photo Url
+                            profileName = profile.getDisplayName();
+                            profileEmail = profile.getEmail();
+                            profilePhotoUrl = profile.getPhotoUrl();
+                        }
+                        GlideApp.with(getApplicationContext()).load(profilePhotoUrl).placeholder(R.mipmap.ic_launcher).error(R.drawable.zlikx_logo_bg_blur_grey).transform(new CircleCrop()).into(profileImageImageView);
+                        profileNameTextView.setText(profileName);
+                        profileEmailTextView.setText(profileEmail);
                     }
                 } else {
                     startActivityForResult(
@@ -160,9 +171,9 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         View headerLayout = navigationView.inflateHeaderView(R.layout.nav_header_main);
-        profileImage = headerLayout.findViewById(R.id.profile_image_view);
-        profileName = headerLayout.findViewById(R.id.profile_name_text_view);
-        profileEmail = headerLayout.findViewById(R.id.profile_mail_text_view);
+        profileImageImageView = headerLayout.findViewById(R.id.profile_image_view);
+        profileNameTextView = headerLayout.findViewById(R.id.profile_name_text_view);
+        profileEmailTextView = headerLayout.findViewById(R.id.profile_mail_text_view);
 
 
         movies = new ArrayList<>();
@@ -175,14 +186,13 @@ public class MainActivity extends AppCompatActivity
         recyclerView.setAdapter(mAdapter);
         recyclerView.setHasFixedSize(true);
 
-//        setupSharedPreferences();
-
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
                 if (newState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL) {
                     isScrolling = true;
+
                 }
             }
 
@@ -203,10 +213,13 @@ public class MainActivity extends AppCompatActivity
 
         getData();
 
-        MobileAds.initialize(this, "ca-app-pub-1865534838493345~1681246593");
-        mAdView = findViewById(R.id.adView);
-        AdRequest adRequest = new AdRequest.Builder().build();
-        mAdView.loadAd(adRequest);
+        if (BuildConfig.BUILD_TYPE.equalsIgnoreCase("release")) {
+            MobileAds.initialize(this, "ca-app-pub-1865534838493345~1681246593");
+            mAdView = findViewById(R.id.adView);
+            AdRequest adRequest = new AdRequest.Builder().build();
+            mAdView.loadAd(adRequest);
+        }
+
     }
 
 //
@@ -398,46 +411,60 @@ public class MainActivity extends AppCompatActivity
 
     private void getData() {
 
-//        progress.setVisibility(View.VISIBLE);
         System.out.println("PAGE_NO : " + PAGE_NO);
         System.out.println("TOT_PAGES : " + TOT_PAGES);
         System.out.println("ORG_LANG : " + ORG_LANG);
 
-//        if(PAGE_NO > TOT_PAGES){
-//            return;
-//        }
-//        final Call<PostList> postList = MovieAPI.getService().getPopularMovies(BuildConfig.TMDB_KEY, PAGE_NO);
-        final Call<PostList> postList = MovieAPI.getService().getTrendingMovies(BuildConfig.TMDB_KEY, SORT_BY, PRIM_REL_YEAR, ORG_LANG, PAGE_NO);
+
+        final ProgressDialog progressDialog;
+        progressDialog = new ProgressDialog(MainActivity.this);
+//        progressDialog.setMax(100);
+        progressDialog.setMessage("Loading...");
+//        progressDialog.setTitle("ProgressDialog bar example");
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        // show it
+        progressDialog.show();
+
+
+
+        final Call<PostList> postList;
+        if (ORG_LANG.equals("en")) {
+            postList = MovieAPI.getService().getPopularMovies(BuildConfig.TMDB_KEY, PAGE_NO);
+        } else {
+            postList = MovieAPI.getService().getTrendingMovies(BuildConfig.TMDB_KEY, SORT_BY, PRIM_REL_YEAR, ORG_LANG, PAGE_NO);
+        }
+
+
         postList.enqueue(new Callback<PostList>() {
             @Override
             public void onResponse(Call<PostList> call, Response<PostList> response) {
-                PostList list = response.body();
-//                PAGE_NO = list.getPage();
+                progressDialog.dismiss();
 
+                PostList list = response.body();
                 TOT_PAGES = list.getTotalPages();
                 movies.addAll(list.getResults());
                 mAdapter.notifyDataSetChanged();
                 if (PAGE_NO <= TOT_PAGES) {
                     PAGE_NO = PAGE_NO + 1;
-                    System.out.println("inside page no block");
                 }
-                System.out.println("PAGE NO at ENd : " + PAGE_NO);
-//                Toast.makeText(MainActivity.this, "Page NO : " + PAGE_NO, Toast.LENGTH_SHORT).show();
+
             }
 
             @Override
             public void onFailure(Call<PostList> call, Throwable t) {
+                progressDialog.dismiss();
+
                 if (t instanceof IOException) {
-//                    Toast.makeText(MovieDetailActivity.this, "No network ", Toast.LENGTH_SHORT).show();
                     Snackbar mySnackbar = Snackbar.make(findViewById(R.id.main_activity_layout), "No Network", Snackbar.LENGTH_LONG);
                     mySnackbar.show();
-                    System.out.println("Failure is : " + t.getMessage());
+                    Log.e(TAG, "onFailure: " + t.getMessage().toString());
                     AlertDialog.Builder builder;
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                         builder = new AlertDialog.Builder(MainActivity.this, android.R.style.Theme_Material_Dialog_Alert);
                     } else {
                         builder = new AlertDialog.Builder(MainActivity.this);
                     }
+
                     builder.setTitle("Internet Access Required")
                             .setMessage("Unable to Continue. Please Check Internet and try again\"")
                             .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
@@ -451,7 +478,7 @@ public class MainActivity extends AppCompatActivity
                 } else {
                     Snackbar mySnackbar = Snackbar.make(findViewById(R.id.main_activity_layout), "Error Occurred", Snackbar.LENGTH_LONG);
                     mySnackbar.show();
-                    System.out.println("Failure is : " + t.getMessage());
+                    Log.e(TAG, "onFailure: " + t.getMessage());
                     AlertDialog.Builder builder;
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                         builder = new AlertDialog.Builder(MainActivity.this, android.R.style.Theme_Material_Dialog_Alert);
@@ -472,8 +499,6 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-
     }
-
 
 }

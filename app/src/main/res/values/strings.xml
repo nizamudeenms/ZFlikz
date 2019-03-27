@@ -35,5 +35,6 @@
     <string name="compose_shortcut_short_label1">Zlikx</string>
     <string name="compose_shortcut_long_label1">Zlikx Short</string>
     <string name="compose_disabled_message1">Zlikx Disabled</string>
+    <string name="zlikx_deep_link">Zlikx Deeplink</string>
 
 </resources>

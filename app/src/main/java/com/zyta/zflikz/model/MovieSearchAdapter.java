@@ -2,7 +2,6 @@ package com.zyta.zflikz.model;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +14,8 @@ import com.zyta.zflikz.PersonActivity;
 import com.zyta.zflikz.R;
 
 import java.util.List;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 public class MovieSearchAdapter extends RecyclerView.Adapter<MovieSearchAdapter.MovieSearchViewHolder> {
 

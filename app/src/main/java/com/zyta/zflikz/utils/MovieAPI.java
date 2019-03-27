@@ -4,7 +4,13 @@ import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import com.zyta.zflikz.BuildConfig;
 
 import java.io.IOException;
+import java.security.cert.CertificateException;
 import java.util.concurrent.TimeUnit;
+
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSocketFactory;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
@@ -38,7 +44,6 @@ public class MovieAPI {
     }
 
 
-
     public static Retrofit getClient() {
 
         if (okHttpClient == null)
@@ -56,31 +61,88 @@ public class MovieAPI {
     }
 
     private static void initOkHttp() {
-        OkHttpClient.Builder httpClient = new OkHttpClient().newBuilder()
-                .connectTimeout(REQUEST_TIMEOUT, TimeUnit.SECONDS)
-                .readTimeout(REQUEST_TIMEOUT, TimeUnit.SECONDS)
-                .writeTimeout(REQUEST_TIMEOUT, TimeUnit.SECONDS);
 
-        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
-        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+      /*  ConnectionSpec cs = new ConnectionSpec.Builder(ConnectionSpec.MODERN_TLS)
+                .tlsVersions(TlsVersion.TLS_1_1)
+                .cipherSuites(
+                        CipherSuite.TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,
+                        CipherSuite.TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,
+                        CipherSuite.TLS_DHE_RSA_WITH_AES_128_GCM_SHA256)
+                .build();
 
-        httpClient.addInterceptor(interceptor);
+        ConnectionSpec cs2 = new ConnectionSpec.Builder(ConnectionSpec.MODERN_TLS)
+                .tlsVersions(TlsVersion.TLS_1_2)
+                .cipherSuites(
+                        CipherSuite.TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,
+                        CipherSuite.TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,
+                        CipherSuite.TLS_DHE_RSA_WITH_AES_128_GCM_SHA256)
+                .build();
 
-        httpClient.addInterceptor(new Interceptor() {
-            @Override
-            public Response intercept(Chain chain) throws IOException {
-                Request original = chain.request();
-                Request.Builder requestBuilder = original.newBuilder()
-                        .addHeader("Accept", "application/json")
-                        .addHeader("Request-Type", "Android")
-                        .addHeader("Content-Type", "application/json");
+        List<ConnectionSpec> specs = new ArrayList<>();
+        specs.add(cs);
+        specs.add(cs2);
+//        specs.add(ConnectionSpec.MODERN_TLS);
+//        specs.add(ConnectionSpec.CLEARTEXT);
 
-                Request request = requestBuilder.build();
-                return chain.proceed(request);
-            }
-        });
+//        OkHttpClient client = new OkHttpClient.Builder()
+//                .connectionSpecs(Collections.singletonList(spec))
+//                .build();
+*/
 
-        okHttpClient = httpClient.build();
+        try {
+            final TrustManager[] trustAllCerts = new TrustManager[]{
+                    new X509TrustManager() {
+                        @Override
+                        public void checkClientTrusted(java.security.cert.X509Certificate[] chain, String authType) throws CertificateException {
+                        }
+
+                        @Override
+                        public void checkServerTrusted(java.security.cert.X509Certificate[] chain, String authType) throws CertificateException {
+                        }
+
+                        @Override
+                        public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+                            return new java.security.cert.X509Certificate[]{};
+                        }
+                    }
+            };
+
+            // Install the all-trusting trust manager
+            final SSLContext sslContext = SSLContext.getInstance("SSL");
+            sslContext.init(null, trustAllCerts, new java.security.SecureRandom());
+
+            // Create an ssl socket factory with our all-trusting manager
+            final SSLSocketFactory sslSocketFactory = sslContext.getSocketFactory();
+
+
+            OkHttpClient.Builder httpClient = new OkHttpClient().newBuilder()
+                    .connectTimeout(REQUEST_TIMEOUT, TimeUnit.SECONDS)
+                    .readTimeout(REQUEST_TIMEOUT, TimeUnit.SECONDS)
+                    .writeTimeout(REQUEST_TIMEOUT, TimeUnit.SECONDS);
+
+            HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
+            interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+
+            httpClient.addInterceptor(interceptor);
+
+            httpClient.addInterceptor(new Interceptor() {
+                @Override
+                public Response intercept(Chain chain) throws IOException {
+                    Request original = chain.request();
+                    Request.Builder requestBuilder = original.newBuilder()
+                            .addHeader("Accept", "application/json")
+                            .addHeader("Request-Type", "Android")
+                            .addHeader("Content-Type", "application/json");
+
+                    Request request = requestBuilder.build();
+                    return chain.proceed(request);
+                }
+            });
+
+            okHttpClient = httpClient.build();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public static void resetApiClient() {

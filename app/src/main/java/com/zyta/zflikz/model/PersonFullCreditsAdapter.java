@@ -2,8 +2,6 @@ package com.zyta.zflikz.model;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +17,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.RecyclerView;
 
 public class PersonFullCreditsAdapter  extends SectionedRecyclerViewAdapter<PersonFullCreditsAdapter.PersonCreditHeaderHolder,PersonFullCreditsAdapter.PersonCreditContentHolder> {
 
@@ -136,7 +137,7 @@ public class PersonFullCreditsAdapter  extends SectionedRecyclerViewAdapter<Pers
         holder.castPersonTextView.setText(fullCredits.getName());
 
         if (fullCreditsArrayList.get(itemPosition).getProfilePath() != null) {
-            GlideApp.with(mContext).load("http://image.tmdb.org/t/p/w185" + fullCreditsArrayList.get(itemPosition).getProfilePath()).placeholder(R.drawable.zlikx_logo).into(holder.castImageView);
+            GlideApp.with(mContext).load("https://image.tmdb.org/t/p/w154" + fullCreditsArrayList.get(itemPosition).getProfilePath()).placeholder(R.drawable.zlikx_logo).into(holder.castImageView);
         } else {
             GlideApp.with(mContext)
                     .load(R.drawable.person_placeholder)

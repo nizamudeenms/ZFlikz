@@ -2,11 +2,6 @@ package com.zyta.zflikz;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.CardView;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -22,6 +17,7 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
+import com.google.android.material.snackbar.Snackbar;
 import com.stfalcon.frescoimageviewer.ImageViewer;
 import com.zyta.zflikz.model.Backdrop;
 import com.zyta.zflikz.model.Cast;
@@ -52,6 +48,10 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -83,6 +83,7 @@ public class MovieDetailActivity extends AppCompatActivity {
     ArrayList<String> posterPathArrayList = new ArrayList<>();
 
     String POSTER_BASE_URL = "http://image.tmdb.org/t/p/w500";
+    String BACKDROP_BASE_URL = "http://image.tmdb.org/t/p/w342";
 
     CreditsAdapter creditsAdapter;
     ProductionAdapter productionAdapter;
@@ -102,6 +103,10 @@ public class MovieDetailActivity extends AppCompatActivity {
     private AdView mAdView;
 
     SimpleDraweeView posterSimpleDraweeView;
+    ImageOverlayView imageOverlayView;
+    private String TAG = MovieDetailActivity.class.getSimpleName();
+    private String newPosterPath;
+    private String newBackdropPath;
 
     interface CastItemClicked {
         void castClicked(Bundle b);
@@ -143,6 +148,8 @@ public class MovieDetailActivity extends AppCompatActivity {
         similiarMovieCardView = findViewById(R.id.similiar_movie_card_view);
 
         posterSimpleDraweeView = findViewById(R.id.poster_simple_drawee_view);
+        imageOverlayView = new ImageOverlayView(this);
+
 
         crewRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayout.HORIZONTAL, false));
         prodrecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayout.HORIZONTAL, false));
@@ -194,20 +201,31 @@ public class MovieDetailActivity extends AppCompatActivity {
         posterSimpleDraweeView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new ImageViewer.Builder<>(MovieDetailActivity.this, posterPathArrayList)
-                        .setStartPosition(0)
-                        .setCustomDraweeHierarchyBuilder(hierarchyBuilder)
-                        .show();
+                if (posterArrayList.size() != 0) {
+                    new ImageViewer.Builder<>(MovieDetailActivity.this, posterPathArrayList)
+                            .setStartPosition(0)
+                            .setOverlayView(imageOverlayView)
+                            .setCustomDraweeHierarchyBuilder(hierarchyBuilder)
+                            .show();
+                } else {
+                    Snackbar posterImagesSnackBar = Snackbar.make(getWindow().getDecorView(), "Poster Unavailable", Snackbar.LENGTH_LONG);
+                    posterImagesSnackBar.show();
+                }
             }
         });
 
         backDropImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new ImageViewer.Builder<>(MovieDetailActivity.this, backdropPathArrayList)
-                        .setStartPosition(0)
-                        .setCustomDraweeHierarchyBuilder(hierarchyBuilder)
-                        .show();
+                if (backdropArrayList.size() != 0) {
+                    new ImageViewer.Builder<>(MovieDetailActivity.this, backdropPathArrayList)
+                            .setStartPosition(0)
+                            .setCustomDraweeHierarchyBuilder(hierarchyBuilder)
+                            .show();
+                } else {
+                    Snackbar backDropImagesSnackBar = Snackbar.make(getWindow().getDecorView(), "Backdrop Unavailable", Snackbar.LENGTH_LONG);
+                    backDropImagesSnackBar.show();
+                }
             }
         });
 
@@ -234,10 +252,13 @@ public class MovieDetailActivity extends AppCompatActivity {
 
         reviewAdapter.notifyDataSetChanged();
 
-        MobileAds.initialize(this, "ca-app-pub-1865534838493345~1681246593");
-        mAdView = findViewById(R.id.adView);
-        AdRequest adRequest = new AdRequest.Builder().build();
-        mAdView.loadAd(adRequest);
+        if (BuildConfig.BUILD_TYPE.equalsIgnoreCase("release")) {
+
+            MobileAds.initialize(this, "ca-app-pub-1865534838493345~1681246593");
+            mAdView = findViewById(R.id.adView);
+            AdRequest adRequest = new AdRequest.Builder().build();
+            mAdView.loadAd(adRequest);
+        }
 
     }
 
@@ -322,7 +343,8 @@ public class MovieDetailActivity extends AppCompatActivity {
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if ((keyCode == KeyEvent.KEYCODE_BACK)) {
             System.out.println("back pressed and exited");
-            finish();
+            //TODO CHECK LATER FOR BACK BUTTON FUNC WORKS PROPERLY
+//            finish();
         }
         return super.onKeyDown(keyCode, event);
     }
@@ -383,14 +405,13 @@ public class MovieDetailActivity extends AppCompatActivity {
                 }
 
                 for (int i = 0; i < productionCompanyList.size(); i++) {
-                    System.out.println("path is :   http://image.tmdb.org/t/p/w185" + productionCompanyList.get(i).getLogoPath());
+                    Log.d(TAG, "production compaypath is :  "+productionCompanyList.get(i).getLogoPath() );
                 }
 
                 for (ProductionCompany company : productionCompanyList) {
-                    System.out.println("Production Company : " + company.getName());
+                    Log.d(TAG, "onResponse: "+ company.getName());
                 }
 
-                System.out.println("movieDetails : " + movieDetails.toString());
                 overview = movieDetails.getOverview();
                 releaseDate = movieDetails.getReleaseDate();
                 voteAverage = movieDetails.getVoteAverage();
@@ -429,16 +450,26 @@ public class MovieDetailActivity extends AppCompatActivity {
                     ratingTextView.setText(String.valueOf(voteAverage));
                 }
 
-                if (posterPath != null) {
-                    posterPath = "http://image.tmdb.org/t/p/w342" + posterPath;
-                    backdropPath = "http://image.tmdb.org/t/p/w342" + backdropPath;
-                    GlideApp.with(getApplicationContext()).load(posterPath).placeholder(R.drawable.zlikx_logo).into(posterSimpleDraweeView);
-                    GlideApp.with(getApplicationContext()).load((backdropPath == null) ? posterPath : backdropPath).placeholder(R.drawable.zlikx_logo).into(backDropImageView);
-                    GlideApp.with(getApplicationContext()).load((backdropPath == null) ? posterPath : backdropPath).placeholder(R.drawable.zlikx_logo).transform(new BlurTransformation(getApplicationContext())).into(recImageView);
+
+                //TODO Change this condition according to null condiotion
+                if(posterPath != null){
+                    newPosterPath =  BACKDROP_BASE_URL + posterPath;
+                }
+
+                if(backdropPath != null){
+                    newBackdropPath =  BACKDROP_BASE_URL + backdropPath;
+                }
+
+
+                System.out.println("posterPath = " + posterPath);
+                if (newPosterPath != null) {
+                    GlideApp.with(getApplicationContext()).load(newPosterPath).placeholder(R.drawable.zlikx_logo).into(posterSimpleDraweeView);
+                    GlideApp.with(getApplicationContext()).load((backdropPath == null) ? newPosterPath : newBackdropPath).placeholder(R.drawable.zlikx_logo).into(backDropImageView);
+                    GlideApp.with(getApplicationContext()).load((backdropPath == null) ? newPosterPath : newBackdropPath).placeholder(R.drawable.zlikx_logo).transform(new BlurTransformation(getApplicationContext())).into(recImageView);
                 } else {
                     GlideApp.with(getApplicationContext()).load(R.drawable.zlikx_logo_bg_blur).placeholder(R.drawable.zlikx_logo).into(posterSimpleDraweeView);
-                    GlideApp.with(getApplicationContext()).load((backdropPath == null) ? R.drawable.zlikx_logo_bg_blur : backdropPath).placeholder(R.drawable.zlikx_logo).into(backDropImageView);
-                    GlideApp.with(getApplicationContext()).load((backdropPath == null) ? R.drawable.zlikx_logo_bg_blur : backdropPath).placeholder(R.drawable.zlikx_logo).transform(new BlurTransformation(getApplicationContext())).into(recImageView);
+                    GlideApp.with(getApplicationContext()).load((backdropPath == null) ? R.drawable.zlikx_logo_bg_blur_grey : newBackdropPath).placeholder(R.drawable.zlikx_logo).into(backDropImageView);
+                    GlideApp.with(getApplicationContext()).load((backdropPath == null) ? R.drawable.zlikx_logo_bg_blur_grey : newBackdropPath).placeholder(R.drawable.zlikx_logo).transform(new BlurTransformation(getApplicationContext())).into(recImageView);
                 }
 
 
@@ -518,10 +549,10 @@ public class MovieDetailActivity extends AppCompatActivity {
                 posterArrayList.addAll(imagesObject.getPosters());
 
                 for (Poster poster : posterArrayList) {
-                    posterPathArrayList.add(POSTER_BASE_URL+poster.getFilePath());
+                    posterPathArrayList.add(POSTER_BASE_URL + poster.getFilePath());
                 }
                 for (Backdrop backdrop : backdropArrayList) {
-                    backdropPathArrayList.add(POSTER_BASE_URL+backdrop.getFilePath());
+                    backdropPathArrayList.add(POSTER_BASE_URL + backdrop.getFilePath());
                 }
             }
 

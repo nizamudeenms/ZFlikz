@@ -1,7 +1,6 @@
 package com.zyta.zflikz;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.drawable.ProgressBarDrawable;
@@ -13,6 +12,8 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.stfalcon.frescoimageviewer.ImageViewer;
 
 import java.util.ArrayList;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 public class FullscreenImageActivity extends AppCompatActivity {
     ArrayList<String> personImagePathArrayList = new ArrayList<>();

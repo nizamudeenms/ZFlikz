@@ -1,13 +1,9 @@
 package com.zyta.zflikz;
 
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.view.View;
-import android.widget.Toast;
+import android.util.Log;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.zyta.zflikz.model.Cast;
 import com.zyta.zflikz.model.Crew;
 import com.zyta.zflikz.model.FullCredits;
@@ -20,6 +16,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import jp.wasabeef.recyclerview.animators.FlipInTopXAnimator;
 
 public class FullCreditsActivity extends AppCompatActivity implements FullCreditsAdapter.OnItemClickListener, PersonFullCreditsAdapter.OnItemClickListener {
@@ -37,13 +36,14 @@ public class FullCreditsActivity extends AppCompatActivity implements FullCredit
     FloatingActionButton myFab;
     Boolean isExpanded = false;
     String type = null;
+    private String TAG = FullCreditsActivity.class.getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_credits);
 
-        myFab = (FloatingActionButton) findViewById(R.id.more_fab);
+//        myFab = (FloatingActionButton) findViewById(R.id.more_fab);
 
         creditsRecyclerview = findViewById(R.id.credits_recycler_view);
         creditsRecyclerview.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
@@ -61,13 +61,13 @@ public class FullCreditsActivity extends AppCompatActivity implements FullCredit
             personFullCreditsAdapter.setOnItemClickListener(this);
             personFullCreditsAdapter.notifyDataChanged();
             creditsRecyclerview.setAdapter(personFullCreditsAdapter);
-            if (!personCrewArrayList.isEmpty()) {
-                personFullCreditsAdapter.collapseAllSections();
-            } else{
+//            if (!personCrewArrayList.isEmpty()) {
+//                personFullCreditsAdapter.collapseAllSections();
+//            } else{
                 personFullCreditsAdapter.expandAllSections();
                 isExpanded = true;
-                myFab.setImageResource(R.drawable.ic_keyboard_arrow_up_black_24dp);
-            }
+//                myFab.setImageResource(R.drawable.ic_keyboard_arrow_up_black_24dp);
+//            }
 
         } else if (type.equals("movie")) {
             crewList = (ArrayList<Crew>) getIntent().getSerializableExtra("crew_list");
@@ -80,33 +80,33 @@ public class FullCreditsActivity extends AppCompatActivity implements FullCredit
             mSectionedRecyclerAdapter.setOnItemClickListener(this);
             creditsRecyclerview.setAdapter(mSectionedRecyclerAdapter);
             mSectionedRecyclerAdapter.notifyDataChanged();
-            mSectionedRecyclerAdapter.collapseAllSections();
+//            mSectionedRecyclerAdapter.collapseAllSections();
         }
 
-        myFab.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                System.out.println("isExpanded = " + isExpanded);
-                if (!isExpanded) {
-                    if (type.equals("person")) {
-                        personFullCreditsAdapter.expandAllSections();
-                    } else if (type.equals("movie")) {
-                        mSectionedRecyclerAdapter.expandAllSections();
-                    }
-                    myFab.setImageResource(R.drawable.ic_keyboard_arrow_up_black_24dp);
-                    isExpanded = true;
-                    Toast.makeText(FullCreditsActivity.this, "Expanded all Sections", Toast.LENGTH_SHORT).show();
-                } else {
-                    if (type.equals("person")) {
-                        personFullCreditsAdapter.collapseAllSections();
-                    } else if (type.equals("movie")) {
-                        mSectionedRecyclerAdapter.collapseAllSections();
-                    }
-                    myFab.setImageResource(R.drawable.ic_keyboard_arrow_down_black_24dp);
-                    isExpanded = false;
-                    Toast.makeText(FullCreditsActivity.this, "Collapsed all Sections", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
+//        myFab.setOnClickListener(new View.OnClickListener() {
+//            public void onClick(View v) {
+//                System.out.println("isExpanded = " + isExpanded);
+//                if (!isExpanded) {
+//                    if (type.equals("person")) {
+//                        personFullCreditsAdapter.expandAllSections();
+//                    } else if (type.equals("movie")) {
+//                        mSectionedRecyclerAdapter.expandAllSections();
+//                    }
+//                    myFab.setImageResource(R.drawable.ic_keyboard_arrow_up_black_24dp);
+//                    isExpanded = true;
+//                    Toast.makeText(FullCreditsActivity.this, "Expanded all Sections", Toast.LENGTH_SHORT).show();
+//                } else {
+//                    if (type.equals("person")) {
+//                        personFullCreditsAdapter.collapseAllSections();
+//                    } else if (type.equals("movie")) {
+//                        mSectionedRecyclerAdapter.collapseAllSections();
+//                    }
+//                    myFab.setImageResource(R.drawable.ic_keyboard_arrow_down_black_24dp);
+//                    isExpanded = false;
+//                    Toast.makeText(FullCreditsActivity.this, "Collapsed all Sections", Toast.LENGTH_SHORT).show();
+//                }
+//            }
+//        });
 
     }
 //
@@ -124,20 +124,26 @@ public class FullCreditsActivity extends AppCompatActivity implements FullCredit
 //        mSectionedRecyclerAdapter.notifyItemRemovedAtPosition(index);
     }
 
+    //TODO sub header click to be fixed later
+
     @Override
     public void onSubheaderClicked(int position) {
-        if (type.equals("person")) {
-            if (personFullCreditsAdapter.isSectionExpanded(personFullCreditsAdapter.getSectionIndex(position))) {
-                personFullCreditsAdapter.collapseSection(personFullCreditsAdapter.getSectionIndex(position));
-            } else {
-                personFullCreditsAdapter.expandSection(personFullCreditsAdapter.getSectionIndex(position));
-            }
-        } else if (type.equals("movie")) {
-            if (mSectionedRecyclerAdapter.isSectionExpanded(mSectionedRecyclerAdapter.getSectionIndex(position))) {
-                mSectionedRecyclerAdapter.collapseSection(mSectionedRecyclerAdapter.getSectionIndex(position));
-            } else {
-                mSectionedRecyclerAdapter.expandSection(mSectionedRecyclerAdapter.getSectionIndex(position));
-            }
-        }
+        Log.i(TAG, "onSubheaderClicked: type :"+type+"space");
+
+//        if (type.equals("person")) {
+//            Log.i(TAG, "onSubheaderClicked section: "+personFullCreditsAdapter.isSectionExpanded(position));
+//            Log.i(TAG, "onSubheaderClicked:section  exp "+personFullCreditsAdapter.getSectionIndex(position));
+//            if (personFullCreditsAdapter.isSectionExpanded(personFullCreditsAdapter.getSectionIndex(position))) {
+//                personFullCreditsAdapter.collapseSection(personFullCreditsAdapter.getSectionIndex(position));
+//            } else {
+//                personFullCreditsAdapter.expandSection(personFullCreditsAdapter.getSectionIndex(position));
+//            }
+//        } else if (type.equals("movie")) {
+//            if (mSectionedRecyclerAdapter.isSectionExpanded(mSectionedRecyclerAdapter.getSectionIndex(position))) {
+//                mSectionedRecyclerAdapter.collapseSection(mSectionedRecyclerAdapter.getSectionIndex(position));
+//            } else {
+//                mSectionedRecyclerAdapter.expandSection(mSectionedRecyclerAdapter.getSectionIndex(position));
+//            }
+//        }
     }
 }

@@ -3,12 +3,6 @@ package com.zyta.zflikz;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.CardView;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.DividerItemDecoration;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextWatcher;
@@ -16,8 +10,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.fxn.pix.Pix;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -35,6 +29,14 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+
 public class ConverseActivity extends AppCompatActivity {
     private static final String TAG = "ConverseActivity";
 
@@ -47,7 +49,8 @@ public class ConverseActivity extends AppCompatActivity {
     String postDate = df6.format(simpleDate);
 
 
-    private ProgressBar mProgressBar;
+//    private ProgressBar mProgressBar;
+    LottieAnimationView lottieAnimationView;
     private ImageView mPhotoPickerButton, postImageView;
     private EditText mMessageEditText;
     private Button mSendButton;
@@ -87,9 +90,12 @@ public class ConverseActivity extends AppCompatActivity {
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         mDatabaseReference = mFirebaseDatabase.getReference().child("movies").child(movieId.toString());
 
+        lottieAnimationView = findViewById(R.id.converse_animation_view);
+        lottieAnimationView.setVisibility(lottieAnimationView.INVISIBLE);
 
-        mProgressBar = (ProgressBar) findViewById(R.id.con_progress_bar);
-        mProgressBar.setVisibility(ProgressBar.INVISIBLE);
+
+//        mProgressBar = (ProgressBar) findViewById(R.id.con_progress_bar);
+//        mProgressBar.setVisibility(ProgressBar.INVISIBLE);
 
 
         GlideApp.with(getApplicationContext()).load(backDropImagePath).placeholder(R.drawable.zlikx_logo).transform(new BlurTransformation(getApplicationContext())).into(backDropImage);
@@ -252,11 +258,15 @@ public class ConverseActivity extends AppCompatActivity {
 
                     if (dataSnapshot.getChildrenCount() > 0) {
                         emptyDataCardView.setVisibility(View.INVISIBLE);
-                        mProgressBar.setVisibility(ProgressBar.VISIBLE);
+//                        mProgressBar.setVisibility(ProgressBar.VISIBLE);
+                        lottieAnimationView.setVisibility(lottieAnimationView.VISIBLE);
+
                     } else {
                         emptyDataCardView.setVisibility(View.VISIBLE);
                     }
-                    mProgressBar.setVisibility(ProgressBar.INVISIBLE);
+//                    mProgressBar.setVisibility(ProgressBar.INVISIBLE);
+                    lottieAnimationView.setVisibility(lottieAnimationView.INVISIBLE);
+
                 }
 
                 @Override
@@ -264,7 +274,9 @@ public class ConverseActivity extends AppCompatActivity {
 
                 }
             });
-            mProgressBar.setVisibility(ProgressBar.VISIBLE);
+//            mProgressBar.setVisibility(ProgressBar.VISIBLE);
+            lottieAnimationView.setVisibility(lottieAnimationView.VISIBLE);
+
 
             mChildEventListener = new ChildEventListener() {
                 @Override
@@ -289,7 +301,8 @@ public class ConverseActivity extends AppCompatActivity {
 //                    }
                     conversationAdapter.notifyDataSetChanged();
                     conRecyclerView.smoothScrollToPosition(conRecyclerView.getAdapter().getItemCount());
-                    mProgressBar.setVisibility(ProgressBar.INVISIBLE);
+//                    mProgressBar.setVisibility(ProgressBar.INVISIBLE);
+                    lottieAnimationView.setVisibility(lottieAnimationView.INVISIBLE);
 
                 }
 

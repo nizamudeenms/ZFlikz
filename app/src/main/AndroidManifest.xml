@@ -8,7 +8,6 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
-        android:name="android.support.multidex.MultiDexApplication"
         android:allowBackup="true"
         android:hardwareAccelerated="true"
         android:icon="@mipmap/ic_launcher"
@@ -16,17 +15,42 @@
         android:largeHeap="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
+        android:networkSecurityConfig="@xml/network_security_config"
         android:theme="@style/AppTheme">
 
+
+        <activity
+            android:name=".SplashActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/SplashTheme">
+            <intent-filter android:label="@string/zlikx_deep_link">
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".MainActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.MainActivityTheme">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
+            <intent-filter android:label="@string/zlikx_deep_link">
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <!-- Accepts URIs that begin with "http://www.example.com/gizmos” -->
+                <data
+                    android:host="www.nizamudeen.com"
+                    android:pathPrefix="/zlikx"
+                    android:scheme="https" />
+                <!-- note that the leading "/" is required for pathPrefix-->
+                <!-- Accepts URIs that begin with "example://gizmos” -->
+                <data
+                    android:host="www.nizamudeen.com"
+                    android:scheme="https" />
+
             </intent-filter>
+
         </activity>
         <activity
             android:name=".MovieDetailActivity"

@@ -1,8 +1,6 @@
 package com.zyta.zflikz.model;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +11,9 @@ import com.zyta.zflikz.GlideApp;
 import com.zyta.zflikz.R;
 
 import java.util.ArrayList;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
 public class ProductionAdapter extends RecyclerView.Adapter<ProductionAdapter.ProductionHolder> {
     ArrayList<ProductionCompany> productionArrayList = new ArrayList<ProductionCompany>();
