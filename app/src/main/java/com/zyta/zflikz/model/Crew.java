@@ -29,7 +29,7 @@ public class Crew implements Serializable
     private String name;
     @SerializedName("profile_path")
     @Expose
-    private Object profilePath;
+    private String profilePath;
     private final static long serialVersionUID = 1993812556034869653L;
 
     public String getCreditId() {
@@ -80,11 +80,11 @@ public class Crew implements Serializable
         this.name = name;
     }
 
-    public Object getProfilePath() {
+    public String getProfilePath() {
         return profilePath;
     }
 
-    public void setProfilePath(Object profilePath) {
+    public void setProfilePath(String profilePath) {
         this.profilePath = profilePath;
     }
 

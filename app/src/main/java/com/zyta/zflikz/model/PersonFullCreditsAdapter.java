@@ -8,6 +8,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.zhukic.sectionedrecyclerview.SectionedRecyclerViewAdapter;
 import com.zyta.zflikz.GlideApp;
 import com.zyta.zflikz.MovieDetailActivity;
@@ -17,9 +20,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.RecyclerView;
 
 public class PersonFullCreditsAdapter  extends SectionedRecyclerViewAdapter<PersonFullCreditsAdapter.PersonCreditHeaderHolder,PersonFullCreditsAdapter.PersonCreditContentHolder> {
 

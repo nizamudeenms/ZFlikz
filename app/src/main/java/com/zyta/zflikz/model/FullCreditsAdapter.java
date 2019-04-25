@@ -8,6 +8,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.zhukic.sectionedrecyclerview.SectionedRecyclerViewAdapter;
 import com.zyta.zflikz.GlideApp;
 import com.zyta.zflikz.PersonActivity;
@@ -17,9 +20,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.RecyclerView;
 
 public class FullCreditsAdapter extends SectionedRecyclerViewAdapter<FullCreditsAdapter.CreditHeaderHolder, FullCreditsAdapter.CreditContentHolder> {
 
@@ -164,7 +164,7 @@ public class FullCreditsAdapter extends SectionedRecyclerViewAdapter<FullCredits
 //        totalDept++;
 
         if (fullCreditsArrayList.get(itemPosition).getProfilePath() != null) {
-            GlideApp.with(mContext).load("https://image.tmdb.org/t/p/w185" + fullCreditsArrayList.get(itemPosition).getProfilePath()).placeholder(R.drawable.zlikx_logo).into(holder.castImageView);
+            GlideApp.with(mContext).load("http://image.tmdb.org/t/p/w185" + fullCreditsArrayList.get(itemPosition).getProfilePath()).placeholder(R.drawable.zlikx_logo).into(holder.castImageView);
         } else {
             GlideApp.with(mContext)
                     .load(R.drawable.person_placeholder)

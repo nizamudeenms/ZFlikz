@@ -10,14 +10,14 @@ import android.view.animation.ScaleAnimation;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.zyta.zflikz.GlideApp;
 import com.zyta.zflikz.MovieDetailActivity;
 import com.zyta.zflikz.R;
 
 import java.util.List;
 import java.util.Random;
-
-import androidx.recyclerview.widget.RecyclerView;
 
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MyViewHolder> {
     String TAG = MovieAdapter.class.getSimpleName();

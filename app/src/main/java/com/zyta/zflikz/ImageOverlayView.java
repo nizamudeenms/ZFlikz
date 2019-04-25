@@ -16,8 +16,8 @@ public class ImageOverlayView extends RelativeLayout {
 
     private ImageView downloadImage;
 
-    private String sharingText;
-
+    String sharingText = null;
+    
     public ImageOverlayView(Context context) {
         super(context);
         init();
@@ -47,6 +47,9 @@ public class ImageOverlayView extends RelativeLayout {
     }
 
     private void init() {
+         sharingText = getResources().getString(R.string.image_share_text);
+
+
         View view = inflate(getContext(), R.layout.view_image_overlay, this);
 //        downloadImage = (ImageView) view.findViewById(R.id.ic_download_button);
         view.findViewById(R.id.btnShare).setOnClickListener(new OnClickListener() {

@@ -10,6 +10,11 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.drawable.ProgressBarDrawable;
 import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
@@ -48,10 +53,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.cardview.widget.CardView;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -235,6 +236,9 @@ public class MovieDetailActivity extends AppCompatActivity {
 
                 System.out.println("crewList = " + crewList.size());
                 System.out.println("castList = " + castList.size());
+
+//                Bundle creditsBundle = new Bundle();
+//                creditsBundle.putParcelableArrayList("crewList",crewList);
 
 
                 if (crewList.size() == 0 && castList.size() == 0) {

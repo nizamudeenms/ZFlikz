@@ -15,6 +15,17 @@ import android.widget.AbsListView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.ads.AdRequest;
@@ -35,16 +46,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBarDrawerToggle;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.content.ContextCompat;
-import androidx.core.view.GravityCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -141,6 +142,7 @@ public class MainActivity extends AppCompatActivity
                             profileName = profile.getDisplayName();
                             profileEmail = profile.getEmail();
                             profilePhotoUrl = profile.getPhotoUrl();
+                            System.out.println("profile.getUid = " + profile.getUid());
                         }
                         GlideApp.with(getApplicationContext()).load(profilePhotoUrl).placeholder(R.mipmap.ic_launcher).error(R.drawable.zlikx_logo_bg_blur_grey).transform(new CircleCrop()).into(profileImageImageView);
                         profileNameTextView.setText(profileName);

@@ -3,7 +3,10 @@ package com.zyta.zflikz;
 import android.os.Bundle;
 import android.util.Log;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.zyta.zflikz.model.Cast;
 import com.zyta.zflikz.model.Crew;
 import com.zyta.zflikz.model.FullCredits;
@@ -16,9 +19,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import jp.wasabeef.recyclerview.animators.FlipInTopXAnimator;
 
 public class FullCreditsActivity extends AppCompatActivity implements FullCreditsAdapter.OnItemClickListener, PersonFullCreditsAdapter.OnItemClickListener {
@@ -33,7 +33,7 @@ public class FullCreditsActivity extends AppCompatActivity implements FullCredit
     private Comparator<PersonCrew> personCrewComparator;
     private FullCreditsAdapter mSectionedRecyclerAdapter;
     private PersonFullCreditsAdapter personFullCreditsAdapter;
-    FloatingActionButton myFab;
+//    FloatingActionButton myFab;
     Boolean isExpanded = false;
     String type = null;
     private String TAG = FullCreditsActivity.class.getSimpleName();
@@ -61,9 +61,9 @@ public class FullCreditsActivity extends AppCompatActivity implements FullCredit
             personFullCreditsAdapter.setOnItemClickListener(this);
             personFullCreditsAdapter.notifyDataChanged();
             creditsRecyclerview.setAdapter(personFullCreditsAdapter);
-//            if (!personCrewArrayList.isEmpty()) {
-//                personFullCreditsAdapter.collapseAllSections();
-//            } else{
+          /*  if (!personCrewArrayList.isEmpty()) {
+                personFullCreditsAdapter.collapseAllSections();
+            } else{
                 personFullCreditsAdapter.expandAllSections();
                 isExpanded = true;
 //                myFab.setImageResource(R.drawable.ic_keyboard_arrow_up_black_24dp);
