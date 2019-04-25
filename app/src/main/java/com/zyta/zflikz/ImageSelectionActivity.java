@@ -23,6 +23,10 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.fxn.pix.Options;
 import com.fxn.pix.Pix;
 import com.fxn.utility.PermUtil;
 import com.google.android.gms.tasks.Continuation;
@@ -30,6 +34,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserInfo;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
@@ -43,9 +48,6 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 
 public class ImageSelectionActivity extends AppCompatActivity {
     ListView selectedPhotosList;
@@ -119,8 +121,8 @@ public class ImageSelectionActivity extends AppCompatActivity {
         mMessageEditText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(DEFAULT_MSG_LENGTH_LIMIT)});
 
         selectedPhotosList = findViewById(R.id.sel_image_list_view);
-        Pix.start(ImageSelectionActivity.this, 100, 1);
-
+//        Pix.start(ImageSelectionActivity.this, 100, 1);
+        Pix.start(this, Options.init().setRequestCode(100));
         mSendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -261,7 +263,7 @@ public class ImageSelectionActivity extends AppCompatActivity {
 //                    for (String s : returnValue) {
 //                        Log.e("val", " ->  " + s);
 //                    }
-                } else if(resultCode == Activity.RESULT_CANCELED){
+                } else if (resultCode == Activity.RESULT_CANCELED) {
                     finish();
                 }
             }
@@ -276,7 +278,7 @@ public class ImageSelectionActivity extends AppCompatActivity {
             case PermUtil.REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS: {
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Pix.start(ImageSelectionActivity.this, 100, 1);
+                    Pix.start(this, Options.init().setRequestCode(100));
                 } else {
                     Toast.makeText(ImageSelectionActivity.this, "Please approve permissions to select Image", Toast.LENGTH_LONG).show();
                     finish();
@@ -289,10 +291,22 @@ public class ImageSelectionActivity extends AppCompatActivity {
         }
     }
 
+    //    public String getmUsername() {
+//        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+//        mUsername = user.getDisplayName();
+//        mUserProfileImage = user.getPhotoUrl();
+//        return mUsername;
+//    }
     public String getmUsername() {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        mUsername = user.getDisplayName();
-        mUserProfileImage = user.getPhotoUrl();
+        for (UserInfo profile : user.getProviderData()) {
+            mUsername = profile.getDisplayName();
+            if (profile.getPhotoUrl() != null) {
+                mUserProfileImage = profile.getPhotoUrl();
+            } else {
+                mUserProfileImage = Uri.parse("android.resource://com.zyta.zflikz/drawable/no_image_available.png");
+            }
+        }
         return mUsername;
     }
 }
@@ -318,10 +332,7 @@ class ImageListAdapter extends ArrayAdapter {
             convertView = inflater.inflate(R.layout.content_listview_selected_images, parent, false);
         }
 
-        GlideApp
-                .with(context)
-                .load(imageUrls.get(position))
-                .into((ImageView) convertView);
+        GlideApp.with(context).load(imageUrls.get(position)).into((ImageView) convertView);
 
         return convertView;
     }

@@ -194,7 +194,7 @@ public class MovieDetailActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(MovieDetailActivity.this, ConverseActivity.class);
                 intent.putExtra("movieId", movieId);
-                intent.putExtra("backDropImagePath", backdropPath);
+                intent.putExtra("backDropImagePath", BACKDROP_BASE_URL +backdropPath);
                 MovieDetailActivity.this.startActivity(intent);
             }
         });

@@ -137,7 +137,7 @@ public class PersonFullCreditsAdapter  extends SectionedRecyclerViewAdapter<Pers
         holder.castPersonTextView.setText(fullCredits.getName());
 
         if (fullCreditsArrayList.get(itemPosition).getProfilePath() != null) {
-            GlideApp.with(mContext).load("https://image.tmdb.org/t/p/w154" + fullCreditsArrayList.get(itemPosition).getProfilePath()).placeholder(R.drawable.zlikx_logo).into(holder.castImageView);
+            GlideApp.with(mContext).load("http://image.tmdb.org/t/p/w154" + fullCreditsArrayList.get(itemPosition).getProfilePath()).placeholder(R.drawable.zlikx_logo).into(holder.castImageView);
         } else {
             GlideApp.with(mContext)
                     .load(R.drawable.person_placeholder)

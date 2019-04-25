@@ -11,10 +11,17 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.airbnb.lottie.LottieAnimationView;
-import com.fxn.pix.Pix;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserInfo;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -29,13 +36,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.cardview.widget.CardView;
-import androidx.recyclerview.widget.DefaultItemAnimator;
-import androidx.recyclerview.widget.DividerItemDecoration;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 
 public class ConverseActivity extends AppCompatActivity {
     private static final String TAG = "ConverseActivity";
@@ -49,7 +49,7 @@ public class ConverseActivity extends AppCompatActivity {
     String postDate = df6.format(simpleDate);
 
 
-//    private ProgressBar mProgressBar;
+    //    private ProgressBar mProgressBar;
     LottieAnimationView lottieAnimationView;
     private ImageView mPhotoPickerButton, postImageView;
     private EditText mMessageEditText;
@@ -200,9 +200,11 @@ public class ConverseActivity extends AppCompatActivity {
                 mMessageEditText.setText("");
             }
         });
+
+
     }
 
-    @Override
+   /* @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         if (requestCode == RC_PHOTO_PICKER && resultCode == RESULT_OK) {
@@ -234,16 +236,22 @@ public class ConverseActivity extends AppCompatActivity {
 //                }
 //            });
         }
-    }
+    }*/
 
     public String getmUsername() {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        mUsername = user.getDisplayName();
-        if (user.getPhotoUrl() != null) {
-            mUserProfileImage = user.getPhotoUrl();
-        } else {
-            mUserProfileImage = Uri.parse("android.resource://com.zyta.zflikz/drawable/no_image_available.png");
+//        mUsername = user.getProviderData();
+        for (UserInfo profile : user.getProviderData()) {
+            mUsername = profile.getDisplayName();
+            if (profile.getPhotoUrl() != null) {
+                mUserProfileImage = profile.getPhotoUrl();
+            } else {
+                mUserProfileImage = Uri.parse("android.resource://com.zyta.zflikz/drawable/no_image_available.png");
+            }
         }
+
+        System.out.println("mUsername = " + mUsername);
+        System.out.println("mUserProfileImage = " + mUserProfileImage);
         return mUsername;
     }
 

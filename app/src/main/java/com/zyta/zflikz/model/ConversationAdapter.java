@@ -7,6 +7,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.bumptech.glide.request.RequestOptions;
@@ -15,9 +19,6 @@ import com.zyta.zflikz.GlideApp;
 import com.zyta.zflikz.R;
 
 import java.util.List;
-
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
 
 public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapter.ConvViewHolder> {
     List<ConversationMessage> conversationMessages;
@@ -43,6 +44,8 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
     public void onBindViewHolder(@NonNull ConvViewHolder holder, int position) {
         conversationMessages.get(position);
         ImageView shareImage = holder.shareImage;
+        ImageView targetImage = holder.targetImage;
+        ImageView replyImage = holder.replyImage;
         ImageView postImage = holder.postPhotoImageView;
         TextView postText = holder.postMessageTextView;
         ImageView profileImage = holder.authorPPImageview;
@@ -84,6 +87,20 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
                 cContext.startActivity(Intent.createChooser(intent, "choose one"));
             }
         });
+
+        targetImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(cContext, "Feature Coming Soon", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        replyImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(cContext, "Feature Coming Soon", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override
@@ -95,7 +112,7 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
 
     public class ConvViewHolder extends RecyclerView.ViewHolder {
         TextView postMessageTextView;
-        ImageView postPhotoImageView, authorPPImageview, shareImage;
+        ImageView postPhotoImageView, authorPPImageview, shareImage, targetImage, replyImage;
         TextView authorNameTextView, authorPostdateTextView;
         Context cContext;
         List<ConversationMessage> conversationMessages;
@@ -110,6 +127,8 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
             authorNameTextView = itemView.findViewById(R.id.con_profile_text_view_name);
             authorPostdateTextView = itemView.findViewById(R.id.con_profile_text_view_date);
             shareImage = itemView.findViewById(R.id.post_share_icon_view);
+            targetImage = itemView.findViewById(R.id.post_target_image_view);
+            replyImage = itemView.findViewById(R.id.post_reply_image_view);
         }
     }
 }

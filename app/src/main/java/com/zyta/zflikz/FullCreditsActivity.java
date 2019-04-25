@@ -65,7 +65,7 @@ public class FullCreditsActivity extends AppCompatActivity implements FullCredit
                 personFullCreditsAdapter.collapseAllSections();
             } else{
                 personFullCreditsAdapter.expandAllSections();
-                isExpanded = true;
+                isExpanded = true;*/
 //                myFab.setImageResource(R.drawable.ic_keyboard_arrow_up_black_24dp);
 //            }
 
