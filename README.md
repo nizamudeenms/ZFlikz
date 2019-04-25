@@ -1,2 +1,2 @@
 # ZFlikz
-Z flikz is Movie Discussion Android application.
+Z Flikz AKA Zlikx is Movie Discussion Android application.
