@@ -142,7 +142,6 @@ public class MainActivity extends AppCompatActivity
                             profileName = profile.getDisplayName();
                             profileEmail = profile.getEmail();
                             profilePhotoUrl = profile.getPhotoUrl();
-                            System.out.println("profile.getUid = " + profile.getUid());
                         }
                         GlideApp.with(getApplicationContext()).load(profilePhotoUrl).placeholder(R.mipmap.ic_launcher).error(R.drawable.zlikx_logo_bg_blur_grey).transform(new CircleCrop()).into(profileImageImageView);
                         profileNameTextView.setText(profileName);
@@ -378,7 +377,6 @@ public class MainActivity extends AppCompatActivity
             intent.putExtra(Intent.EXTRA_TEXT, "Hey check out my app at: https://play.google.com/store/apps/details?id=com.google.android.apps.plus\n");
             startActivity(Intent.createChooser(intent, "choose one"));
         } else if (id == R.id.nav_sign_out) {
-            System.out.println("signout called");
             AuthUI.getInstance().signOut(this);
         }
 
@@ -413,11 +411,6 @@ public class MainActivity extends AppCompatActivity
 
     private void getData() {
 
-        System.out.println("PAGE_NO : " + PAGE_NO);
-        System.out.println("TOT_PAGES : " + TOT_PAGES);
-        System.out.println("ORG_LANG : " + ORG_LANG);
-
-
         final ProgressDialog progressDialog;
         progressDialog = new ProgressDialog(MainActivity.this);
 //        progressDialog.setMax(100);
@@ -440,7 +433,7 @@ public class MainActivity extends AppCompatActivity
         postList.enqueue(new Callback<PostList>() {
             @Override
             public void onResponse(Call<PostList> call, Response<PostList> response) {
-                progressDialog.dismiss();
+//                progressDialog.dismiss();
 
                 PostList list = response.body();
                 TOT_PAGES = list.getTotalPages();
@@ -454,7 +447,7 @@ public class MainActivity extends AppCompatActivity
 
             @Override
             public void onFailure(Call<PostList> call, Throwable t) {
-                progressDialog.dismiss();
+//                progressDialog.dismiss();
 
                 if (t instanceof IOException) {
                     Snackbar mySnackbar = Snackbar.make(findViewById(R.id.main_activity_layout), "No Network", Snackbar.LENGTH_LONG);
@@ -500,7 +493,7 @@ public class MainActivity extends AppCompatActivity
                 }
             }
         });
-
+        progressDialog.dismiss();
     }
 
 }

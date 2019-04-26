@@ -123,8 +123,6 @@ public class MovieDetailActivity extends AppCompatActivity {
         Button converseButton;
 
         movieId = getIntent().getIntExtra("id", 0);
-        System.out.println("movieId ---------------- " + movieId);
-
         creditsAdapter = new CreditsAdapter(this, castList);
         productionAdapter = new ProductionAdapter(this, productionCompanyList);
         videoAdapter = new VideoAdapter(this, videoUrlsArrayList);
@@ -194,7 +192,7 @@ public class MovieDetailActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(MovieDetailActivity.this, ConverseActivity.class);
                 intent.putExtra("movieId", movieId);
-                intent.putExtra("backDropImagePath", BACKDROP_BASE_URL +backdropPath);
+                intent.putExtra("backDropImagePath", backdropPath);
                 MovieDetailActivity.this.startActivity(intent);
             }
         });
@@ -234,8 +232,6 @@ public class MovieDetailActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                System.out.println("crewList = " + crewList.size());
-                System.out.println("castList = " + castList.size());
 
 //                Bundle creditsBundle = new Bundle();
 //                creditsBundle.putParcelableArrayList("crewList",crewList);
@@ -274,12 +270,9 @@ public class MovieDetailActivity extends AppCompatActivity {
             public void onResponse(Call<SimiliarMovieDetails> call, Response<SimiliarMovieDetails> response) {
                 SimiliarMovieDetails similiarMovieDetails = response.body();
 
-                System.out.println("reviewDetails : " + similiarMovieDetails.getSimiliarMovies().size());
-
                 similiarMoviesList.addAll(similiarMovieDetails.getSimiliarMovies());
                 similiarMovieAdapter.notifyDataSetChanged();
 
-                System.out.println("similiarMoviesList = " + similiarMoviesList.size());
                 if (similiarMovieDetails.getSimiliarMovies().size() == 0) {
                     similiarMovieCardView.setVisibility(View.GONE);
                 }
@@ -291,11 +284,9 @@ public class MovieDetailActivity extends AppCompatActivity {
                 if (t instanceof IOException) {
                     Snackbar mySnackbar = Snackbar.make(findViewById(R.id.complete_layout), "No Network", Snackbar.LENGTH_LONG);
                     mySnackbar.show();
-                    System.out.println("Failure is : " + t.getMessage());
                 } else {
                     Snackbar mySnackbar = Snackbar.make(findViewById(R.id.complete_layout), "Error Occurred", Snackbar.LENGTH_LONG);
                     mySnackbar.show();
-                    System.out.println("Failure is : " + t.getMessage());
                 }
             }
 
@@ -311,15 +302,10 @@ public class MovieDetailActivity extends AppCompatActivity {
             public void onResponse(Call<ReviewDetails> call, Response<ReviewDetails> response) {
                 ReviewDetails reviewDetails = response.body();
 
-                System.out.println("reviewDetails : " + reviewDetails.getId());
-
                 Log.e("Movie Id received is :", "Reviews onResponse: " + response.body().getId() + "  Title : " + reviewDetails.getReviews().size());
 
                 reviewsList.addAll(reviewDetails.getReviews());
                 reviewAdapter.notifyDataSetChanged();
-
-
-                System.out.println("reviewsList.size() = " + reviewsList.size());
 
                 if (reviewDetails.getReviews().size() == 0) {
                     reviewCardView.setVisibility(View.GONE);
@@ -332,11 +318,9 @@ public class MovieDetailActivity extends AppCompatActivity {
                 if (t instanceof IOException) {
                     Snackbar mySnackbar = Snackbar.make(findViewById(R.id.complete_layout), "No Network", Snackbar.LENGTH_LONG);
                     mySnackbar.show();
-                    System.out.println("Failure is : " + t.getMessage());
                 } else {
                     Snackbar mySnackbar = Snackbar.make(findViewById(R.id.complete_layout), "Error Occurred", Snackbar.LENGTH_LONG);
                     mySnackbar.show();
-                    System.out.println("Failure is : " + t.getMessage());
                 }
             }
 
@@ -346,7 +330,6 @@ public class MovieDetailActivity extends AppCompatActivity {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if ((keyCode == KeyEvent.KEYCODE_BACK)) {
-            System.out.println("back pressed and exited");
             //TODO CHECK LATER FOR BACK BUTTON FUNC WORKS PROPERLY
 //            finish();
         }
@@ -364,7 +347,6 @@ public class MovieDetailActivity extends AppCompatActivity {
                 castList.addAll(credits.getCast());
                 crewList.addAll(credits.getCrew());
 
-                System.out.println("castList.size() = " + castList.size());
 
                 if (response.body().getCast().isEmpty()) {
                     castCardView.setVisibility(View.GONE);
@@ -378,11 +360,9 @@ public class MovieDetailActivity extends AppCompatActivity {
                 if (t instanceof IOException) {
                     Snackbar mySnackbar = Snackbar.make(findViewById(R.id.complete_layout), "No Network", Snackbar.LENGTH_LONG);
                     mySnackbar.show();
-                    System.out.println("Failure is : " + t.getMessage());
                 } else {
                     Snackbar mySnackbar = Snackbar.make(findViewById(R.id.complete_layout), "Error Occurred", Snackbar.LENGTH_LONG);
                     mySnackbar.show();
-                    System.out.println("Failure is : " + t.getMessage());
                 }
             }
 
@@ -427,13 +407,11 @@ public class MovieDetailActivity extends AppCompatActivity {
 
 
                 if (overview == null || overview.isEmpty()) {
-                    System.out.println("overview = " + overview);
                     overviewCardView.setVisibility(View.GONE);
                 } else {
                     overviewTextView.setText(overview);
                 }
                 if (releaseDate.isEmpty() || releaseDate == null) {
-                    System.out.println("releaseDate = " + releaseDate);
                     releaseDateCardView.setVisibility(View.GONE);
                 } else {
                     try {
@@ -448,7 +426,6 @@ public class MovieDetailActivity extends AppCompatActivity {
                     releaseDateTextView.setText(releaseDate);
                 }
                 if (voteAverage == 0.0 || voteAverage == null) {
-                    System.out.println("voteAverage = " + voteAverage);
                     ratingCardView.setVisibility(View.GONE);
                 } else {
                     ratingTextView.setText(String.valueOf(voteAverage));
@@ -465,7 +442,6 @@ public class MovieDetailActivity extends AppCompatActivity {
                 }
 
 
-                System.out.println("posterPath = " + posterPath);
                 if (newPosterPath != null) {
                     GlideApp.with(getApplicationContext()).load(newPosterPath).placeholder(R.drawable.zlikx_logo).into(posterSimpleDraweeView);
                     GlideApp.with(getApplicationContext()).load((backdropPath == null) ? newPosterPath : newBackdropPath).placeholder(R.drawable.zlikx_logo).into(backDropImageView);
@@ -486,13 +462,9 @@ public class MovieDetailActivity extends AppCompatActivity {
 //                    Toast.makeText(MovieDetailActivity.this, "No network ", Toast.LENGTH_SHORT).show();
                     Snackbar mySnackbar = Snackbar.make(findViewById(R.id.complete_layout), "No Network", Snackbar.LENGTH_LONG);
                     mySnackbar.show();
-                    System.out.println("Failure is : " + t.getMessage());
                 } else {
                     Snackbar mySnackbar = Snackbar.make(findViewById(R.id.complete_layout), "Error Occurred", Snackbar.LENGTH_LONG);
                     mySnackbar.show();
-                    System.out.println("Failure is : " + t.getMessage());
-
-
                 }
             }
 
@@ -513,10 +485,8 @@ public class MovieDetailActivity extends AppCompatActivity {
 
                 for (VideoList videoList : videosListArrayList) {
                     FINAL_URL = FIRST_VIDEO_URL + videoList.getKey() + SECOND_VIDEO_URL;
-                    System.out.println("FINAL_URL = " + FINAL_URL);
                     videoUrlsArrayList.add(FINAL_URL);
                 }
-                System.out.println("videoUrlsArrayList.size() = " + videoUrlsArrayList.size());
 
                 if (response.body().getVideoList().isEmpty()) {
                     videoCardView.setVisibility(View.GONE);
@@ -530,11 +500,9 @@ public class MovieDetailActivity extends AppCompatActivity {
                 if (t instanceof IOException) {
                     Snackbar mySnackbar = Snackbar.make(findViewById(R.id.complete_layout), "No Network", Snackbar.LENGTH_LONG);
                     mySnackbar.show();
-                    System.out.println("Failure is : " + t.getMessage());
                 } else {
                     Snackbar mySnackbar = Snackbar.make(findViewById(R.id.complete_layout), "Error Occurred", Snackbar.LENGTH_LONG);
                     mySnackbar.show();
-                    System.out.println("Failure is : " + t.getMessage());
                 }
             }
         });
@@ -563,11 +531,9 @@ public class MovieDetailActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<ImageDetails> call, Throwable t) {
                 if (t instanceof IOException) {
-                    System.out.println("Failure is : " + t.getMessage());
                     Snackbar mySnackbar = Snackbar.make(findViewById(R.id.images_activity_frame_layout), "No Network", Snackbar.LENGTH_LONG);
                     mySnackbar.show();
                 } else {
-                    System.out.println("Failure is : " + t.getMessage());
                     Snackbar mySnackbar = Snackbar.make(findViewById(R.id.images_activity_frame_layout), "Error Occurred", Snackbar.LENGTH_LONG);
                     mySnackbar.show();
                 }

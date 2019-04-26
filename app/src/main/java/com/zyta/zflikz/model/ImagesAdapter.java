@@ -7,13 +7,14 @@ import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.widget.ImageView;
 
+import androidx.annotation.NonNull;
+import androidx.viewpager.widget.PagerAdapter;
+
 import com.zyta.zflikz.GlideApp;
 import com.zyta.zflikz.R;
 
 import java.util.ArrayList;
 
-import androidx.annotation.NonNull;
-import androidx.viewpager.widget.PagerAdapter;
 import ua.zabelnikov.swipelayout.layout.frame.SwipeableLayout;
 import ua.zabelnikov.swipelayout.layout.listener.OnLayoutPercentageChangeListener;
 import ua.zabelnikov.swipelayout.layout.listener.OnLayoutSwipedListener;
@@ -29,7 +30,6 @@ public class ImagesAdapter extends PagerAdapter {
     public ImagesAdapter(ArrayList<String> items, Context context) {
         this.items = items;
         this.mContext = context;
-        System.out.println("instantiated");
     }
 
     public void setOnLayoutSwipedListener(OnLayoutSwipedListener onLayoutSwipedListener) {
@@ -39,7 +39,6 @@ public class ImagesAdapter extends PagerAdapter {
     @Override
     public View instantiateItem(ViewGroup container, final int position) {
         String imageUrl = items.get(position);
-        System.out.println("postersLink in instance = " + imageUrl);
 
         LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
@@ -47,7 +46,6 @@ public class ImagesAdapter extends PagerAdapter {
         ImageView imageView = (ImageView) view.findViewById(R.id.fullscreen_image_view);
 
         posterPath = POSTER_BASE_URL + imageUrl;
-        System.out.println("posterPath = " + posterPath);
 
         GlideApp.with(mContext).load(posterPath).placeholder(R.drawable.zlikx_logo).into(imageView);
 

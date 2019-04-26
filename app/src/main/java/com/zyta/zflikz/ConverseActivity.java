@@ -47,6 +47,7 @@ public class ConverseActivity extends AppCompatActivity {
     Date simpleDate = new Date();
     DateFormat df6 = new SimpleDateFormat("E, MMM dd yyyy HH:mm:ss");
     String postDate = df6.format(simpleDate);
+    String BACKDROP_BASE_URL = "http://image.tmdb.org/t/p/w342";
 
 
     //    private ProgressBar mProgressBar;
@@ -98,7 +99,11 @@ public class ConverseActivity extends AppCompatActivity {
 //        mProgressBar.setVisibility(ProgressBar.INVISIBLE);
 
 
-        GlideApp.with(getApplicationContext()).load(backDropImagePath).placeholder(R.drawable.zlikx_logo).transform(new BlurTransformation(getApplicationContext())).into(backDropImage);
+        if (backDropImagePath!=null) {
+            GlideApp.with(getApplicationContext()).load(BACKDROP_BASE_URL+backDropImagePath).placeholder(R.drawable.zlikx_logo).transform(new BlurTransformation(getApplicationContext())).into(backDropImage);
+        }else{
+            GlideApp.with(getApplicationContext()).load(R.drawable.zlikx_logo_bg_blur).placeholder(R.drawable.zlikx_logo).transform(new BlurTransformation(getApplicationContext())).into(backDropImage);
+        }
 
         conRecyclerView = (RecyclerView) findViewById(R.id.con_recycler_view);
         mPhotoPickerButton = (ImageView) findViewById(R.id.photoPickerButton);

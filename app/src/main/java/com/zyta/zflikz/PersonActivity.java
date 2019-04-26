@@ -9,6 +9,11 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.drawable.ProgressBarDrawable;
 import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
@@ -29,10 +34,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.cardview.widget.CardView;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -94,8 +95,6 @@ public class PersonActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                System.out.println("crewList = " + crewList.size());
-                System.out.println("castList = " + castList.size());
 
                 if (crewList.size() == 0 && castList.size() == 0) {
                     Snackbar creditsSnackbar = Snackbar.make(getWindow().getDecorView(), "Full Credits Unavailable", Snackbar.LENGTH_LONG);
@@ -146,7 +145,6 @@ public class PersonActivity extends AppCompatActivity {
     }
 
     private void getPersonDetails() {
-        System.out.println("PersonActivity.getPersonDetails : " + personId);
 
         final Call<PersonDetails> personDetailsCall = MovieAPI.getService().getPersonDetails(personId, BuildConfig.TMDB_KEY);
         personDetailsCall.enqueue(new Callback<PersonDetails>() {
@@ -209,11 +207,9 @@ public class PersonActivity extends AppCompatActivity {
                 if (t instanceof IOException) {
                     Snackbar mySnackbar = Snackbar.make(findViewById(R.id.person_coordinator_layout), "No Network", Snackbar.LENGTH_LONG);
                     mySnackbar.show();
-                    System.out.println("Failure is : " + t.getMessage());
                 } else {
                     Snackbar mySnackbar = Snackbar.make(findViewById(R.id.person_coordinator_layout), "Error Occurred", Snackbar.LENGTH_LONG);
                     mySnackbar.show();
-                    System.out.println("Failure is : " + t.getMessage());
                 }
             }
         });
@@ -222,7 +218,6 @@ public class PersonActivity extends AppCompatActivity {
 
     private void getPersonCredits() {
 
-        System.out.println("personId = " + personId);
 
         final Call<PersonCreditDetails> credits = MovieAPI.getService().getPersonCredits(personId, BuildConfig.TMDB_KEY);
 
@@ -231,11 +226,9 @@ public class PersonActivity extends AppCompatActivity {
             public void onResponse(Call<PersonCreditDetails> call, Response<PersonCreditDetails> response) {
                 PersonCreditDetails personCreditDetails = response.body();
                 Log.e("test debug ", "onResponse: " + personCreditDetails.getId());
-                System.out.println("personCreditDetails.getPersonCast().size() = " + personCreditDetails.getPersonCast().size());
                 castList.addAll(personCreditDetails.getPersonCast());
                 crewList.addAll(personCreditDetails.getPersonCrew());
 
-                System.out.println("castList.size() = " + castList.size());
 
                 if (response.body().getPersonCast().isEmpty()) {
                     personCardView.setVisibility(View.GONE);
@@ -250,20 +243,15 @@ public class PersonActivity extends AppCompatActivity {
                 if (t instanceof IOException) {
                     Snackbar mySnackbar = Snackbar.make(findViewById(R.id.person_coordinator_layout), "No Network", Snackbar.LENGTH_LONG);
                     mySnackbar.show();
-                    System.out.println("Failure is : " + t.getMessage());
                 } else {
                     Snackbar mySnackbar = Snackbar.make(findViewById(R.id.person_coordinator_layout), "Error Occurred", Snackbar.LENGTH_LONG);
                     mySnackbar.show();
-                    System.out.println("Failure is : " + t.getMessage());
                 }
             }
         });
     }
 
     private void getPersonImages() {
-
-        System.out.println("Person Id  person images : " + personId);
-
 
         final Call<PersonImageDetails> imageDetails = MovieAPI.getService().getPersonImageDetails(personId, BuildConfig.TMDB_KEY);
         imageDetails.enqueue(new Callback<PersonImageDetails>() {
@@ -282,11 +270,9 @@ public class PersonActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<PersonImageDetails> call, Throwable t) {
                 if (t instanceof IOException) {
-                    System.out.println("Failure is : " + t.getMessage());
                     Snackbar mySnackbar = Snackbar.make(findViewById(R.id.person_coordinator_layout), "No Network", Snackbar.LENGTH_LONG);
                     mySnackbar.show();
                 } else {
-                    System.out.println("Failure is : " + t.getMessage());
                     Snackbar mySnackbar = Snackbar.make(findViewById(R.id.person_coordinator_layout), "Error Occurred", Snackbar.LENGTH_LONG);
                     mySnackbar.show();
                 }

@@ -83,7 +83,6 @@ public class PersonFullCreditsAdapter  extends SectionedRecyclerViewAdapter<Pers
             fullCreditsArrayList.add(fullCredits);
         }
 
-        System.out.println("fullCreditsArrayList.size() = " + fullCreditsArrayList.size());
 
         for (int i = 0; i < personCrewArrayList.size(); i++) {
             FullCredits fullCredits = new FullCredits();
@@ -97,7 +96,6 @@ public class PersonFullCreditsAdapter  extends SectionedRecyclerViewAdapter<Pers
             fullCredits.setDepartment(personCrewArrayList.get(i).getDepartment());
             fullCreditsArrayList.add(fullCredits);
         }
-        System.out.println("fullCreditsArrayList.size() = " + fullCreditsArrayList.size());
 
         for (FullCredits fullCredits : fullCreditsArrayList) {
             String key = fullCredits.getDepartment();
@@ -110,7 +108,6 @@ public class PersonFullCreditsAdapter  extends SectionedRecyclerViewAdapter<Pers
 
     @Override
     public boolean onPlaceSubheaderBetweenItems(int position) {
-        System.out.println("position = " + personCrewArrayList.size());
         final FullCredits fullCredits = fullCreditsArrayList.get(position);
         final FullCredits nextFullCredits = fullCreditsArrayList.get(position +1);
 
@@ -144,7 +141,6 @@ public class PersonFullCreditsAdapter  extends SectionedRecyclerViewAdapter<Pers
                     .into(holder.castImageView);
         }
 //        holder.itemView.setOnClickListener(v -> onItemClickListener.onItemClicked(fullCredits));
-        System.out.println("fullCreditsArrayList.get(itemPosition).getId() = " + fullCreditsArrayList.get(itemPosition).getId());
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

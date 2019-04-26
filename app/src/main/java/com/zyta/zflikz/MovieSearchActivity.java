@@ -9,6 +9,12 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.jakewharton.rxbinding2.widget.RxTextView;
 import com.jakewharton.rxbinding2.widget.TextViewTextChangeEvent;
 import com.zyta.zflikz.model.MovieSearchAdapter;
@@ -21,11 +27,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.DefaultItemAnimator;
-import androidx.recyclerview.widget.DividerItemDecoration;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -118,7 +119,6 @@ public class MovieSearchActivity extends AppCompatActivity implements MovieSearc
         return new DisposableObserver<SearchResults>() {
             @Override
             public void onNext(SearchResults searchResults) {
-                System.out.println(searchResults.getSearches().size());
                 resultArrayList.clear();
                 resultArrayList.addAll(searchResults.getSearches());
 //                searchResultsArrayList.addAll(searchResults.getResults());

@@ -3,6 +3,9 @@ package com.zyta.zflikz;
 import android.os.Bundle;
 import android.util.Log;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.viewpager.widget.ViewPager;
+
 import com.google.android.material.snackbar.Snackbar;
 import com.zyta.zflikz.model.Backdrop;
 import com.zyta.zflikz.model.ImageDetails;
@@ -13,8 +16,6 @@ import com.zyta.zflikz.utils.MovieAPI;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.viewpager.widget.ViewPager;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -75,8 +76,6 @@ public class ImagesActivity extends AppCompatActivity implements OnLayoutSwipedL
 
     private void getImages() {
 
-        System.out.println("Movie Id  : " + movieId);
-
         final Call<ImageDetails> imageDetails = MovieAPI.getService().getImageDetails(movieId, BuildConfig.TMDB_KEY);
         imageDetails.enqueue(new Callback<ImageDetails>() {
             @Override
@@ -110,11 +109,9 @@ public class ImagesActivity extends AppCompatActivity implements OnLayoutSwipedL
             @Override
             public void onFailure(Call<ImageDetails> call, Throwable t) {
                 if (t instanceof IOException) {
-                    System.out.println("Failure is : " + t.getMessage());
                     Snackbar mySnackbar = Snackbar.make(findViewById(R.id.images_activity_frame_layout), "No Network", Snackbar.LENGTH_LONG);
                     mySnackbar.show();
                 } else {
-                    System.out.println("Failure is : " + t.getMessage());
                     Snackbar mySnackbar = Snackbar.make(findViewById(R.id.images_activity_frame_layout), "Error Occurred", Snackbar.LENGTH_LONG);
                     mySnackbar.show();
                 }
