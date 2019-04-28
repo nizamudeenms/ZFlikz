@@ -1,6 +1,7 @@
 package com.zyta.zflikz;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -95,7 +96,7 @@ public class MovieDetailActivity extends AppCompatActivity {
     TextView movieNameTextView;
     TextView overviewTextView, ratingTextView, releaseDateTextView, completeCastTextView;
     CardView ratingCardView, releaseDateCardView, overviewCardView, productionCardView, castCardView, videoCardView, reviewCardView, similiarMovieCardView;
-    ImageView recImageView;
+    ImageView recImageView,detailShareButtonImageView;
     RecyclerView crewRecyclerView, prodrecyclerView, videosRecyclerView, reviewsRecylerView, similiarMovieRecyclerView;
     final String FIRST_VIDEO_URL = "<body style=\"margin:0 0 0 0; padding:0 0 0 0; \"><iframe   style=\"width: 100%; height: 100%;\" frameborder=\"0\" framespacing=\"0\" src=\"https://www.youtube.com/embed/";
     final String SECOND_VIDEO_URL = "\"  allowfullscreen ></iframe></body>";
@@ -122,7 +123,8 @@ public class MovieDetailActivity extends AppCompatActivity {
 
         Button converseButton;
 
-        movieId = getIntent().getIntExtra("id", 0);
+        handleIntent();
+
         creditsAdapter = new CreditsAdapter(this, castList);
         productionAdapter = new ProductionAdapter(this, productionCompanyList);
         videoAdapter = new VideoAdapter(this, videoUrlsArrayList);
@@ -130,7 +132,7 @@ public class MovieDetailActivity extends AppCompatActivity {
         similiarMovieAdapter = new SimiliarMovieAdapter(this, similiarMoviesList);
 
         recImageView = findViewById(R.id.back_temp);
-
+        detailShareButtonImageView = findViewById(R.id.detail_button_share);
 
         crewRecyclerView = findViewById(R.id.cast_recycler_view);
         prodrecyclerView = findViewById(R.id.production_recycler_view);
@@ -250,16 +252,51 @@ public class MovieDetailActivity extends AppCompatActivity {
             }
         });
 
+        detailShareButtonImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_SEND);
+                intent.setType("text/plain");
+                intent.putExtra(Intent.EXTRA_SUBJECT, "Zlikx");
+
+                String shareText = "Hi, Checkout this movie in Zlikx. https://zflikz.page.link/zlkx"+"?"+movieId;
+                System.out.println("shareText = " + shareText);
+                intent.putExtra(Intent.EXTRA_TEXT, shareText);
+                startActivity(Intent.createChooser(intent, "Share with"));
+
+
+            }
+        });
+
         reviewAdapter.notifyDataSetChanged();
 
         if (BuildConfig.BUILD_TYPE.equalsIgnoreCase("release")) {
-
             MobileAds.initialize(this, "ca-app-pub-1865534838493345~1681246593");
             mAdView = findViewById(R.id.adView);
             AdRequest adRequest = new AdRequest.Builder().build();
             mAdView.loadAd(adRequest);
         }
 
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+        handleIntent();
+    }
+
+    private void handleIntent() {
+        Intent appLinkIntent = getIntent();
+        String appLinkAction = appLinkIntent.getAction();
+        Uri appLinkData = appLinkIntent.getData();
+        if (appLinkAction != null) {
+            System.out.println("appLinkData.getLastPathSegment() = " + appLinkData.getQuery());
+            movieId = Integer.parseInt(appLinkData.getQuery());
+                
+        } else {
+            movieId = getIntent().getIntExtra("id", 0);
+        }
     }
 
     private void getSimiliarMovies() {
@@ -389,11 +426,11 @@ public class MovieDetailActivity extends AppCompatActivity {
                 }
 
                 for (int i = 0; i < productionCompanyList.size(); i++) {
-                    Log.d(TAG, "production compaypath is :  "+productionCompanyList.get(i).getLogoPath() );
+                    Log.d(TAG, "production compaypath is :  " + productionCompanyList.get(i).getLogoPath());
                 }
 
                 for (ProductionCompany company : productionCompanyList) {
-                    Log.d(TAG, "onResponse: "+ company.getName());
+                    Log.d(TAG, "onResponse: " + company.getName());
                 }
 
                 overview = movieDetails.getOverview();
@@ -433,12 +470,12 @@ public class MovieDetailActivity extends AppCompatActivity {
 
 
                 //TODO Change this condition according to null condiotion
-                if(posterPath != null){
-                    newPosterPath =  BACKDROP_BASE_URL + posterPath;
+                if (posterPath != null) {
+                    newPosterPath = BACKDROP_BASE_URL + posterPath;
                 }
 
-                if(backdropPath != null){
-                    newBackdropPath =  BACKDROP_BASE_URL + backdropPath;
+                if (backdropPath != null) {
+                    newBackdropPath = BACKDROP_BASE_URL + backdropPath;
                 }
 
 

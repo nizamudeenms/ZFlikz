@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.zyta.zflikz">
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -33,29 +34,25 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.MainActivityTheme">
 
-            <intent-filter android:label="@string/zlikx_deep_link">
-                <action android:name="android.intent.action.VIEW" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-                <!-- Accepts URIs that begin with "http://www.example.com/gizmos” -->
-                <data
-                    android:host="www.nizamudeen.com"
-                    android:pathPrefix="/zlikx"
-                    android:scheme="https" />
-                <!-- note that the leading "/" is required for pathPrefix-->
-                <!-- Accepts URIs that begin with "example://gizmos” -->
-                <data
-                    android:host="www.nizamudeen.com"
-                    android:scheme="https" />
-
-            </intent-filter>
-
         </activity>
         <activity
             android:name=".MovieDetailActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/ConnectionTheme" />
+            android:launchMode="singleTop"
+            android:theme="@style/ConnectionTheme">
+            <tools:validation testUrl="https://zflikz.page.link/zlkx" />
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:scheme="https"
+                    android:host="zflikz.page.link"
+                    android:pathPrefix="/zlkx" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".SettingsActivity"
             android:label="@string/action_settings"

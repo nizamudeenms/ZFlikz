@@ -9,7 +9,7 @@ android {
         applicationId "com.zyta.zflikz"
         minSdkVersion 19
         targetSdkVersion 28
-        versionCode 6
+        versionCode 9
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
@@ -18,7 +18,8 @@ android {
         release {
 
             minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro','proguard-fresco.pro'
+
         }
     }
     buildTypes.each {
