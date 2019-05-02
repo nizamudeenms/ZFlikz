@@ -1,19 +1,16 @@
 package com.zyta.zflikz.messaging;
 
+import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Build;
-import android.widget.Toast;
 
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.zyta.zflikz.GlideApp;
@@ -22,8 +19,6 @@ import com.zyta.zflikz.R;
 
 import java.io.InputStream;
 import java.util.concurrent.ExecutionException;
-
-import io.reactivex.annotations.NonNull;
 
 public class ZlikxMessagingService extends FirebaseMessagingService {
 
@@ -85,27 +80,15 @@ public class ZlikxMessagingService extends FirebaseMessagingService {
                 .setBadgeIconType(NotificationCompat.BADGE_ICON_LARGE)
                 .setAutoCancel(true)
                 .setContentIntent(pendingIntent)
-                .setSmallIcon(R.mipmap.ic_launcher)
+                .setSmallIcon(R.drawable.ic_notification_icon)
                 .setLargeIcon(myBitmap)
+                .setDefaults(Notification.DEFAULT_ALL)
                 .setStyle(new NotificationCompat.BigPictureStyle().bigPicture(myBitmap).bigLargeIcon(null))
                 .setContentText(body);
 
 
         NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(this);
         notificationManagerCompat.notify(999, noBuilder.build());
-
-
-        FirebaseMessaging.getInstance().subscribeToTopic("general")
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        String msg = "Successful Messaging";
-                        if (!task.isSuccessful()) {
-                            msg = "Failed Messaging";
-                        }
-                        Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
-                    }
-                });
 
     }
 }
