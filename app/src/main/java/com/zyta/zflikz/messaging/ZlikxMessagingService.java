@@ -33,13 +33,13 @@ public class ZlikxMessagingService extends FirebaseMessagingService {
     public void onMessageReceived(RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
         if (remoteMessage.getData().size() > 0) {
-            imageUrl = remoteMessage.getData().get("image_url");
+            imageUrl = remoteMessage.getData().get("imageUrl");
             title = remoteMessage.getData().get("title");
             message = remoteMessage.getData().get("message");
         }
 
         try {
-            myBitmap = GlideApp.with(this).asBitmap().load(imageUrl).into(256, 256).get();
+                myBitmap = GlideApp.with(this).asBitmap().load(imageUrl != null ? imageUrl:R.drawable.zlikx_logo).into(256, 256).get();
         } catch (ExecutionException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
