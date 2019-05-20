@@ -304,7 +304,7 @@ public class ImageSelectionActivity extends AppCompatActivity {
             if (profile.getPhotoUrl() != null) {
                 mUserProfileImage = profile.getPhotoUrl();
             } else {
-                mUserProfileImage = Uri.parse("android.resource://com.zyta.zflikz/drawable/no_image_available.png");
+                mUserProfileImage = Uri.parse("android.resource://com.zyta.zflikz/drawable/zlikx_logo.png");
             }
         }
         return mUsername;

@@ -2,6 +2,8 @@ package com.zyta.zflikz;
 
 import android.os.Bundle;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.drawable.ProgressBarDrawable;
 import com.facebook.drawee.drawable.ScalingUtils;
@@ -12,8 +14,6 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.stfalcon.frescoimageviewer.ImageViewer;
 
 import java.util.ArrayList;
-
-import androidx.appcompat.app.AppCompatActivity;
 
 public class FullscreenImageActivity extends AppCompatActivity {
     ArrayList<String> personImagePathArrayList = new ArrayList<>();
@@ -37,7 +37,7 @@ public class FullscreenImageActivity extends AppCompatActivity {
         if (postImagePath != null) {
             GenericDraweeHierarchy hierarchy =
                     GenericDraweeHierarchyBuilder.newInstance(getResources())
-                            .setFailureImage(R.drawable.no_image_available)
+                            .setFailureImage(R.drawable.zlikx_logo_bg_blur_grey)
                             .setFailureImageScaleType(ScalingUtils.ScaleType.CENTER_CROP)
                             .setPlaceholderImage(R.drawable.zlikx_logo_bg_white)
                             .setPlaceholderImageScaleType(ScalingUtils.ScaleType.CENTER_CROP)
@@ -73,7 +73,7 @@ public class FullscreenImageActivity extends AppCompatActivity {
 
         if (personImagePathArrayList != null) {
             GenericDraweeHierarchyBuilder hierarchyBuilder = GenericDraweeHierarchyBuilder.newInstance(getResources())
-                    .setFailureImage(R.drawable.no_image_available)
+                    .setFailureImage(R.drawable.zlikx_logo_bg_blur_grey)
                     .setProgressBarImage(new ProgressBarDrawable());
 
             ImageViewer.Builder builder = new ImageViewer.Builder<>(this, personImagePathArrayList)

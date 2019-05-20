@@ -118,7 +118,7 @@ public class PersonActivity extends AppCompatActivity {
 
                 if (personImagePathArrayList.size() != 0) {
                     GenericDraweeHierarchyBuilder hierarchyBuilder = GenericDraweeHierarchyBuilder.newInstance(getResources())
-                            .setFailureImage(R.drawable.no_image_available)
+                            .setFailureImage(R.drawable.zlikx_logo_bg_blur_grey)
                             .setProgressBarImage(new ProgressBarDrawable());
 
                     ImageViewer.Builder builder = new ImageViewer.Builder<>(PersonActivity.this, personImagePathArrayList)

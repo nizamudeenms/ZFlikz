@@ -175,7 +175,7 @@ public class MovieDetailActivity extends AppCompatActivity {
         converseButton = findViewById(R.id.con_button);
 
         GenericDraweeHierarchyBuilder hierarchyBuilder = GenericDraweeHierarchyBuilder.newInstance(getResources())
-                .setFailureImage(R.drawable.no_image_available)
+                .setFailureImage(R.drawable.zlikx_logo_bg_blur_grey)
                 .setProgressBarImage(new ProgressBarDrawable());
 
 

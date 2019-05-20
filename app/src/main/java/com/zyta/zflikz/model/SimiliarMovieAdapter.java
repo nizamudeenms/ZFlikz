@@ -8,14 +8,14 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.zyta.zflikz.GlideApp;
 import com.zyta.zflikz.MovieDetailActivity;
 import com.zyta.zflikz.R;
 
 import java.util.ArrayList;
-
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
 
 public class SimiliarMovieAdapter extends RecyclerView.Adapter<SimiliarMovieAdapter.SimiliarMovieHolder> {
     Context mContext;
@@ -51,7 +51,7 @@ public class SimiliarMovieAdapter extends RecyclerView.Adapter<SimiliarMovieAdap
         if (similiarMovieArrayList.get(position).getPosterPath() != null) {
             GlideApp.with(mContext).load("http://image.tmdb.org/t/p/w185" + similiarMovieArrayList.get(position).getPosterPath()).centerCrop().placeholder(R.drawable.zlikx_logo).into(similiarMoviePosterImageView);
         }else {
-            GlideApp.with(mContext).load(R.drawable.no_image_available).placeholder(R.drawable.zlikx_logo).into(similiarMoviePosterImageView);
+            GlideApp.with(mContext).load(R.drawable.zlikx_logo_bg_blur_grey).placeholder(R.drawable.zlikx_logo).into(similiarMoviePosterImageView);
         }
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
